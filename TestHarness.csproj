@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BDDF8E8F-4E14-42C4-A259-ACD132A2073D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ca.Roop</RootNamespace>
+    <AssemblyName>TestHarness</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestHarness\Compare\Comparator.cs" />
+    <Compile Include="TestHarness\Compare\ErrorEqualVerboseWriter.cs" />
+    <Compile Include="TestHarness\Compare\ErrorNotEqualVerboseWriter.cs" />
+    <Compile Include="TestHarness\Compare\ErrorNotEqualWriter.cs" />
+    <Compile Include="TestHarness\Compare\IBufferWriter.cs" />
+    <Compile Include="TestHarness\Compare\ListComparator.cs" />
+    <Compile Include="TestHarness\Compare\MsgBufferWriter.cs" />
+    <Compile Include="TestHarness\Compare\PrimitiveComparator.cs" />
+    <Compile Include="TestHarness\Compare\PrimitiveTypeCheck.cs" />
+    <Compile Include="TestHarness\Compare\PrimitiveTypeEqual.cs" />
+    <Compile Include="TestHarness\Compare\PrimitiveValue.cs" />
+    <Compile Include="TestHarness\Compare\ErrorEqualWriter.cs" />
+    <Compile Include="TestHarness\Compare\VerboseMsgWriter.cs" />
+    <Compile Include="TestHarness\Core\IQueryable.cs" />
+    <Compile Include="TestHarness\Core\IRegisterable.cs" />
+    <Compile Include="TestHarness\Core\ITestable.cs" />
+    <Compile Include="TestHarness\Core\LogCompare.cs" />
+    <Compile Include="TestHarness\Core\TestCase.cs" />
+    <Compile Include="TestHarness\Core\TestRegistrar.cs" />
+    <Compile Include="TestHarness\Core\TestSetProcessor.cs" />
+    <Compile Include="TestHarness\Core\Test\ArgListParser.cs" />
+    <Compile Include="TestHarness\Core\Test\ArgParser.cs" />
+    <Compile Include="TestHarness\Core\Test\ArgConverterFactory.cs" />
+    <Compile Include="TestHarness\Core\Test\TestArg.cs" />
+    <Compile Include="TestHarness\Core\Test\TestCaseTimer.cs" />
+    <Compile Include="TestHarness\Core\Test\TestHarnessConsole.cs" />
+    <Compile Include="TestHarness\Core\Test\TestInfo.cs" />
+    <Compile Include="TestHarness\Core\Test\TestStatus.cs" />
+    <Compile Include="TestHarness\Engine\ITestSetInitialiser.cs" />
+    <Compile Include="TestHarness\Engine\TestEngine.cs" />
+    <Compile Include="TestHarness\Engine\TestSetInfo.cs" />
+    <Compile Include="TestHarness\Engine\TestSetInitialiserFactory.cs" />
+    <Compile Include="TestHarness\Engine\XmlTestSetInitialiser.cs" />
+    <Compile Include="TestHarness\Inputs\IScriptReader.cs" />
+    <Compile Include="TestHarness\Inputs\ScriptReaderFactory.cs" />
+    <Compile Include="TestHarness\Inputs\XmlFileScriptReader.cs" />
+    <Compile Include="TestHarness\Logs\ILogable.cs" />
+    <Compile Include="TestHarness\Logs\Initialisers\ILogInitialiser.cs" />
+    <Compile Include="TestHarness\Logs\Initialisers\InitialiserFactory.cs" />
+    <Compile Include="TestHarness\Logs\Initialisers\XmlLogInitialiser.cs" />
+    <Compile Include="TestHarness\Logs\Log.cs" />
+    <Compile Include="TestHarness\Logs\LogEngine.cs" />
+    <Compile Include="TestHarness\Logs\LogFactory.cs" />
+    <Compile Include="TestHarness\Logs\LogInfo.cs" />
+    <Compile Include="TestHarness\Logs\LogSyntaxInfo.cs" />
+    <Compile Include="TestHarness\Logs\LogSyntaxType.cs" />
+    <Compile Include="TestHarness\Logs\LogType.cs" />
+    <Compile Include="TestHarness\Logs\RowBuilders\ColumnDef.cs" />
+    <Compile Include="TestHarness\Logs\RowBuilders\ConsoleLogRowBuilder.cs" />
+    <Compile Include="TestHarness\Logs\RowBuilders\HeaderRowBuilder.cs" />
+    <Compile Include="TestHarness\Logs\RowBuilders\IRowBuilder.cs" />
+    <Compile Include="TestHarness\Logs\RowBuilders\QueryableRowBuilder.cs" />
+    <Compile Include="TestHarness\Logs\RowBuilders\RowBuilder.cs" />
+    <Compile Include="TestHarness\Logs\RowBuilders\RowBuilderFactory.cs" />
+    <Compile Include="TestHarness\Logs\SqlLog.cs" />
+    <Compile Include="TestHarness\Logs\Sql\SqlBuilder.cs" />
+    <Compile Include="TestHarness\Logs\Sql\SqlColumnNameTypeListBuilder.cs" />
+    <Compile Include="TestHarness\Logs\StatementTemplate.cs" />
+    <Compile Include="TestHarness\Logs\StatementTemplateType.cs" />
+    <Compile Include="TestHarness\Logs\TextLog.cs" />
+    <Compile Include="TestHarness\Outputs\ConsoleOutput.cs" />
+    <Compile Include="TestHarness\Outputs\CredentialType.cs" />
+    <Compile Include="TestHarness\Outputs\EmailOutput.cs" />
+    <Compile Include="TestHarness\Outputs\FileOutput.cs" />
+    <Compile Include="TestHarness\Outputs\IOutputable.cs" />
+    <Compile Include="TestHarness\Outputs\OdbcOutput.cs" />
+    <Compile Include="TestHarness\Outputs\OutputCredential.cs" />
+    <Compile Include="TestHarness\Outputs\OutputFactory.cs" />
+    <Compile Include="TestHarness\Outputs\OutputInfo.cs" />
+    <Compile Include="TestHarness\Outputs\OutputType.cs" />
+    <Compile Include="TestHarness\TestExceptions\InputException.cs" />
+    <Compile Include="TestHarness\Xml\XmlElementHelper.cs" />
+    <Compile Include="TestHarness\Xml\XmlExceptionProcessor.cs" />
+    <Compile Include="TestHarness\Xml\XmlInitHelper.cs" />
+    <Compile Include="Utilities\InvalidEnumMessage.cs" />
+    <Compile Include="Utilities\Str.cs" />
+    <Compile Include="Utilities\TryHelper.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy  "..\..\$(OutDir)$(TargetFileName)"   "..\..\..\$(SolutionName)\Deploy\" /Y  /Q &lt;NUL:</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>REM This needs to be placed in the first project on the dependency list
+rmdir  "..\..\..\$(SolutionName)\Deploy\" /s  /Q &lt;NUL:</PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
