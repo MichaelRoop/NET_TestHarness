@@ -2,7 +2,7 @@
 
 namespace Ca.Roop.Utilities {
 
-class Str {
+public class Str {
 
     /// <summary>
     /// Does a safe call to an object's ToString method. If the object is null, "null" is 
