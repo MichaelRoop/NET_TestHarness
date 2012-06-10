@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.Serialization;
 
 namespace ChkUtils {
     
     /// <summary>
-    /// Common exception to be used with error wrapping library
+    /// Common exception to be used with error wrapping library. This object is only used as
+    /// a vehicle to hold the ErrReport with the original data. It was derived from exception
+    /// to enable it to be caught and rethrown in the Wrap methods
     /// </summary>
+    /// <author>Michael Roop</author>
     public class ErrReportException : Exception {
 
         #region Data
@@ -32,25 +31,46 @@ namespace ChkUtils {
 
         #region Constructors
 
-
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public ErrReportException ()
             : base () {
             this.report  = new ErrReport();
         }
 
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="report">The error report object</param>
         public ErrReportException (ErrReport report)
             : base () {
                 this.report = report;
         }
 
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="code">Error code</param>
+        /// <param name="atClass">Class of origine</param>
+        /// <param name="atMethod">Method of origine</param>
+        /// <param name="msg">Error message</param>
+        /// <param name="e">Exception of origine</param>
         public ErrReportException (int code, string atClass, string atMethod, string msg, Exception e)
             : this (new ErrReport (code, atClass, atMethod, msg, e)) {
         }
 
 
-        public ErrReportException (int code, string atClass, string atMethod, string msg)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="code">Error code</param>
+        /// <param name="atClass">Class of origine</param>
+        /// <param name="atMethod">Method of origine</param>
+        /// <param name="msg">Error message</param>
+        public ErrReportException(int code, string atClass, string atMethod, string msg)
             : this (code, atClass, atMethod, msg, null) {
         }
 

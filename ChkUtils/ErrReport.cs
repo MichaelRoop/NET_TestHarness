@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using ChkUtils.ExceptionParsers;
 
@@ -22,8 +20,6 @@ namespace ChkUtils {
 
         private string msg = "";
 
-        //private Exception atException = null;
-
         private StringBuilder stackTrace = new StringBuilder();
 
         #endregion
@@ -37,9 +33,6 @@ namespace ChkUtils {
             get { 
                 return this.code;
             }
-            set { 
-                this.code = value; 
-            }
         }
 
         /// <summary>
@@ -49,9 +42,6 @@ namespace ChkUtils {
             get {
                 return this.atClass;
             }
-            set {
-                this.atClass = value;
-            }
         }
 
         /// <summary>
@@ -60,9 +50,6 @@ namespace ChkUtils {
         public string AtMethod {
             get {
                 return this.atMethod;
-            }
-            set {
-                this.atMethod = value;
             }
         }
 
@@ -78,7 +65,6 @@ namespace ChkUtils {
             }
         }
         
-
         /// <summary>
         /// The stack trace
         /// </summary>
@@ -86,24 +72,7 @@ namespace ChkUtils {
             get {
                 return this.stackTrace.ToString();
             }
-            //set {
-            //    this.msg = value;
-            //}
         }
-
-
-
-        ///// <summary>
-        ///// The originating Exception
-        ///// </summary>
-        //public Exception AtException {
-        //    get {
-        //        return this.atException;
-        //    }
-        //    set {
-        //        this.atException = value;
-        //    }
-        //}
 
         #endregion
 
@@ -129,13 +98,13 @@ namespace ChkUtils {
             this.atClass = atClass;
             this.atMethod = atMethod;
             this.msg = msg;
-            //this.atException = atException;
 
+            // Translate any exception information to string but do not store the exception
             if (atException != null) {
                 IExceptionParser parser = ExceptionParserFactory.Get(atException);
                 this.stackTrace
-                    .AppendLine(parser.GetInfo().Name)
-                    .AppendLine(parser.GetInfo().Msg);
+                    .AppendLine()
+                    .AppendLine(String.Format("{0} : {1}", parser.GetInfo().Name, parser.GetInfo().Msg));
 
                 parser.GetExtraInfoInfo().ForEach(item => this.stackTrace.AppendLine(String.Format("{0}={1}", item.Name, item.Value)));
                 parser.GetStackFrames(true).ForEach(item => this.stackTrace.AppendLine(item));

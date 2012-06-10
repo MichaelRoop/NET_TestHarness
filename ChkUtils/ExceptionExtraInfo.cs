@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace ChkUtils {
 
+    /// <summary>
+    /// Contains key value of an extra piece of exception information for particular exceptions
+    /// </summary>
+    /// <author>Michael Roop</author>
     public class ExceptionExtraInfo {
 
         #region Data
@@ -17,12 +17,18 @@ namespace ChkUtils {
 
         #region Properties
 
+        /// <summary>
+        /// The extra exception value name
+        /// </summary>
         public string Name {
             get { 
                 return this.name; 
             }
         }
 
+        /// <summary>
+        /// The extra exception value
+        /// </summary>
         public string Value {
             get {
                 return this.value;
@@ -34,13 +40,24 @@ namespace ChkUtils {
 
         #region Constructors
 
+        /// <summary>
+        /// Default constructor in private scope to prevent usage
+        /// </summary>
+        private ExceptionExtraInfo() {
+        }
+
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="name">The exception extra value key name</param>
+        /// <param name="value">The value</param>
         public ExceptionExtraInfo(string name, string value) {
             this.name = name;
             this.value = value;
         }
 
         #endregion
-
-
+        
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using ChkUtils;
 
-//using NUnit.f
+
 
 namespace TestCases.TestNUnit {
  
@@ -31,12 +31,44 @@ namespace TestCases.TestNUnit {
             Console.WriteLine ("I have done it");
         }
 
+
+        [Test]
+        public void ToErrReportNoErrWithErrStringMethod () {
+            // Confirms that the error message formating section is not invoked unless there is actually an error
+            ErrReport err;
+            WrapErr.ToErrReport(out err, 1111, 
+                () => { 
+                    Assert.Fail("The error formating should not have been invoked"); 
+                    return "this error"; 
+                },
+                () => {
+                    this.NonExceptionAction();
+                });
+        }
+
+
+        [Test]
+        public void ToErrReportWithException() {
+            // Confirms that the error message formating section is not invoked unless there is actually an error
+            ErrReport err;
+            WrapErr.ToErrReport(out err, 1111, () => { return "The error formating has been invoked"; }, () => { 
+                new ClassTwo().DoIt(); 
+            });
+            Assert.AreEqual(1111, err.Code);
+            Assert.AreEqual("TestTests", err.AtClass);
+            Assert.AreEqual("ToErrReportWithException", err.AtMethod);
+            Assert.AreEqual("The error formating has been invoked", err.Msg);
+            Assert.IsTrue(err.StackTrace.Contains("ClassOne"));
+            Assert.IsTrue(err.StackTrace.Contains("ClassTwo"));
+        }
+
+
+
         [Test]
         public void TriggerExcepTest () {
-
             try {
 
-                WrapErr.ActionOnly(12345, "This is unexpected", () => {
+                WrapErr.ActionOnly(12345, "Unexpected Error Processing Block", () => {
                     ClassTwo cc = new ClassTwo();
                     cc.DoIt();
                 });
@@ -59,6 +91,9 @@ namespace TestCases.TestNUnit {
 
         }
 
+
+        private void NonExceptionAction() {
+        }
 
     }
 
