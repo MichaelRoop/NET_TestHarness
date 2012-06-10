@@ -33,6 +33,23 @@ namespace TestCases.TestNUnit {
 
 
         [Test]
+        public void ValidateArgTest() {
+            ErrReport err;
+            WrapErr.ToErrReport(out err, 1111, "Validate arg", () => {
+                WrapErr.ValidateParam(8888, null, "zork");
+            });
+            Assert.AreEqual(8888, err.Code);
+            Assert.AreEqual("TestTests", err.AtClass);
+            Assert.AreEqual("ValidateArgTest", err.AtMethod);
+            Assert.AreEqual("Null zork Argument", err.Msg);
+            Assert.AreEqual("", err.StackTrace);
+       
+        }
+
+
+
+
+        [Test]
         public void ToErrReportNoErrWithErrStringMethod () {
             // Confirms that the error message formating section is not invoked unless there is actually an error
             ErrReport err;

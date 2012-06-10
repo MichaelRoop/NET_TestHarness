@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using ChkUtils.ExceptionParsers;
+using System.Reflection;
 
 namespace ChkUtils {
 
@@ -116,12 +117,38 @@ namespace ChkUtils {
         /// Constructor
         /// </summary>
         /// <param name="code">Error code</param>
+        /// <param name="method">Originating stack frame method</param>
+        /// <param name="msg">Error message</param>
+        /// <param name="atException">Originating Exception</param>
+        public ErrReport(int code, MethodBase method, string msg, Exception atException)
+            : this(code, method.DeclaringType.Name, method.Name, msg, atException) {
+        }
+
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="code">Error code</param>
         /// <param name="atClass">Originating class</param>
         /// <param name="atMethod">Originating method</param>
         /// <param name="msg">Error message</param>
         public ErrReport (int code, string atClass, string atMethod, string msg)
             : this (code, atClass, atMethod, msg, null) {
         }
+
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="code">Error code</param>
+        /// <param name="method">Originating stack frame method</param>
+        /// <param name="msg">Error message</param>
+        public ErrReport(int code, MethodBase method, string msg)
+            : this(code, method.DeclaringType.Name, method.Name, msg, null) {
+        }
+
+
+        //
 
         #endregion
     }

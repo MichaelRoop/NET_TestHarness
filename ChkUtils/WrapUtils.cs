@@ -161,14 +161,70 @@ namespace ChkUtils {
             try {
                 // Always needs to be called directly from one of the wrap objects to get the right number of the stack frame
                 // This will give us the class and method names in which the wrap method is used
-                MethodBase method = new StackTrace().GetFrame(2).GetMethod();
-                return new ErrReport(code, method.DeclaringType.Name, method.Name, msg, e);
+//                return new ErrReport(code, new StackTrace().GetFrame(2).GetMethod(), msg, e);
+                return new ErrReport(code, WrapErr.FirstNonWrappedMethod(), msg, e);
             }
             catch (Exception ex) {
                 Debug.WriteLine("{0} on call to WrapErr.GetErrReport:{1} - {2}", ex.GetType().Name, ex.Message, ex.StackTrace);
                 return new ErrReport(code, "UnknownClass", "UnknownMethod", msg, e);
             }
         }
+
+
+
+        private static ErrReport GetErrReport(int code, string msg) {
+            try {
+                // Called directly from a method in an application. One level up and no stack trace
+//                return new ErrReport(code, new StackTrace().GetFrame(1).GetMethod(), msg);
+                return new ErrReport(code, WrapErr.FirstNonWrappedMethod(), msg);
+            }
+            catch (Exception ex) {
+                Debug.WriteLine("{0} on call to WrapErr.GetErrReport:{1} - {2}", ex.GetType().Name, ex.Message, ex.StackTrace);
+                return new ErrReport(code, "UnknownClass", "UnknownMethod", msg);
+            }
+        }
+
+
+        /// <summary>
+        /// Experimental method to walk through stack until you encounter the first non ErrWrap class method that does not have the <>
+        /// </summary>
+        /// <returns></returns>
+        private static MethodBase FirstNonWrappedMethod() {
+            // Go at least one up.
+            int index = 1;
+            StackTrace st = new StackTrace();
+
+            MethodBase mb = st.GetFrame(index).GetMethod();
+            while (true) {
+
+                //Console.WriteLine("{0}  {1}  {2}", mb.DeclaringType.Name, typeof(WrapErr).Name, mb.Name);
+
+
+                if (mb.DeclaringType.Name != typeof(WrapErr).Name && !mb.Name.Contains("<")) {
+                    return mb;
+                }
+
+                ++index;
+                StackFrame sf = st.GetFrame(index);
+                if (sf == null) {
+                    return mb;
+                }
+                
+
+                MethodBase tmp = sf.GetMethod();
+                if (tmp == null) {
+                    return mb;
+                }
+                mb = tmp;
+            }
+
+
+
+
+        }
+
+
+
 
         #endregion
         

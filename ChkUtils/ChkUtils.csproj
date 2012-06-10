@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="ErrReport.cs" />
     <Compile Include="ErrReportException.cs" />
+    <Compile Include="ErrValidator.cs" />
     <Compile Include="ExceptionExtraInfo.cs" />
     <Compile Include="ExceptionInfo.cs" />
     <Compile Include="ExceptionParsers\DefaultExceptionParser.cs" />
