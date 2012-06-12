@@ -33,6 +33,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,8 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ErrReport.cs" />
-    <Compile Include="ErrReportException.cs" />
+    <Compile Include="ErrOjbects\ErrReport.cs" />
+    <Compile Include="ErrOjbects\ErrReportException.cs" />
     <Compile Include="ErrValidator.cs" />
     <Compile Include="ExceptionExtraInfo.cs" />
     <Compile Include="ExceptionInfo.cs" />
@@ -51,7 +53,9 @@
     <Compile Include="ExceptionParsers\IExceptionParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WrapActionToErrException.cs" />
+    <Compile Include="WrapActionToErrFaultException.cs.cs" />
     <Compile Include="WrapErrToErrReport.cs" />
+    <Compile Include="WrapFuncToErrException.cs" />
     <Compile Include="WrapUtils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ChkUtils.ErrObjects;
 
 namespace ChkUtils {
 
@@ -112,7 +113,7 @@ namespace ChkUtils {
 
         #endregion
 
-        #region Action Only And Return Value
+        #region Func Only
 
         /// <summary>
         /// Wrap an action and report the results with an ErrReport object. No exceptions will 
@@ -169,7 +170,7 @@ namespace ChkUtils {
         
         #endregion
 
-        #region Action And Finally And Return Value
+        #region Func And Finally
 
         /// <summary>
         /// Wrap an action and report the results with an ErrReport object. No exceptions will 

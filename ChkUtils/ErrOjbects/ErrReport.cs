@@ -2,13 +2,15 @@
 using System.Text;
 using ChkUtils.ExceptionParsers;
 using System.Reflection;
+using System.Runtime.Serialization;
 
-namespace ChkUtils {
+namespace ChkUtils.ErrObjects {
 
     /// <summary>
     /// Object to hold error information
     /// </summary>
     /// <author>Michael Roop</author>
+    [DataContract]
     public class ErrReport {
 
         #region Data
@@ -30,33 +32,47 @@ namespace ChkUtils {
         /// <summary>
         /// The error code
         /// </summary>
+        [DataMember]
         public int Code {
-            get { 
+            get {
                 return this.code;
+            }
+            set {
+                this.code = value;
             }
         }
 
         /// <summary>
         /// The originating class for the error
         /// </summary>
+        [DataMember]
         public string AtClass {
             get {
                 return this.atClass;
             }
+            set {
+                this.atClass = value;
+            }
         }
+        
 
         /// <summary>
         /// The originating class for the error
         /// </summary>
+        [DataMember]
         public string AtMethod {
             get {
                 return this.atMethod;
+            }
+            set {
+                this.atMethod = value;
             }
         }
 
         /// <summary>
         /// The error message
         /// </summary>
+        [DataMember]
         public string Msg {
             get {
                 return this.msg;
@@ -65,13 +81,18 @@ namespace ChkUtils {
                 this.msg = value;
             }
         }
-        
+
         /// <summary>
         /// The stack trace
         /// </summary>
+        [DataMember]
         public string StackTrace {
             get {
                 return this.stackTrace.ToString();
+            }
+            set {
+                this.stackTrace.Clear();
+                this.stackTrace.Append(value);
             }
         }
 
@@ -82,7 +103,7 @@ namespace ChkUtils {
         /// <summary>
         /// Constructor for object with no error (success)
         /// </summary>
-        public ErrReport () {
+        public ErrReport() {
         }
 
 
@@ -94,13 +115,14 @@ namespace ChkUtils {
         /// <param name="atMethod">Originating method</param>
         /// <param name="msg">Error message</param>
         /// <param name="atException">Originating Exception</param>
-        public ErrReport (int code, string atClass, string atMethod, string msg, Exception atException) {
+        public ErrReport(int code, string atClass, string atMethod, string msg, Exception atException) {
             this.code = code;
             this.atClass = atClass;
             this.atMethod = atMethod;
             this.msg = msg;
 
-            // Translate any exception information to string but do not store the exception
+            // Translate any exception information to string but do not store the exception. This allows the 
+            // object to be serialized and passed to a FaultException that can used to traverse WCF boundries
             if (atException != null) {
                 IExceptionParser parser = ExceptionParserFactory.Get(atException);
                 this.stackTrace
@@ -132,8 +154,8 @@ namespace ChkUtils {
         /// <param name="atClass">Originating class</param>
         /// <param name="atMethod">Originating method</param>
         /// <param name="msg">Error message</param>
-        public ErrReport (int code, string atClass, string atMethod, string msg)
-            : this (code, atClass, atMethod, msg, null) {
+        public ErrReport(int code, string atClass, string atMethod, string msg)
+            : this(code, atClass, atMethod, msg, null) {
         }
 
 
@@ -146,9 +168,6 @@ namespace ChkUtils {
         public ErrReport(int code, MethodBase method, string msg)
             : this(code, method.DeclaringType.Name, method.Name, msg, null) {
         }
-
-
-        //
 
         #endregion
     }

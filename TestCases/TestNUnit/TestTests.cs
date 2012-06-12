@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using ChkUtils;
+using ChkUtils.ErrObjects;
 
 
 
@@ -36,7 +37,7 @@ namespace TestCases.TestNUnit {
         public void ValidateArgTest() {
             ErrReport err;
             WrapErr.ToErrReport(out err, 1111, "Validate arg", () => {
-                WrapErr.ValidateParam(8888, null, "zork");
+                WrapErr.ValidateParam(null, "zork", 8888);
             });
             Assert.AreEqual(8888, err.Code);
             Assert.AreEqual("TestTests", err.AtClass);
@@ -85,7 +86,7 @@ namespace TestCases.TestNUnit {
         public void TriggerExcepTest () {
             try {
 
-                WrapErr.ActionOnly(12345, "Unexpected Error Processing Block", () => {
+                WrapErr.ToErrorReportException(12345, "Unexpected Error Processing Block", () => {
                     ClassTwo cc = new ClassTwo();
                     cc.DoIt();
                 });

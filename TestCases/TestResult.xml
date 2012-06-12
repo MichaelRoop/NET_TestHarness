@@ -1,21 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--This file represents the results of running a test suite-->
-<test-results name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\TestCases.csproj" total="5" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2012-06-10" time="01:40:37">
+<test-results name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\TestCases.csproj" total="5" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2012-06-12" time="19:53:45">
   <environment nunit-version="2.6.0.12051" clr-version="2.0.50727.5448" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases" machine-name="MAIN-PC" user="Michael" user-domain="MAIN-PC" />
   <culture-info current-culture="en-US" current-uiculture="en-US" />
-  <test-suite type="Project" name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\TestCases.csproj" executed="True" result="Success" success="True" time="0.296" asserts="0">
+  <test-suite type="Project" name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\TestCases.csproj" executed="True" result="Success" success="True" time="0.282" asserts="0">
     <results>
-      <test-suite type="Assembly" name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\bin\Debug\TestCases.dll" executed="True" result="Success" success="True" time="0.288" asserts="0">
+      <test-suite type="Assembly" name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\bin\Debug\TestCases.dll" executed="True" result="Success" success="True" time="0.276" asserts="0">
         <results>
-          <test-suite type="Namespace" name="TestCases" executed="True" result="Success" success="True" time="0.288" asserts="0">
+          <test-suite type="Namespace" name="TestCases" executed="True" result="Success" success="True" time="0.276" asserts="0">
             <results>
-              <test-suite type="Namespace" name="TestNUnit" executed="True" result="Success" success="True" time="0.287" asserts="0">
+              <test-suite type="Namespace" name="TestNUnit" executed="True" result="Success" success="True" time="0.275" asserts="0">
                 <results>
-                  <test-suite type="TestFixture" name="TestTests" executed="True" result="Success" success="True" time="0.283" asserts="0">
+                  <test-suite type="TestFixture" name="TestTests" executed="True" result="Success" success="True" time="0.265" asserts="0">
                     <results>
-                      <test-case name="TestCases.TestNUnit.TestTests.ToErrReportNoErrWithErrStringMethod" executed="True" result="Success" success="True" time="0.090" asserts="0" />
-                      <test-case name="TestCases.TestNUnit.TestTests.ToErrReportWithException" executed="True" result="Success" success="True" time="0.132" asserts="6" />
-                      <test-case name="TestCases.TestNUnit.TestTests.TriggerExcepTest" executed="True" result="Success" success="True" time="0.007" asserts="0" />
+                      <test-case name="TestCases.TestNUnit.TestTests.ToErrReportNoErrWithErrStringMethod" executed="True" result="Success" success="True" time="0.088" asserts="0" />
+                      <test-case name="TestCases.TestNUnit.TestTests.ToErrReportWithException" executed="True" result="Success" success="True" time="0.136" asserts="6" />
+                      <test-case name="TestCases.TestNUnit.TestTests.TriggerExcepTest" executed="True" result="Success" success="True" time="0.002" asserts="0" />
                       <test-case name="TestCases.TestNUnit.TestTests.TriggerNUnit" executed="True" result="Success" success="True" time="0.000" asserts="0" />
                       <test-case name="TestCases.TestNUnit.TestTests.ValidateArgTest" executed="True" result="Success" success="True" time="0.001" asserts="5" />
                     </results>

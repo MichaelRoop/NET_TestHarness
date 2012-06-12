@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ChkUtils {
+namespace ChkUtils.ErrObjects {
     
     /// <summary>
     /// Common exception to be used with error wrapping library. This object is only used as
