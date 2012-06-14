@@ -7,6 +7,9 @@ using System.ServiceModel;
 
 namespace ChkUtils {
 
+    public delegate void LogingMsgDelegate(ErrReport errReport);
+
+
     /// <summary>
     /// Partial class implementation with catch action to ErrReportFaultException
     /// </summary>
@@ -23,19 +26,35 @@ namespace ChkUtils {
         /// <param name="msg">The error message</param>
         /// <param name="action">The action to invoke</param>
         public static void ToErrorReportFaultException(int code, string msg, Action action) {
+            WrapErr.ToErrorReportFaultException(code, msg, (report) => { /* no logging */ }, action);
+        }
+
+
+        public static void ToErrorReportFaultException(int code, string msg, LogingMsgDelegate logAction, Action action) {
             try {
                 action.Invoke();
             }
-            catch (FaultException<ErrReport>) {
+            catch (FaultException<ErrReport> e) {
+                WrapErr.SafeAction(() => logAction.Invoke(e.Detail));
                 throw;
             }
             catch (ErrReportException e) {
+                WrapErr.SafeAction(() => logAction.Invoke(e.Report));
                 throw new FaultException<ErrReport>(e.Report);
             }
             catch (Exception e) {
+                WrapErr.SafeAction(() => {
+                    ErrReport err = WrapErr.GetErrReport(code, msg, e);
+                    WrapErr.SafeAction(() => logAction.Invoke(err));
+                    throw new FaultException<ErrReport>(err);
+                });
+
                 throw new FaultException<ErrReport>(WrapErr.GetErrReport(code, msg, e));
             }
         }
+
+
+
 
 
         /// <summary>
