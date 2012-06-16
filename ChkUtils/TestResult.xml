@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="U:\Data\Data\Programming\Projects\NET_TestHarness\ChkUtils\ChkUtils.csproj" total="0" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2012-06-15" time="23:18:20">
+  <environment nunit-version="2.6.0.12051" clr-version="2.0.50727.5448" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="U:\Data\Data\Programming\Projects\NET_TestHarness\ChkUtils" machine-name="MAIN-PC" user="Michael" user-domain="MAIN-PC" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="Project" name="U:\Data\Data\Programming\Projects\NET_TestHarness\ChkUtils\ChkUtils.csproj" executed="True" result="Inconclusive" success="False" time="0.000" asserts="0">
+    <results>
+      <test-suite type="Assembly" name="U:\Data\Data\Programming\Projects\NET_TestHarness\ChkUtils\bin\Debug\ChkUtils.dll" executed="True" result="Inconclusive" success="False" time="0.000" asserts="0" />
+    </results>
+  </test-suite>
+</test-results>

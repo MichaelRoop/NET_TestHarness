@@ -57,7 +57,11 @@
     <Compile Include="WrapErrToErrReport.cs" />
     <Compile Include="WrapFuncToErrException.cs" />
     <Compile Include="WrapFuncToErrFaultException.cs.cs" />
+    <Compile Include="WrapInitializersMethods.cs" />
     <Compile Include="WrapUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

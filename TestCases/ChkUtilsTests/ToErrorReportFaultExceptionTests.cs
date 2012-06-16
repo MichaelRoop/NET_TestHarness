@@ -33,14 +33,17 @@ namespace TestCases.ChkUtilsTests {
         #region Logging delegate tests
 
         [Test]
-        public void FaultException_LogingDelegateTest() {
+        public void LogingDelegateTest() {
+
+            WrapErr.InitialiseOnExceptionLogDelegate(this.LogDelegate);
+
             try {
-                WrapErr.ToLoggedErrorReportFaultException(12345, "Big Booboo", this.LogDelegate, () => {
+                WrapErr.ToErrorReportFaultException(12345, "Big Booboo", () => {
                     new TestHelpers.OuterClass().DoNestedException();
                 });
             }
             catch (FaultException<ErrReport> e) {
-                this.Validate(e.Detail, 12345, "FaultException_LogingDelegateTest", "Big Booboo");
+                this.Validate(e.Detail, 12345, "LogingDelegateTest", "Big Booboo");
                 Assert.IsTrue(this.logged, "The logging delegate did not get invoked");
                 return;
             }
@@ -49,15 +52,17 @@ namespace TestCases.ChkUtilsTests {
 
 
         [Test]
-        public void FaultException_LogingAndFormatingDelegateTest() {
+        public void LogingAndFormatingDelegateTest() {
+
+            WrapErr.InitialiseOnExceptionLogDelegate(this.LogDelegate);
+
             try {
-                WrapErr.ToLoggedErrorReportFaultException(9999,
+                WrapErr.ToErrorReportFaultException(9999,
                     () => { this.msgFormated = true; return "Oops"; }, 
-                    this.LogDelegate,
                     () => { new TestHelpers.OuterClass().DoNestedException(); });
             }
             catch (FaultException<ErrReport> e) {
-                this.Validate(e.Detail, 9999, "FaultException_LogingAndFormatingDelegateTest", "Oops");
+                this.Validate(e.Detail, 9999, "LogingAndFormatingDelegateTest", "Oops");
                 Assert.IsTrue(this.msgFormated, "The message formating delegate did not get invoked");
                 return;
             }
@@ -86,6 +91,7 @@ namespace TestCases.ChkUtilsTests {
 
 
         private void LogDelegate(ErrReport report) {
+            Console.WriteLine("LogDelegateInvoked:{0} {1}.{2} : {3}", report.Code, report.AtClass, report.AtMethod, report.Msg);
             this.logged = true;
         }
 

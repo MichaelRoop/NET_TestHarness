@@ -24,7 +24,7 @@ namespace ChkUtils {
 
         /// <summary>
         /// Wrap a function returning T to catch and convert exceptions not previously caught and 
-        /// converted to FaultException<ErrReport> to traverse WCF boundries. Invoke log action
+        /// converted to FaultException<ErrReport> to traverse WCF boundries.
         /// </summary>
         /// <typeparam name="T">The return type of the function</typeparam>
         /// <param name="code">The error code</param>
@@ -32,36 +32,17 @@ namespace ChkUtils {
         /// <param name="action">The action to invoke</param>
         /// <returns>A T value</returns>
         public static T ToErrorReportFaultException<T>(int code, string msg, Func<T> func) {
-            return WrapErr.ToLoggedErrorReportFaultException(code, msg, (report) => { /* no logging */ }, func);
-        }
-
-
-        /// <summary>
-        /// Wrap a function returning T to catch and convert exceptions not previously caught and 
-        /// converted to FaultException<ErrReport> to traverse WCF boundries. Invoke log action
-        /// </summary>
-        /// <typeparam name="T">The return type of the function</typeparam>
-        /// <param name="code">The error code</param>
-        /// <param name="msg">The error message</param>
-        /// <param name="logAction">The log action to invoke on error</param>
-        /// <param name="func">The function to invoke</param>
-        /// <returns>A T value</returns>
-        public static T ToLoggedErrorReportFaultException<T>(int code, string msg, LogingMsgDelegate logAction, Func<T> func) {
             try {
                 return func.Invoke();
             }
-            catch (FaultException<ErrReport> e) {
-                WrapErr.SafeAction(() => logAction.Invoke(e.Detail));
+            catch (FaultException<ErrReport>) {
                 throw;
             }
             catch (ErrReportException e) {
-                WrapErr.SafeAction(() => logAction.Invoke(e.Report));
                 throw new FaultException<ErrReport>(e.Report);
             }
             catch (Exception e) {
-                ErrReport err = WrapErr.GetErrReport(code, msg, e);
-                WrapErr.SafeAction(() => logAction.Invoke(err));
-                throw new FaultException<ErrReport>(err);
+                throw new FaultException<ErrReport>(WrapErr.GetErrReport(code, msg, e));
             }
         }
 
@@ -77,38 +58,17 @@ namespace ChkUtils {
         /// <param name="func">The function to invoke</param>
         /// <returns>A T value</returns>
         public static T ToErrorReportFaultException<T>(int code, Func<string> errMsgFunc, Func<T> func) {
-            return WrapErr.ToLoggedErrorReportFaultException(code, errMsgFunc, (report) => { /* No logging */ }, func);
-        }
-
-
-        /// <summary>
-        /// Wrap a function to catch and convert exceptions not previously caught and converted to 
-        /// FaultException<ErrReport> to traverse WCF boundries. Efficient form where error 
-        /// message formating Func is not invoked unless there is an error. Includes a log delegate
-        /// to push log message before sending over WCF connection
-        /// </summary>
-        /// <typeparam name="T">The return type of the function</typeparam>
-        /// <param name="code">The error code</param>
-        /// <param name="errMsgFunc">The error message on error function</param>
-        /// <param name="logAction">The log action to invoke on error</param>
-        /// <param name="func">The function to invoke</param>
-        /// <returns>A T value</returns>
-        public static T ToLoggedErrorReportFaultException<T>(int code, Func<string> errMsgFunc, LogingMsgDelegate logAction, Func<T> func) {
             try {
                 return func.Invoke();
             }
-            catch (FaultException<ErrReport> e) {
-                WrapErr.SafeAction(() => logAction.Invoke(e.Detail));
+            catch (FaultException<ErrReport>) {
                 throw;
             }
             catch (ErrReportException e) {
-                WrapErr.SafeAction(() => logAction.Invoke(e.Report));
                 throw new FaultException<ErrReport>(e.Report);
             }
             catch (Exception e) {
-                ErrReport err = WrapErr.GetErrReport(code, WrapErr.SafeAction(errMsgFunc), e);
-                WrapErr.SafeAction(() => logAction.Invoke(err));
-                throw new FaultException<ErrReport>(err);
+                throw new FaultException<ErrReport>(WrapErr.GetErrReport(code, WrapErr.SafeAction(errMsgFunc), e));
             }
         }
 
@@ -127,36 +87,17 @@ namespace ChkUtils {
         /// <param name="func">The function to invoke</param>
         /// <param name="finallyAction">The finally action</param>
         public static T ToErrorReportFaultException<T>(int code, string msg, Func<T> func, Action finallyAction) {
-            return WrapErr.ToLoggedErrorReportFaultException(code, msg, (report) => { /* no logging */ }, func, finallyAction);
-        }
-
-
-        /// <summary>
-        /// Wrap a function to catch and convert exceptions not previously caught and 
-        /// converted to FaultException<ErrReport> to traverse WCF boundries. Invoke log action
-        /// </summary>
-        /// <typeparam name="T">The return type of the function</typeparam>
-        /// <param name="code">The error code</param>
-        /// <param name="msg">The error message</param>
-        /// <param name="logAction">The log action to invoke on error</param>
-        /// <param name="func">The function to invoke</param>
-        /// <param name="finallyAction">The finally action</param>
-        public static T ToLoggedErrorReportFaultException<T>(int code, string msg, LogingMsgDelegate logAction, Func<T> func, Action finallyAction) {
             try {
                 return func.Invoke();
             }
-            catch (FaultException<ErrReport> e) {
-                WrapErr.SafeAction(() => logAction.Invoke(e.Detail));
+            catch (FaultException<ErrReport>) {
                 throw;
             }
             catch (ErrReportException e) {
-                WrapErr.SafeAction(() => logAction.Invoke(e.Report));
                 throw new FaultException<ErrReport>(e.Report);
             }
             catch (Exception e) {
-                ErrReport err = WrapErr.GetErrReport(code, msg, e);
-                WrapErr.SafeAction(() => logAction.Invoke(err));
-                throw new FaultException<ErrReport>(err);
+                throw new FaultException<ErrReport>(WrapErr.GetErrReport(code, msg, e));
             }
             finally {
                 WrapErr.SafeAction(finallyAction);
@@ -176,37 +117,17 @@ namespace ChkUtils {
         /// <param name="func">The function to invoke</param>
         /// <param name="finallyAction">The finally action to invoke</param>
         public static T ToErrorReportFaultException<T>(int code, Func<string> errMsgFunc, Func<T> func, Action finallyAction) {
-            return WrapErr.ToLoggedErrorReportFaultException(code, errMsgFunc, (report) => { /* No logging */ }, func, finallyAction);
-        }
-
-
-        /// <summary>
-        /// Wrap a function to catch and convert exceptions not previously caught and converted to 
-        /// FaultException<ErrReport> to traverse WCF boundries. Efficient form where error 
-        /// message formating Func is not invoked unless there is an error. Includes a log delegate
-        /// to push log message before sending over WCF connection
-        /// </summary>
-        /// <param name="code">The error code</param>
-        /// <param name="errMsgFunc">The error message on error function</param>
-        /// <param name="logAction">The log action to invoke on error</param>
-        /// <param name="func">The function to invoke</param>
-        /// <param name="finallyAction">The finally action</param>
-        public static T ToLoggedErrorReportFaultException<T>(int code, Func<string> errMsgFunc, LogingMsgDelegate logAction, Func<T> func, Action finallyAction) {
             try {
                 return func.Invoke();
             }
-            catch (FaultException<ErrReport> e) {
-                WrapErr.SafeAction(() => logAction.Invoke(e.Detail));
+            catch (FaultException<ErrReport>) {
                 throw;
             }
             catch (ErrReportException e) {
-                WrapErr.SafeAction(() => logAction.Invoke(e.Report));
                 throw new FaultException<ErrReport>(e.Report);
             }
             catch (Exception e) {
-                ErrReport err = WrapErr.GetErrReport(code, WrapErr.SafeAction(errMsgFunc), e);
-                WrapErr.SafeAction(() => logAction.Invoke(err));
-                throw new FaultException<ErrReport>(err);
+                throw new FaultException<ErrReport>(WrapErr.GetErrReport(code, WrapErr.SafeAction(errMsgFunc), e));
             }
             finally {
                 WrapErr.SafeAction(finallyAction);

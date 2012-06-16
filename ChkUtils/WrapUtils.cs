@@ -145,45 +145,6 @@ namespace ChkUtils {
                 return "NoClassName";
             }
         }
-        
-        #endregion
-
-        #region Private Methods
-
-        /// <summary>
-        /// Helper to create an error report object with the class and method names of calling method that
-        /// had an exeption occur. Names are found by relection
-        /// </summary>
-        /// <param name="code">Unique error code</param>
-        /// <param name="msg">Error message</param>
-        /// <param name="e">Exception of origine</param>
-        /// <returns>And error report object</returns>
-        private static ErrReport GetErrReport(int code, string msg, Exception e) {
-            try {
-                // Always needs to be called directly from one of the wrap objects to get the right number of the stack frame
-                // This will give us the class and method names in which the wrap method is used
-//                return new ErrReport(code, new StackTrace().GetFrame(2).GetMethod(), msg, e);
-                return new ErrReport(code, WrapErr.FirstNonWrappedMethod(), msg, e);
-            }
-            catch (Exception ex) {
-                Debug.WriteLine("{0} on call to WrapErr.GetErrReport:{1} - {2}", ex.GetType().Name, ex.Message, ex.StackTrace);
-                return new ErrReport(code, "UnknownClass", "UnknownMethod", msg, e);
-            }
-        }
-
-
-
-        private static ErrReport GetErrReport(int code, string msg) {
-            try {
-                // Called directly from a method in an application. One level up and no stack trace
-//                return new ErrReport(code, new StackTrace().GetFrame(1).GetMethod(), msg);
-                return new ErrReport(code, WrapErr.FirstNonWrappedMethod(), msg);
-            }
-            catch (Exception ex) {
-                Debug.WriteLine("{0} on call to WrapErr.GetErrReport:{1} - {2}", ex.GetType().Name, ex.Message, ex.StackTrace);
-                return new ErrReport(code, "UnknownClass", "UnknownMethod", msg);
-            }
-        }
 
 
         /// <summary>
@@ -199,8 +160,6 @@ namespace ChkUtils {
             while (true) {
 
                 //Console.WriteLine("{0}  {1}  {2}", mb.DeclaringType.Name, typeof(WrapErr).Name, mb.Name);
-
-
                 if (mb.DeclaringType.Name != typeof(WrapErr).Name && !mb.Name.Contains("<")) {
                     return mb;
                 }
@@ -210,7 +169,6 @@ namespace ChkUtils {
                 if (sf == null) {
                     return mb;
                 }
-                
 
                 MethodBase tmp = sf.GetMethod();
                 if (tmp == null) {
@@ -218,15 +176,61 @@ namespace ChkUtils {
                 }
                 mb = tmp;
             }
+        }
 
+        #endregion
 
+        #region ErrReport Helper Methods
 
-
+        /// <summary>
+        /// Helper to create an error report object with the class and method names of calling method that
+        /// had an exeption occur. Names are found by relection
+        /// </summary>
+        /// <param name="code">Unique error code</param>
+        /// <param name="msg">Error message</param>
+        /// <param name="e">Exception of origine</param>
+        /// <returns>And error report object</returns>
+        private static ErrReport GetErrReport(int code, string msg, Exception e) {
+            try {
+                // Always needs to be called directly from one of the wrap objects to get the right number of the stack frame
+                // This will give us the class and method names in which the wrap method is used
+//                return new ErrReport(code, new StackTrace().GetFrame(2).GetMethod(), msg, e);
+                return WrapErr.LogErr(new ErrReport(code, WrapErr.FirstNonWrappedMethod(), msg, e));
+            }
+            catch (Exception ex) {
+                Debug.WriteLine("{0} on call to WrapErr.GetErrReport:{1} - {2}", ex.GetType().Name, ex.Message, ex.StackTrace);
+                return WrapErr.LogErr(new ErrReport(code, "UnknownClass", "UnknownMethod", msg, e));
+            }
         }
 
 
 
+        private static ErrReport GetErrReport(int code, string msg) {
+            try {
+                // Called directly from a method in an application. One level up and no stack trace
+//                return new ErrReport(code, new StackTrace().GetFrame(1).GetMethod(), msg);
+                return WrapErr.LogErr(new ErrReport(code, WrapErr.FirstNonWrappedMethod(), msg));
+            }
+            catch (Exception ex) {
+                Debug.WriteLine("{0} on call to WrapErr.GetErrReport:{1} - {2}", ex.GetType().Name, ex.Message, ex.StackTrace);
+                return WrapErr.LogErr(new ErrReport(code, "UnknownClass", "UnknownMethod", msg));
+            }
+        }
 
+
+        /// <summary>
+        /// Log the ErrReport
+        /// </summary>
+        /// <param name="err"></param>
+        private static ErrReport LogErr(ErrReport err) {
+            lock (WrapErr.onExceptionLogLock) {
+                if (WrapErr.onExceptionLog != null) {
+                    WrapErr.SafeAction(() => WrapErr.onExceptionLog.Invoke(err));
+                }
+            }
+            return err;
+        }
+        
         #endregion
         
     }
