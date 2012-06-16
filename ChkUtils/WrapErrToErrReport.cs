@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ChkUtils.ErrObjects;
+using System.ServiceModel;
 
 namespace ChkUtils {
 
@@ -29,6 +30,9 @@ namespace ChkUtils {
             catch (ErrReportException e) {
                 report = e.Report;
             }
+            catch (FaultException<ErrReport> e) {
+                report = e.Detail;
+            }
             catch (Exception e) {
                 report = WrapErr.GetErrReport(code, msg, e);
             }
@@ -49,6 +53,9 @@ namespace ChkUtils {
             }
             catch (ErrReportException e) {
                 report = e.Report;
+            }
+            catch (FaultException<ErrReport> e) {
+                report = e.Detail;
             }
             catch (Exception e) {
                 report = WrapErr.GetErrReport(code, WrapErr.SafeAction(errMsgFunc), e);
@@ -76,6 +83,9 @@ namespace ChkUtils {
             catch (ErrReportException e) {
                 report = e.Report;
             }
+            catch (FaultException<ErrReport> e) {
+                report = e.Detail;
+            }
             catch (Exception e) {
                 report = WrapErr.GetErrReport(code, msg, e);
             }
@@ -102,6 +112,9 @@ namespace ChkUtils {
             }
             catch (ErrReportException e) {
                 report = e.Report;
+            }
+            catch (FaultException<ErrReport> e) {
+                report = e.Detail;
             }
             catch (Exception e) {
                 report = WrapErr.GetErrReport(code, WrapErr.SafeAction(errMsgFunc), e);
@@ -135,6 +148,10 @@ namespace ChkUtils {
                 report = e.Report;
                 return default(T);
             }
+            catch (FaultException<ErrReport> e) {
+                report = e.Detail;
+                return default(T);
+            }
             catch (Exception e) {
                 report = WrapErr.GetErrReport(code, msg, e);
                 return default(T);
@@ -160,6 +177,10 @@ namespace ChkUtils {
             }
             catch (ErrReportException e) {
                 report = e.Report;
+                return default(T);
+            }
+            catch (FaultException<ErrReport> e) {
+                report = e.Detail;
                 return default(T);
             }
             catch (Exception e) {
@@ -193,6 +214,10 @@ namespace ChkUtils {
                 report = e.Report;
                 return default(T);
             }
+            catch (FaultException<ErrReport> e) {
+                report = e.Detail;
+                return default(T);
+            }
             catch (Exception e) {
                 report = WrapErr.GetErrReport(code, msg, e);
                 return default(T);
@@ -222,6 +247,10 @@ namespace ChkUtils {
             }
             catch (ErrReportException e) {
                 report = e.Report;
+                return default(T);
+            }
+            catch (FaultException<ErrReport> e) {
+                report = e.Detail;
                 return default(T);
             }
             catch (Exception e) {

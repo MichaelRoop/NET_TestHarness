@@ -25,6 +25,7 @@ namespace TestCases {
             public void DoException(string name) {
                 throw new Exception("Throw from InnerClass.DoIt() with name:" + name);  // @ Line 26 DO NOT CHANGE
             }
+
         }
 
         /// <summary>
@@ -45,6 +46,10 @@ namespace TestCases {
             /// <param name="name"></param>
             public void DoException(string name) {
                 throw new Exception("Throw from OuterClass.DoIt() with name:" + name);
+            }
+
+            public void DoNestedFaultException() {
+                WrapErr.ToErrorReportFaultException(9191, "Unexpected error", () => new InnerClass().DoException("George"));
             }
         }
 

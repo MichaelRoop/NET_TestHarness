@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
   <TopNode>[0-1000]U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\TestCases.csproj</TopNode>
-  <SelectedNode>[0-1014]U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\bin\Debug\TestCases.dll</SelectedNode>
+  <SelectedNode>[0-1046]TestCases.ChkUtilsTests.ToErrReportTests.FaultExceptionCaught</SelectedNode>
   <ExcludeCategories>false</ExcludeCategories>
   <Nodes>
     <Node UniqueName="[0-1000]U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\TestCases.csproj" Expanded="true" />
-    <Node UniqueName="[0-1014]U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\bin\Debug\TestCases.dll" Expanded="true" />
-    <Node UniqueName="[0-1015]TestCases" Expanded="true" />
-    <Node UniqueName="[0-1016]TestCases.ChkUtilsTests" Expanded="true" />
-    <Node UniqueName="[0-1009]TestCases.ChkUtilsTests.ToErrorReportExceptionTests" Expanded="true" />
+    <Node UniqueName="[0-1047]U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\bin\Debug\TestCases.dll" Expanded="true" />
+    <Node UniqueName="[0-1048]TestCases" Expanded="true" />
+    <Node UniqueName="[0-1049]TestCases.ChkUtilsTests" Expanded="true" />
     <Node UniqueName="[0-1003]TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests" Expanded="true" />
-    <Node UniqueName="[0-1011]TestCases.ChkUtilsTests.ToErrReportTests" Expanded="true" />
+    <Node UniqueName="[0-1041]TestCases.ChkUtilsTests.ToErrReportTests" Expanded="true" />
     <Node UniqueName="[0-1006]TestCases.ChkUtilsTests.ValidatorTests" Expanded="true" />
     <Node UniqueName="[0-1001]TestCases.TestHelperTests" Expanded="true" />
   </Nodes>

@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="ErrOjbects\ErrReport.cs" />
     <Compile Include="ErrOjbects\ErrReportException.cs" />
+    <Compile Include="ErrOjbects\ExceptionType.cs" />
     <Compile Include="ErrValidator.cs" />
     <Compile Include="ExceptionExtraInfo.cs" />
     <Compile Include="ExceptionInfo.cs" />
