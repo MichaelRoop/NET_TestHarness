@@ -51,6 +51,21 @@ namespace TestCases {
             public void DoNestedFaultException() {
                 WrapErr.ToErrorReportFaultException(9191, "Unexpected error", () => new InnerClass().DoException("George"));
             }
+
+            public void DoNestedErrReportException() {
+                WrapErr.ToErrorReportException(9292, "Unexpected error", () => new InnerClass().DoException("Ziffle"));
+            }
+
+            public int RetDoNestedFaultException() {
+                WrapErr.ToErrorReportFaultException(9191, "Unexpected error", () => new InnerClass().DoException("George"));
+                return 1;
+            }
+
+            public int RetDoNestedErrReportException() {
+                WrapErr.ToErrorReportException(9292, "Unexpected error", () => new InnerClass().DoException("Ziffle"));
+                return 1;
+            }
+
         }
 
         #endregion
@@ -59,6 +74,9 @@ namespace TestCases {
         public static void NonExceptionAction() {
         }
 
+        public static int NonExceptionFunc() {
+            return 100;
+        }
 
 
         #region Test Wrappers
