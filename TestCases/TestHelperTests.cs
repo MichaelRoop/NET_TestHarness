@@ -11,8 +11,11 @@ namespace TestCases {
 
         [Test, Explicit]
         public void TestCatchUnexpected() {
-            TestHelpers.CatchUnexpected(() => { throw new Exception("Blah Exception"); });
-
+            Assert.Throws(typeof(AssertionException), () => {
+                TestHelpers.CatchUnexpected(() => { 
+                    throw new Exception("Blah Exception"); 
+                });
+            });
         }
 
 

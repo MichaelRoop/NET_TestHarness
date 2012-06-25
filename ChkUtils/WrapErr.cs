@@ -87,25 +87,6 @@ namespace ChkUtils {
             }
         }
 
-        // TODO - figure out why I had a specialisation for string
-        ///// <summary>
-        ///// Safely executes a function that returns a value . All exceptions caught and ignored. If an exception
-        ///// is thrown, the default for the type T will be returned so it has to be checked
-        ///// </summary>
-        ///// <typeparam name="T">The function return type</typeparam>
-        ///// <param name="func">The function to invoke</param>
-        ///// <returns></returns>
-        //public static string SafeAction(Func<string> func) {
-        //    try {
-        //        return func.Invoke();
-        //    }
-        //    catch (Exception e) {
-        //        Debug.WriteLine("{0} on call to WrapErr.SafeAction:{1} - {2}", e.GetType().Name, e.Message, e.StackTrace);
-        //        // At this point we do not want to report on any error back to the application
-        //        return "Exception trying to format error string:" + e.Message;
-        //    }
-        //}
-
         #endregion
         
         #region Wrap Action to ErrReportException
@@ -923,6 +904,9 @@ namespace ChkUtils {
             return default(T);
         }
 
+        #endregion
+
+        #region Private Error Type Conversions
 
         /// <summary>
         /// Convert a FaultException to a FautException Err Report

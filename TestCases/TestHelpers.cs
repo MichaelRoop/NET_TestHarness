@@ -82,16 +82,32 @@ namespace TestCases {
         #region Test Wrappers
 
         public static void CatchUnexpected(Action action) {
-            try {
-                WrapErr.ToErrorReportException(-1, "Unexpected Error running Test", () => {
-                    action.Invoke();
-                });
-            }
-            catch (ErrReportException e) {
-                TestHelpers.ErrToConsole(e.Report);
-                Assert.Fail("Unexpected Exception Occured on test");
-            }
+            ErrReport err = new ErrReport();
+            WrapErr.ToErrReport(out err, -1, "Unexpected Error running Test", () => {
+                action.Invoke();
+            });
+            TestHelpers.ErrToConsole(err);
+            Assert.Fail("Unexpected Exception Occured on test:{0} {1}", err.Code, err.Msg);
         }
+
+        public static ErrReport CatchExpected(Action action, int code, string atClass, string atMethod, string msg) {
+            ErrReport err = new ErrReport();
+            WrapErr.ToErrReport(out err, -999999, "Unexpected Error running Test", () => {
+                action.Invoke();
+            });
+            Assert.AreNotEqual(-999999, err.Code, "The CatchExpected has put out its own error");
+            TestHelpers.ValidateErrReport(err, code, atClass, atMethod, msg);
+
+            //TestHelpers.ErrToConsole(err);
+            //Assert.AreEqual(code, err.Code, "Mismatched error code");
+            //Assert.AreEqual(atClass, err.AtClass, "Class name of error does not match");
+            //Assert.AreEqual(atMethod, err.AtMethod, "Method name of error does not match");
+            //Assert.AreEqual(msg, err.Msg, "Error message does not match");
+
+            return err;
+        }
+
+
 
         #endregion
 
