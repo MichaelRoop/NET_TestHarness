@@ -45,21 +45,23 @@
     <Compile Include="ErrOjbects\ErrReport.cs" />
     <Compile Include="ErrOjbects\ErrReportException.cs" />
     <Compile Include="ErrOjbects\ExceptionType.cs" />
-    <Compile Include="ErrValidator.cs" />
-    <Compile Include="ExceptionExtraInfo.cs" />
-    <Compile Include="ExceptionInfo.cs" />
+    <Compile Include="ToDiscard\ErrValidator.cs" />
+    <Compile Include="ExceptionParsers\ExceptionExtraInfo.cs" />
+    <Compile Include="ExceptionParsers\ExceptionInfo.cs" />
     <Compile Include="ExceptionParsers\DefaultExceptionParser.cs" />
     <Compile Include="ExceptionParsers\ExceptionParserBase.cs" />
     <Compile Include="ExceptionParsers\ExceptionParserFactory.cs" />
     <Compile Include="ExceptionParsers\IExceptionParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WrapActionToErrException.cs" />
-    <Compile Include="WrapActionToErrFaultException.cs.cs" />
-    <Compile Include="WrapErrToErrReport.cs" />
-    <Compile Include="WrapFuncToErrException.cs" />
-    <Compile Include="WrapFuncToErrFaultException.cs.cs" />
-    <Compile Include="WrapInitializersMethods.cs" />
-    <Compile Include="WrapUtils.cs" />
+    <Compile Include="StackFrameTools.cs" />
+    <Compile Include="ToDiscard\WrapActionToErrException.cs" />
+    <Compile Include="ToDiscard\WrapActionToErrFaultException.cs.cs" />
+    <Compile Include="ToDiscard\WrapErrToErrReport.cs" />
+    <Compile Include="ToDiscard\WrapFuncToErrException.cs" />
+    <Compile Include="ToDiscard\WrapFuncToErrFaultException.cs.cs" />
+    <Compile Include="ToDiscard\WrapInitializersMethods.cs" />
+    <Compile Include="WrapErr.cs" />
+    <Compile Include="ToDiscard\WrapUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

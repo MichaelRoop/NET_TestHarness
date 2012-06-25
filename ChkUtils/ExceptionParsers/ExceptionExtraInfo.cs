@@ -1,5 +1,5 @@
 ﻿
-namespace ChkUtils {
+namespace ChkUtils.ExceptionParsers {
 
     /// <summary>
     /// Contains key value of an extra piece of exception information for particular exceptions

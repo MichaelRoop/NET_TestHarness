@@ -105,7 +105,7 @@ namespace ChkUtils.ExceptionParsers {
                     for (int i =0; i < trace.FrameCount; i++) {
                         StackFrame sf = trace.GetFrame(i);
                         this.stackFrames.Add(
-                            String.Format("\t{0} : Line:{1} - {2}.{3}", WrapErr.FileName(sf), WrapErr.Line(sf), WrapErr.ClassName(sf), WrapErr.MethodName(sf)));
+                            String.Format("\t{0} : Line:{1} - {2}.{3}", StackFrameTools.FileName(sf), StackFrameTools.Line(sf), StackFrameTools.ClassName(sf), StackFrameTools.MethodName(sf)));
                     }
                 }
             }
