@@ -1,128 +1,128 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--This file represents the results of running a test suite-->
-<test-results name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\TestCases.csproj" total="81" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2012-06-25" time="19:18:00">
+<test-results name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\TestCases.csproj" total="81" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2012-06-25" time="19:58:10">
   <environment nunit-version="2.6.0.12051" clr-version="2.0.50727.5448" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases" machine-name="MAIN-PC" user="Michael" user-domain="MAIN-PC" />
   <culture-info current-culture="en-US" current-uiculture="en-US" />
-  <test-suite type="Project" name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\TestCases.csproj" executed="True" result="Success" success="True" time="0.858" asserts="0">
+  <test-suite type="Project" name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\TestCases.csproj" executed="True" result="Success" success="True" time="0.843" asserts="0">
     <results>
-      <test-suite type="Assembly" name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\bin\Debug\TestCases.dll" executed="True" result="Success" success="True" time="0.851" asserts="0">
+      <test-suite type="Assembly" name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\bin\Debug\TestCases.dll" executed="True" result="Success" success="True" time="0.836" asserts="0">
         <results>
-          <test-suite type="Namespace" name="TestCases" executed="True" result="Success" success="True" time="0.851" asserts="0">
+          <test-suite type="Namespace" name="TestCases" executed="True" result="Success" success="True" time="0.835" asserts="0">
             <results>
-              <test-suite type="Namespace" name="ChkUtilsTests" executed="True" result="Success" success="True" time="0.823" asserts="0">
+              <test-suite type="Namespace" name="ChkUtilsTests" executed="True" result="Success" success="True" time="0.808" asserts="0">
                 <results>
-                  <test-suite type="TestFixture" name="ExceptionParserFactoryTests" executed="True" result="Success" success="True" time="0.231" asserts="0">
+                  <test-suite type="TestFixture" name="ExceptionParserFactoryTests" executed="True" result="Success" success="True" time="0.210" asserts="0">
                     <results>
-                      <test-case name="TestCases.ChkUtilsTests.ExceptionParserFactoryTests.DefaultExeptionParserFetch" executed="True" result="Success" success="True" time="0.209" asserts="1" />
+                      <test-case name="TestCases.ChkUtilsTests.ExceptionParserFactoryTests.DefaultExeptionParserFetch" executed="True" result="Success" success="True" time="0.189" asserts="1" />
                       <test-case name="TestCases.ChkUtilsTests.ExceptionParserFactoryTests.ExeptionParserFetch" executed="True" result="Success" success="True" time="0.001" asserts="1" />
                       <test-case name="TestCases.ChkUtilsTests.ExceptionParserFactoryTests.XmlExeptionParserFetch" executed="True" result="Success" success="True" time="0.004" asserts="1" />
                     </results>
                   </test-suite>
-                  <test-suite type="TestFixture" name="ExceptionParserTests" executed="True" result="Success" success="True" time="0.029" asserts="0">
+                  <test-suite type="TestFixture" name="ExceptionParserTests" executed="True" result="Success" success="True" time="0.026" asserts="0">
                     <results>
                       <test-case name="TestCases.ChkUtilsTests.ExceptionParserTests.DefaultExceptionParserTest" executed="True" result="Success" success="True" time="0.009" asserts="5" />
-                      <test-case name="TestCases.ChkUtilsTests.ExceptionParserTests.InnerExceptionParserTest" executed="True" result="Success" success="True" time="0.003" asserts="0" />
-                      <test-case name="TestCases.ChkUtilsTests.ExceptionParserTests.XmlExceptionParserTest" executed="True" result="Success" success="True" time="0.001" asserts="11" />
+                      <test-case name="TestCases.ChkUtilsTests.ExceptionParserTests.InnerExceptionParserTest" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+                      <test-case name="TestCases.ChkUtilsTests.ExceptionParserTests.XmlExceptionParserTest" executed="True" result="Success" success="True" time="0.000" asserts="11" />
                     </results>
                   </test-suite>
-                  <test-suite type="TestFixture" name="SafeActionTests" executed="True" result="Success" success="True" time="0.096" asserts="0">
+                  <test-suite type="TestFixture" name="SafeActionTests" executed="True" result="Success" success="True" time="0.094" asserts="0">
                     <results>
-                      <test-case name="TestCases.ChkUtilsTests.SafeActionTests.DefaultObjectOnThrow" executed="True" result="Success" success="True" time="0.083" asserts="2" />
+                      <test-case name="TestCases.ChkUtilsTests.SafeActionTests.DefaultObjectOnThrow" executed="True" result="Success" success="True" time="0.080" asserts="2" />
                       <test-case name="TestCases.ChkUtilsTests.SafeActionTests.NoExceptionPropagation" executed="True" result="Success" success="True" time="0.001" asserts="0" />
-                      <test-case name="TestCases.ChkUtilsTests.SafeActionTests.ReturnsValidObj" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                      <test-case name="TestCases.ChkUtilsTests.SafeActionTests.ReturnsValidObj" executed="True" result="Success" success="True" time="0.000" asserts="1" />
                     </results>
                   </test-suite>
-                  <test-suite type="TestFixture" name="ToErrorReportExceptionTests" executed="True" result="Success" success="True" time="0.124" asserts="0">
+                  <test-suite type="TestFixture" name="ToErrorReportExceptionTests" executed="True" result="Success" success="True" time="0.117" asserts="0">
                     <results>
                       <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnAction_Exception" executed="True" result="Success" success="True" time="0.048" asserts="7" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnAction_Exception_FinallyInvoked" executed="True" result="Success" success="True" time="0.014" asserts="8" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnAction_Exception_FinallyInvoked" executed="True" result="Success" success="True" time="0.005" asserts="8" />
                       <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnAction_Exception_MsgFormatInvoked" executed="True" result="Success" success="True" time="0.007" asserts="8" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnAction_NoException" executed="True" result="Success" success="True" time="0.004" asserts="2" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnAction_NoException_FinallyInvoked" executed="True" result="Success" success="True" time="0.003" asserts="3" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnAction_NoException_MsgFormatInvoked" executed="True" result="Success" success="True" time="0.003" asserts="3" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnAction_NoException" executed="True" result="Success" success="True" time="0.003" asserts="2" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnAction_NoException_FinallyInvoked" executed="True" result="Success" success="True" time="0.002" asserts="3" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnAction_NoException_MsgFormatInvoked" executed="True" result="Success" success="True" time="0.004" asserts="3" />
                       <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnFunction_Exception" executed="True" result="Success" success="True" time="0.004" asserts="8" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnFunction_Exception_FinallyInvoked" executed="True" result="Success" success="True" time="0.004" asserts="9" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnFunction_Exception_MsgFormatInvoked" executed="True" result="Success" success="True" time="0.002" asserts="9" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnFunction_Exception_NoLogging" executed="True" result="Success" success="True" time="0.003" asserts="8" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnFunction_NoException" executed="True" result="Success" success="True" time="0.001" asserts="3" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnFunction_Exception_FinallyInvoked" executed="True" result="Success" success="True" time="0.003" asserts="9" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnFunction_Exception_MsgFormatInvoked" executed="True" result="Success" success="True" time="0.003" asserts="9" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnFunction_Exception_NoLogging" executed="True" result="Success" success="True" time="0.002" asserts="8" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnFunction_NoException" executed="True" result="Success" success="True" time="0.000" asserts="3" />
                       <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnFunction_NoException_FinallyInvoked" executed="True" result="Success" success="True" time="0.001" asserts="4" />
                       <test-case name="TestCases.ChkUtilsTests.ToErrorReportExceptionTests.OnFunction_NoException_MsgFormatInvoked" executed="True" result="Success" success="True" time="0.001" asserts="4" />
                     </results>
                   </test-suite>
-                  <test-suite type="TestFixture" name="ToErrorReportFaultExceptionTests" executed="True" result="Success" success="True" time="0.109" asserts="0">
+                  <test-suite type="TestFixture" name="ToErrorReportFaultExceptionTests" executed="True" result="Success" success="True" time="0.111" asserts="0">
                     <results>
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnAction_Exception" executed="True" result="Success" success="True" time="0.045" asserts="7" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnAction_Exception_FinallyInvoked" executed="True" result="Success" success="True" time="0.002" asserts="8" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnAction_Exception_MsgFormatInvoked" executed="True" result="Success" success="True" time="0.001" asserts="8" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnAction_NoException" executed="True" result="Success" success="True" time="0.000" asserts="2" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnAction_NoException_FinallyInvoked" executed="True" result="Success" success="True" time="0.000" asserts="3" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnAction_NoException_MsgFormatInvoked" executed="True" result="Success" success="True" time="0.000" asserts="3" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnFunction_Exception" executed="True" result="Success" success="True" time="0.003" asserts="8" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnFunction_Exception_FinallyInvoked" executed="True" result="Success" success="True" time="0.002" asserts="9" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnFunction_Exception_MsgFormatInvoked" executed="True" result="Success" success="True" time="0.001" asserts="9" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnFunction_Exception_NoLogging" executed="True" result="Success" success="True" time="0.001" asserts="8" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnAction_Exception" executed="True" result="Success" success="True" time="0.048" asserts="7" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnAction_Exception_FinallyInvoked" executed="True" result="Success" success="True" time="0.003" asserts="8" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnAction_Exception_MsgFormatInvoked" executed="True" result="Success" success="True" time="0.002" asserts="8" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnAction_NoException" executed="True" result="Success" success="True" time="0.002" asserts="2" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnAction_NoException_FinallyInvoked" executed="True" result="Success" success="True" time="0.002" asserts="3" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnAction_NoException_MsgFormatInvoked" executed="True" result="Success" success="True" time="0.001" asserts="3" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnFunction_Exception" executed="True" result="Success" success="True" time="0.005" asserts="8" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnFunction_Exception_FinallyInvoked" executed="True" result="Success" success="True" time="0.004" asserts="9" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnFunction_Exception_MsgFormatInvoked" executed="True" result="Success" success="True" time="0.003" asserts="9" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnFunction_Exception_NoLogging" executed="True" result="Success" success="True" time="0.002" asserts="8" />
                       <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnFunction_NoException" executed="True" result="Success" success="True" time="0.001" asserts="3" />
                       <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnFunction_NoException_FinallyInvoked" executed="True" result="Success" success="True" time="0.001" asserts="4" />
                       <test-case name="TestCases.ChkUtilsTests.ToErrorReportFaultExceptionTests.OnFunction_NoException_MsgFormatInvoked" executed="True" result="Success" success="True" time="0.000" asserts="4" />
                     </results>
                   </test-suite>
-                  <test-suite type="TestFixture" name="ToErrReportTests" executed="True" result="Success" success="True" time="0.053" asserts="0">
+                  <test-suite type="TestFixture" name="ToErrReportTests" executed="True" result="Success" success="True" time="0.060" asserts="0">
                     <results>
-                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Action_Caught_ErrReportException" executed="True" result="Success" success="True" time="0.001" asserts="8" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Action_Caught_Exception_ErrorFormater" executed="True" result="Success" success="True" time="0.002" asserts="6" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Action_Caught_Exception_SimpleString" executed="True" result="Success" success="True" time="0.001" asserts="6" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Action_Caught_FaultException" executed="True" result="Success" success="True" time="0.001" asserts="8" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Action_Caught_ErrReportException" executed="True" result="Success" success="True" time="0.002" asserts="8" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Action_Caught_Exception_ErrorFormater" executed="True" result="Success" success="True" time="0.003" asserts="6" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Action_Caught_Exception_SimpleString" executed="True" result="Success" success="True" time="0.003" asserts="6" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Action_Caught_FaultException" executed="True" result="Success" success="True" time="0.002" asserts="8" />
                       <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Action_Valid" executed="True" result="Success" success="True" time="0.000" asserts="1" />
                       <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Action_Valid_ConfirmMsgFormaterNotInvoked" executed="True" result="Success" success="True" time="0.000" asserts="0" />
                       <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Action_Valid_FinallyExceptionCaught" executed="True" result="Success" success="True" time="0.001" asserts="1" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Func_Caught_ErrReportException" executed="True" result="Success" success="True" time="0.003" asserts="8" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Func_Caught_Exception_ErrorFormater" executed="True" result="Success" success="True" time="0.001" asserts="6" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Func_Caught_Exception_SimpleString" executed="True" result="Success" success="True" time="0.001" asserts="6" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Func_Caught_ErrReportException" executed="True" result="Success" success="True" time="0.004" asserts="8" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Func_Caught_Exception_ErrorFormater" executed="True" result="Success" success="True" time="0.003" asserts="6" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Func_Caught_Exception_SimpleString" executed="True" result="Success" success="True" time="0.002" asserts="6" />
                       <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Func_Caught_FaultException" executed="True" result="Success" success="True" time="0.001" asserts="8" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Func_Valid" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Func_Valid" executed="True" result="Success" success="True" time="0.001" asserts="1" />
                       <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Func_Valid_ConfirmMsgFormaterNotInvoked" executed="True" result="Success" success="True" time="0.000" asserts="0" />
-                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Func_Valid_FinallyExceptionCaught" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                      <test-case name="TestCases.ChkUtilsTests.ToErrReportTests.Func_Valid_FinallyExceptionCaught" executed="True" result="Success" success="True" time="0.002" asserts="1" />
                     </results>
                   </test-suite>
-                  <test-suite type="TestFixture" name="ValidatorTests" executed="True" result="Success" success="True" time="0.111" asserts="0">
+                  <test-suite type="TestFixture" name="ValidatorTests" executed="True" result="Success" success="True" time="0.108" asserts="0">
                     <results>
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Fault_False" executed="True" result="Success" success="True" time="0.001" asserts="0" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Fault_Param" executed="True" result="Success" success="True" time="0.001" asserts="0" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Fault_StringEmpty" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Fault_False" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Fault_Param" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Fault_StringEmpty" executed="True" result="Success" success="True" time="0.002" asserts="0" />
                       <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Fault_StringNull" executed="True" result="Success" success="True" time="0.000" asserts="0" />
                       <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Fault_True" executed="True" result="Success" success="True" time="0.001" asserts="0" />
                       <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Fault_Var" executed="True" result="Success" success="True" time="0.001" asserts="0" />
                       <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Regular_False" executed="True" result="Success" success="True" time="0.000" asserts="0" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Regular_Param" executed="True" result="Success" success="True" time="0.000" asserts="0" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Regular_String_Empty" executed="True" result="Success" success="True" time="0.002" asserts="0" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Regular_String_Null" executed="True" result="Success" success="True" time="0.001" asserts="0" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Regular_True" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Regular_Param" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Regular_String_Empty" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Regular_String_Null" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Regular_True" executed="True" result="Success" success="True" time="0.001" asserts="0" />
                       <test-case name="TestCases.ChkUtilsTests.ValidatorTests.ExceptionType_Regular_Var" executed="True" result="Success" success="True" time="0.000" asserts="0" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.False_Fail" executed="True" result="Success" success="True" time="0.001" asserts="5" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.False_Fail_FaultException" executed="True" result="Success" success="True" time="0.001" asserts="5" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.False_Fail" executed="True" result="Success" success="True" time="0.002" asserts="5" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.False_Fail_FaultException" executed="True" result="Success" success="True" time="0.002" asserts="5" />
                       <test-case name="TestCases.ChkUtilsTests.ValidatorTests.False_Valid" executed="True" result="Success" success="True" time="0.000" asserts="1" />
                       <test-case name="TestCases.ChkUtilsTests.ValidatorTests.False_Valid_FaultException" executed="True" result="Success" success="True" time="0.000" asserts="1" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.Param_NullArg" executed="True" result="Success" success="True" time="0.001" asserts="5" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.Param_NullArg" executed="True" result="Success" success="True" time="0.002" asserts="5" />
                       <test-case name="TestCases.ChkUtilsTests.ValidatorTests.Param_NullArg_FaultException" executed="True" result="Success" success="True" time="0.001" asserts="5" />
                       <test-case name="TestCases.ChkUtilsTests.ValidatorTests.Param_ValidArg" executed="True" result="Success" success="True" time="0.000" asserts="1" />
                       <test-case name="TestCases.ChkUtilsTests.ValidatorTests.Param_ValidArg_FaultException" executed="True" result="Success" success="True" time="0.001" asserts="1" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.String_Empty" executed="True" result="Success" success="True" time="0.001" asserts="5" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.String_Empty_FaultException" executed="True" result="Success" success="True" time="0.000" asserts="5" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.String_Null" executed="True" result="Success" success="True" time="0.000" asserts="5" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.String_Null_FaultException" executed="True" result="Success" success="True" time="0.001" asserts="5" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.String_Empty" executed="True" result="Success" success="True" time="0.002" asserts="5" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.String_Empty_FaultException" executed="True" result="Success" success="True" time="0.002" asserts="5" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.String_Null" executed="True" result="Success" success="True" time="0.002" asserts="5" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.String_Null_FaultException" executed="True" result="Success" success="True" time="0.002" asserts="5" />
                       <test-case name="TestCases.ChkUtilsTests.ValidatorTests.True_Fail" executed="True" result="Success" success="True" time="0.002" asserts="5" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.True_Fail_FaultException" executed="True" result="Success" success="True" time="0.000" asserts="5" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.True_Fail_FaultException" executed="True" result="Success" success="True" time="0.002" asserts="5" />
                       <test-case name="TestCases.ChkUtilsTests.ValidatorTests.True_Valid" executed="True" result="Success" success="True" time="0.000" asserts="1" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.True_Valid_FaultException" executed="True" result="Success" success="True" time="0.001" asserts="1" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.Var_NullArg" executed="True" result="Success" success="True" time="0.001" asserts="5" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.Var_NullArg_FaultException" executed="True" result="Success" success="True" time="0.000" asserts="5" />
-                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.Var_ValidArg" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.True_Valid_FaultException" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.Var_NullArg" executed="True" result="Success" success="True" time="0.002" asserts="5" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.Var_NullArg_FaultException" executed="True" result="Success" success="True" time="0.002" asserts="5" />
+                      <test-case name="TestCases.ChkUtilsTests.ValidatorTests.Var_ValidArg" executed="True" result="Success" success="True" time="0.001" asserts="1" />
                       <test-case name="TestCases.ChkUtilsTests.ValidatorTests.Var_ValidArg_FaultException" executed="True" result="Success" success="True" time="0.000" asserts="1" />
                     </results>
                   </test-suite>
                 </results>
               </test-suite>
-              <test-suite type="TestFixture" name="TestHelperTests" executed="True" result="Inconclusive" success="False" time="0.006" asserts="0" />
+              <test-suite type="TestFixture" name="TestHelperTests" executed="True" result="Inconclusive" success="False" time="0.009" asserts="0" />
             </results>
           </test-suite>
         </results>

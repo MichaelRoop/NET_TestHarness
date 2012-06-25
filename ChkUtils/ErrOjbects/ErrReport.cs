@@ -3,6 +3,7 @@ using System.Text;
 using ChkUtils.ExceptionParsers;
 using System.Reflection;
 using System.Runtime.Serialization;
+using ChkUtils.ExceptionFormating;
 
 namespace ChkUtils.ErrObjects {
 
@@ -121,17 +122,22 @@ namespace ChkUtils.ErrObjects {
             this.atMethod = atMethod;
             this.msg = msg;
 
-            // Translate any exception information to string but do not store the exception. This allows the 
-            // object to be serialized and passed to a FaultException that can used to traverse WCF boundries
-            if (atException != null) {
-                IExceptionParser parser = ExceptionParserFactory.Get(atException);
-                this.stackTrace
-                    .AppendLine(String.Format("{0} : {1}", parser.Info.Name, parser.Info.Msg));
-                parser.ExtraInfo.ForEach(
-                    item => this.stackTrace.AppendLine(String.Format("{0}={1}", item.Name, item.Value)));
-                parser.GetStackFrames(true).ForEach(
-                    item => this.stackTrace.AppendLine(item));
-            }
+            ExceptionFormaterFactory.Get().FormatException(ExceptionParserFactory.Get(atException), stackTrace);
+
+            //// Translate any exception information to string but do not store the exception. This allows the 
+            //// object to be serialized and passed to a FaultException that can used to traverse WCF boundries
+            //if (atException != null) {
+            //    IExceptionParser parser = ExceptionParserFactory.Get(atException);
+            //    while (parser != null) {
+            //        this.stackTrace.AppendLine(String.Format("{0} : {1}", parser.Info.Name, parser.Info.Msg));
+            //        parser.ExtraInfo.ForEach(
+            //            item => this.stackTrace.AppendLine(String.Format("{0}={1}", item.Name, item.Value)));
+            //        parser.GetStackFrames(true).ForEach(
+            //            item => this.stackTrace.AppendLine(item));
+
+            //        parser = parser.InnerParser;
+            //    }
+            //}
         }
 
 
