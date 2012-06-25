@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChkUtilsTests\SafeActionTests.cs" />
     <Compile Include="ChkUtilsTests\ToErrorReportExceptionTests.cs" />
     <Compile Include="ChkUtilsTests\ToErrorReportFaultExceptionTests.cs" />
     <Compile Include="ChkUtilsTests\ToErrReportTests.cs" />
