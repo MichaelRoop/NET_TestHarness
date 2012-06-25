@@ -12,7 +12,7 @@ namespace ChkUtils.ErrObjects {
 
         #region Data
 
-        ErrReport report = null;
+        ErrReport report = new ErrReport();
 
         #endregion
 
@@ -36,7 +36,6 @@ namespace ChkUtils.ErrObjects {
         /// </summary>
         public ErrReportException ()
             : base () {
-            this.report  = new ErrReport();
         }
 
 

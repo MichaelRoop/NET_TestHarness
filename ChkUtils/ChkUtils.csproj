@@ -45,6 +45,7 @@
     <Compile Include="ErrOjbects\ErrReport.cs" />
     <Compile Include="ErrOjbects\ErrReportException.cs" />
     <Compile Include="ErrOjbects\ExceptionType.cs" />
+    <Compile Include="ExceptionParsers\XmlExceptionParser.cs" />
     <Compile Include="ToDiscard\ErrValidator.cs" />
     <Compile Include="ExceptionParsers\ExceptionExtraInfo.cs" />
     <Compile Include="ExceptionParsers\ExceptionInfo.cs" />

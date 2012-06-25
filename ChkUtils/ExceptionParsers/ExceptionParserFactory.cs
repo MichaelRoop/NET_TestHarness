@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Xml;
 
 namespace ChkUtils.ExceptionParsers {
 
@@ -17,9 +18,13 @@ namespace ChkUtils.ExceptionParsers {
         public static IExceptionParser Get(Exception e) {
             if (e == null) {
                 Debug.WriteLine("ExceptionParserBase.AddStackFrames:Attempting to add stack frames from a null exception");
+                return new DefaultExceptionParser(new Exception("The Exception passed in to the exception parser factory is null"));
             }
 
-            if (e.GetType() == typeof(Exception)) {
+            if (e.GetType() == typeof(XmlException)) {
+                return new XmlExceptionParser((XmlException)e);
+            }
+            else if (e.GetType() == typeof(Exception)) {
                 return new DefaultExceptionParser(e);
             }
             return new DefaultExceptionParser(e);

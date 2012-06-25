@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
+using System.ServiceModel;
 using ChkUtils.ErrObjects;
 using ChkUtils.ErrOjbects;
-using System.ServiceModel;
-using System.Diagnostics;
 
 namespace ChkUtils {
 
     /// <summary>
     /// Delegate signature for logging delegates
     /// </summary>
-    /// <param name="errReport"></param>
+    /// <param name="errReport">The ErrReport object that contains information for the logger</param>
     public delegate void LogingMsgDelegate(ErrReport errReport);
 
 
@@ -20,7 +17,7 @@ namespace ChkUtils {
     /// Partial class implementation with catch Func to ErrReportException
     /// </summary>
     /// <author>Michael Roop</author>
-    public static partial class WrapErr {
+    public static class WrapErr {
         
         #region Data
 

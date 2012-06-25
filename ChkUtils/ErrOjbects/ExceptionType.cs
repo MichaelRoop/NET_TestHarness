@@ -5,6 +5,10 @@ using System.Text;
 
 namespace ChkUtils.ErrOjbects {
 
+    /// <summary>
+    /// Enumeration of exception types handled in the WrapErr
+    /// </summary>
+    /// <author>Michael Roop</author>
     public enum ExceptionType {
 
         /// <summary>

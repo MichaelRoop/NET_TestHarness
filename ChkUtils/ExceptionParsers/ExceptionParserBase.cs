@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Collections;
 
 namespace ChkUtils.ExceptionParsers {
 
@@ -35,7 +36,7 @@ namespace ChkUtils.ExceptionParsers {
         /// <param name="e">The Exception to parse</param>
         public ExceptionParserBase(Exception e) {
             this.info = new ExceptionInfo(e);
-            this.AddExtraInfo(e);
+            this.BuildExtraInfoItems(e);
             this.AddStackFrames(e);
         }
 
@@ -90,6 +91,27 @@ namespace ChkUtils.ExceptionParsers {
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Get the extra Exception particular fields and user defined Data
+        /// </summary>
+        /// <param name="e"></param>
+        private void BuildExtraInfoItems(Exception e) {
+            if (e != null) {
+                // First add the particular fields from the exception parser
+                this.AddExtraInfo(e);
+
+                // Now add any user Data fields
+                if (e.Data != null) {
+                    Console.WriteLine("Getting extra details");
+                    foreach (DictionaryEntry item in e.Data) {
+                        // Note. we use the ToString to dump a representation of the User Data Key and Value
+                        this.extraInfo.Add(new ExceptionExtraInfo(item.Key.ToString(), item.Value.ToString()));
+                    }
+                }
+            }
+        }
+
 
         /// <summary>
         /// Add a stack frames as a list of formatted strings

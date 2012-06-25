@@ -22,6 +22,10 @@ namespace ChkUtils.ExceptionParsers {
 
         #region Overrides
 
+        /// <summary>
+        /// There is no further information fields
+        /// </summary>
+        /// <param name="e"></param>
         protected override void AddExtraInfo(Exception e) {
             // Default one will not attempt to get any extra info
         }
