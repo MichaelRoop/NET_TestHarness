@@ -15,9 +15,24 @@ namespace ChkUtils.ExceptionParsers {
 
         private ExceptionInfo info = null;
 
-        List<ExceptionExtraInfo> extraInfo = new List<ExceptionExtraInfo>();
+        private List<ExceptionExtraInfo> extraInfo = new List<ExceptionExtraInfo>();
 
-        List<string> stackFrames = new List<string>();
+        private List<string> stackFrames = new List<string>();
+
+        private IExceptionParser innerExceptionParser = null;
+
+        #endregion
+
+        #region IExceptionParser Properties
+
+        /// <summary>
+        /// Inner parser with information of inner execption or null if no inner exception
+        /// </summary>
+        public IExceptionParser InnerParser {
+            get {
+                return this.innerExceptionParser;
+            }
+        }
 
         #endregion
 
@@ -38,11 +53,12 @@ namespace ChkUtils.ExceptionParsers {
             this.info = new ExceptionInfo(e);
             this.BuildExtraInfoItems(e);
             this.AddStackFrames(e);
+            this.BuildNestedParsers(e);
         }
 
         #endregion
 
-        #region IExceptionParser
+        #region IExceptionParser Methods
 
         /// <summary>
         /// Retrieve the Exception Info object with basic information
@@ -97,18 +113,22 @@ namespace ChkUtils.ExceptionParsers {
         /// </summary>
         /// <param name="e"></param>
         private void BuildExtraInfoItems(Exception e) {
-            if (e != null) {
-                // First add the particular fields from the exception parser
-                this.AddExtraInfo(e);
+            try {
+                if (e != null) {
+                    // First add the particular fields from the exception parser
+                    this.AddExtraInfo(e);
 
-                // Now add any user Data fields
-                if (e.Data != null) {
-                    Console.WriteLine("Getting extra details");
-                    foreach (DictionaryEntry item in e.Data) {
-                        // Note. we use the ToString to dump a representation of the User Data Key and Value
-                        this.extraInfo.Add(new ExceptionExtraInfo(item.Key.ToString(), item.Value.ToString()));
+                    // Now add any user Data fields
+                    if (e.Data != null) {
+                        foreach (DictionaryEntry item in e.Data) {
+                            // Note. we use the ToString to dump a representation of the User Data Key and Value
+                            this.extraInfo.Add(new ExceptionExtraInfo(item.Key.ToString(), item.Value.ToString()));
+                        }
                     }
                 }
+            }
+            catch (Exception ex) {
+                Debug.WriteLine(String.Format("ExceptionParserBase.BuildExtraInfoItems : Exception {0} :{1}", ex.GetType().Name, ex.Message));
             }
         }
 
@@ -136,6 +156,21 @@ namespace ChkUtils.ExceptionParsers {
             }
         }
 
+
+        /// <summary>
+        /// Build the parser for the inner exception if present
+        /// </summary>
+        /// <param name="e">The current level exception</param>
+        private void BuildNestedParsers(Exception e) {
+            try {
+                if (e.InnerException != null) {
+                    this.innerExceptionParser = ExceptionParserFactory.Get(e.InnerException);
+                }
+            }
+            catch (Exception ex) {
+                Debug.WriteLine(String.Format("ExceptionParserBase.BuildNestedParsers : Exception {0} :{1}", ex.GetType().Name, ex.Message));
+            }
+        }
         #endregion
 
     }

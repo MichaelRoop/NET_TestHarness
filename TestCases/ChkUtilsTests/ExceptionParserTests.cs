@@ -11,6 +11,38 @@ namespace TestCases.ChkUtilsTests {
     [TestFixture]
     public class ExceptionParserTests {
 
+        #region Recursive Inner Excpetion classes
+
+        public class Level3 {
+            public void DoIt() {
+                throw new Exception("Level3 Exception - most inner exception");
+            }
+        }
+
+        public class Level2 {
+            public void DoIt() {
+                try {
+                    new Level3().DoIt();
+                }
+                catch (Exception e) {
+                    throw new FormatException("Level2 Format Exception - middle exception", e);
+                }
+            }
+        }
+
+        public class Level1 {
+            public void DoIt() {
+                try {
+                    new Level2().DoIt();
+                }
+                catch (Exception e) {
+                    throw new Exception("Level1 Exception - highest level exception", e);
+                }
+            }
+        }
+
+        #endregion
+
 
         [Test]
         public void XmlExceptionParserTest() {
@@ -51,11 +83,49 @@ namespace TestCases.ChkUtilsTests {
 
 
 
+        [Test]
+        public void InnerExceptionParserTest() {
+            try {
+                new Level1().DoIt();
+            }
+            catch (Exception e) {
+                IExceptionParser parser = ExceptionParserFactory.Get(e);
+
+                StringBuilder stackTrace = new StringBuilder();
+                while (parser != null) {
+                    //Console.WriteLine("Name:{0}", parser.GetInfo().Name); 
+                    //Console.WriteLine("Msg:{0}", parser.GetInfo().Msg);
+
+                    stackTrace.AppendLine(String.Format("{0} : {1}", parser.GetInfo().Name, parser.GetInfo().Msg));
+                    parser.GetExtraInfoInfo().ForEach(
+                        item => stackTrace.AppendLine(String.Format("{0}={1}", item.Name, item.Value)));
+                    parser.GetStackFrames(true).ForEach(
+                        item => stackTrace.AppendLine(item));
+                    parser = parser.InnerParser;
+                }
+
+                Console.WriteLine(stackTrace.ToString());
+
+
+                //Assert.AreEqual(1, parser.GetExtraInfoInfo().Count, "The count of extra info items is off");
+                //this.ValidateExtraInfo(parser, "DefaultUserKey1", "DefaultUserValue1");
+                //Assert.AreEqual("Exception", parser.GetInfo().Name);
+                //Assert.AreEqual("Default Blah Error", parser.GetInfo().Msg);
+            }
+        }
+
+
+
+
         private void ValidateExtraInfo(IExceptionParser parser, string key, string value) {
             ExceptionExtraInfo i = parser.GetExtraInfoInfo().Find((item) => item.Name == key);
             Assert.IsNotNull(i);
             Assert.AreEqual(value, i.Value);
         }
+
+
+
+
 
 
     }

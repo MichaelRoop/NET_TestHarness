@@ -8,7 +8,12 @@ namespace ChkUtils.ExceptionParsers {
     /// </summary>
     /// <author>Michael Roop</author>
     public interface IExceptionParser {
-        
+
+        /// <summary>
+        /// Inner parser with information of inner execption or null if no inner exception
+        /// </summary>
+        IExceptionParser InnerParser { get; }
+
         /// <summary>
         /// Retrieve the Exception Info object with basic information
         /// </summary>
@@ -20,7 +25,6 @@ namespace ChkUtils.ExceptionParsers {
         /// </summary>
         /// <returns>A list of ExceptionExtraInfo objects</returns>
         List<ExceptionExtraInfo> GetExtraInfoInfo();
-
 
         /// <summary>
         /// Retrieve a list of strings representing the frames of a stack trace
