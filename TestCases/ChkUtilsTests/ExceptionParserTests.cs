@@ -54,13 +54,13 @@ namespace TestCases.ChkUtilsTests {
             }
             catch (XmlException e) {
                 IExceptionParser parser = ExceptionParserFactory.Get(e);
-                Assert.AreEqual(4, parser.GetExtraInfoInfo().Count, "The count of extra info items is off");
+                Assert.AreEqual(4, parser.ExtraInfo.Count, "The count of extra info items is off");
                 this.ValidateExtraInfo(parser, "UserKey1", "UserValue1");
                 this.ValidateExtraInfo(parser, "Line Number", "25");
                 this.ValidateExtraInfo(parser, "Line Position", "100");
                 this.ValidateExtraInfo(parser, "Source URI", null);
-                Assert.AreEqual("XmlException", parser.GetInfo().Name);
-                Assert.AreEqual("Blah Error Line 25, position 100.", parser.GetInfo().Msg);
+                Assert.AreEqual("XmlException", parser.Info.Name);
+                Assert.AreEqual("Blah Error Line 25, position 100.", parser.Info.Msg);
             }
         }
 
@@ -74,10 +74,10 @@ namespace TestCases.ChkUtilsTests {
             }
             catch (Exception e) {
                 IExceptionParser parser = ExceptionParserFactory.Get(e);
-                Assert.AreEqual(1, parser.GetExtraInfoInfo().Count, "The count of extra info items is off");
+                Assert.AreEqual(1, parser.ExtraInfo.Count, "The count of extra info items is off");
                 this.ValidateExtraInfo(parser, "DefaultUserKey1", "DefaultUserValue1");
-                Assert.AreEqual("Exception", parser.GetInfo().Name);
-                Assert.AreEqual("Default Blah Error", parser.GetInfo().Msg);
+                Assert.AreEqual("Exception", parser.Info.Name);
+                Assert.AreEqual("Default Blah Error", parser.Info.Msg);
             }
         }
 
@@ -96,8 +96,8 @@ namespace TestCases.ChkUtilsTests {
                     //Console.WriteLine("Name:{0}", parser.GetInfo().Name); 
                     //Console.WriteLine("Msg:{0}", parser.GetInfo().Msg);
 
-                    stackTrace.AppendLine(String.Format("{0} : {1}", parser.GetInfo().Name, parser.GetInfo().Msg));
-                    parser.GetExtraInfoInfo().ForEach(
+                    stackTrace.AppendLine(String.Format("{0} : {1}", parser.Info.Name, parser.Info.Msg));
+                    parser.ExtraInfo.ForEach(
                         item => stackTrace.AppendLine(String.Format("{0}={1}", item.Name, item.Value)));
                     parser.GetStackFrames(true).ForEach(
                         item => stackTrace.AppendLine(item));
@@ -118,7 +118,7 @@ namespace TestCases.ChkUtilsTests {
 
 
         private void ValidateExtraInfo(IExceptionParser parser, string key, string value) {
-            ExceptionExtraInfo i = parser.GetExtraInfoInfo().Find((item) => item.Name == key);
+            ExceptionExtraInfo i = parser.ExtraInfo.Find((item) => item.Name == key);
             Assert.IsNotNull(i);
             Assert.AreEqual(value, i.Value);
         }

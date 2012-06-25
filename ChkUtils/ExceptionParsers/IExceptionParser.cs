@@ -18,13 +18,13 @@ namespace ChkUtils.ExceptionParsers {
         /// Retrieve the Exception Info object with basic information
         /// </summary>
         /// <returns>The ExceptionInfo object</returns>
-        ExceptionInfo GetInfo();
+        ExceptionInfo Info { get; }
 
         /// <summary>
         /// Retrieve a list of extra info objects for specialised exeptions
         /// </summary>
         /// <returns>A list of ExceptionExtraInfo objects</returns>
-        List<ExceptionExtraInfo> GetExtraInfoInfo();
+        List<ExceptionExtraInfo> ExtraInfo { get; }
 
         /// <summary>
         /// Retrieve a list of strings representing the frames of a stack trace

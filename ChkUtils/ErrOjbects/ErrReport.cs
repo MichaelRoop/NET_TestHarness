@@ -126,8 +126,8 @@ namespace ChkUtils.ErrObjects {
             if (atException != null) {
                 IExceptionParser parser = ExceptionParserFactory.Get(atException);
                 this.stackTrace
-                    .AppendLine(String.Format("{0} : {1}", parser.GetInfo().Name, parser.GetInfo().Msg));
-                parser.GetExtraInfoInfo().ForEach(
+                    .AppendLine(String.Format("{0} : {1}", parser.Info.Name, parser.Info.Msg));
+                parser.ExtraInfo.ForEach(
                     item => this.stackTrace.AppendLine(String.Format("{0}={1}", item.Name, item.Value)));
                 parser.GetStackFrames(true).ForEach(
                     item => this.stackTrace.AppendLine(item));

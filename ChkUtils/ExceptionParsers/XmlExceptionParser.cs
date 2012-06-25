@@ -34,9 +34,9 @@ namespace ChkUtils.ExceptionParsers {
         protected override void AddExtraInfo(Exception e) {
             if (e.GetType() == typeof(XmlException)) {
                 XmlException ex = (XmlException)e;
-                this.GetExtraInfoInfo().Add(new ExceptionExtraInfo("Line Number", ex.LineNumber.ToString()));
-                this.GetExtraInfoInfo().Add(new ExceptionExtraInfo("Line Position", ex.LinePosition.ToString()));
-                this.GetExtraInfoInfo().Add(new ExceptionExtraInfo("Source URI", ex.SourceUri));
+                this.ExtraInfo.Add(new ExceptionExtraInfo("Line Number", ex.LineNumber.ToString()));
+                this.ExtraInfo.Add(new ExceptionExtraInfo("Line Position", ex.LinePosition.ToString()));
+                this.ExtraInfo.Add(new ExceptionExtraInfo("Source URI", ex.SourceUri));
             }
             else {
                 WrapErr.SafeAction(() => 

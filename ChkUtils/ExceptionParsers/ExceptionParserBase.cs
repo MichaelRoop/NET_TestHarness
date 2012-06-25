@@ -34,6 +34,26 @@ namespace ChkUtils.ExceptionParsers {
             }
         }
 
+        /// <summary>
+        /// Retrieve the Exception Info object with basic information
+        /// </summary>
+        /// <returns>The ExceptionInfo object</returns>
+        public ExceptionInfo Info {
+            get {
+                return this.info;
+            }
+        }
+
+        /// <summary>
+        /// Retrieve a list of extra info objects for specialised exeptions
+        /// </summary>
+        /// <returns>A list of ExceptionExtraInfo objects</returns>
+        public List<ExceptionExtraInfo> ExtraInfo {
+            get {
+                return this.extraInfo;
+            }
+        }
+        
         #endregion
 
         #region Constructors
@@ -59,24 +79,6 @@ namespace ChkUtils.ExceptionParsers {
         #endregion
 
         #region IExceptionParser Methods
-
-        /// <summary>
-        /// Retrieve the Exception Info object with basic information
-        /// </summary>
-        /// <returns>The ExceptionInfo object</returns>
-        public ExceptionInfo GetInfo() {
-            return this.info;
-        }
-
-
-        /// <summary>
-        /// Retrieve a list of extra info objects for specialised exeptions
-        /// </summary>
-        /// <returns>A list of ExceptionExtraInfo objects</returns>
-        public List<ExceptionExtraInfo> GetExtraInfoInfo() {
-            return this.extraInfo;
-        }
-
 
         /// <summary>
         /// Retrieve a list of strings representing the frames of a stack trace
