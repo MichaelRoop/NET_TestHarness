@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.ServiceModel;
 using ChkUtils.ErrObjects;
 using ChkUtils.ErrOjbects;
+using ChkUtils.ExceptionFormating;
 
 namespace ChkUtils {
 
@@ -46,7 +47,17 @@ namespace ChkUtils {
                 WrapErr.onExceptionLog = logDelegate;
             }
         }
-        
+
+
+        /// <summary>
+        /// Set the style of format for the exception string information
+        /// </summary>
+        /// <param name="formater">The formater to use</param>
+        public static void SetExceptionFormating(IExceptionOutputFormater formater) {
+            ExceptionFormaterFactory.SetFormater(formater);
+        }
+
+
         #endregion
         
         #region Safe Action Methods

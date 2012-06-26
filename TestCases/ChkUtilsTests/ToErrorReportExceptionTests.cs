@@ -25,6 +25,9 @@ namespace TestCases.ChkUtilsTests {
 
         [SetUp]
         public void SetupTest() {
+
+            //TestHelpers.SetSingleLineException();
+
             this.logged = false;
             this.msgFormated = false;
             this.finallyInvoked = false;

@@ -5,6 +5,7 @@ using System.Text;
 using ChkUtils;
 using ChkUtils.ErrObjects;
 using NUnit.Framework;
+using ChkUtils.ExceptionFormating;
 
 namespace TestCases {
 
@@ -147,8 +148,17 @@ namespace TestCases {
         public static void ErrToConsole(ErrReport e) {
             Console.WriteLine("{0} {1}.{2} : {3}{4}{5}", e.Code, e.AtClass, e.AtMethod, e.Msg, Environment.NewLine, e.StackTrace);
         }
-
+        
         #endregion
+
+        public static void SetSingleLineException() {
+            ExceptionFormaterFactory.SetFormater(new SingleLineExceptionFormater());
+        }
+
+        public static void SetMultiLineException() {
+            ExceptionFormaterFactory.SetFormater(new MultiLineExceptionFormater());
+        }
+
     }
 }
 
