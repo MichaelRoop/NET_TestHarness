@@ -93,15 +93,14 @@ namespace ChkUtils {
         /// </summary>
         /// <returns></returns>
         public static MethodBase FirstNonWrappedMethod(Type typeToIgnore) {
-            // Go at least one up.
+            // Go at least one up to ignore this method.
             int index = 1;
             StackTrace st = new StackTrace();
 
             MethodBase mb = st.GetFrame(index).GetMethod();
             while (true) {
 
-                //Console.WriteLine("{0}  {1}  {2}", mb.DeclaringType.Name, typeof(WrapErr).Name, mb.Name);
-                if (mb.DeclaringType.Name != typeToIgnore.Name && !mb.Name.Contains("<")) {
+                if ((typeToIgnore == null) || mb.DeclaringType.Name != typeToIgnore.Name && !mb.Name.Contains("<")) {
                     return mb;
                 }
 
