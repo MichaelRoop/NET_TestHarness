@@ -89,8 +89,10 @@ namespace ChkUtils {
 
 
         /// <summary>
-        /// Experimental method to walk through stack until you encounter the first non ErrWrap class method that does not have the <>
+        /// Walk through stack until you encounter the first class that is not to be ignored and
+        /// whose method does not have the <>
         /// </summary>
+        /// <param name="typeToIgnore">Type to ignore as you travel the stack</param>
         /// <returns></returns>
         public static MethodBase FirstNonWrappedMethod(Type typeToIgnore) {
             // Go at least one up to ignore this method.

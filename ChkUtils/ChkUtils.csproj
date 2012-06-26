@@ -50,7 +50,6 @@
     <Compile Include="ExceptionFormating\MultiLineExceptionFormater.cs" />
     <Compile Include="ExceptionFormating\SingleLineExceptionFormater.cs" />
     <Compile Include="ExceptionParsers\XmlExceptionParser.cs" />
-    <Compile Include="ToDiscard\ErrValidator.cs" />
     <Compile Include="ExceptionParsers\ExceptionExtraInfo.cs" />
     <Compile Include="ExceptionParsers\ExceptionInfo.cs" />
     <Compile Include="ExceptionParsers\DefaultExceptionParser.cs" />
@@ -59,14 +58,7 @@
     <Compile Include="ExceptionParsers\IExceptionParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StackFrameTools.cs" />
-    <Compile Include="ToDiscard\WrapActionToErrException.cs" />
-    <Compile Include="ToDiscard\WrapActionToErrFaultException.cs.cs" />
-    <Compile Include="ToDiscard\WrapErrToErrReport.cs" />
-    <Compile Include="ToDiscard\WrapFuncToErrException.cs" />
-    <Compile Include="ToDiscard\WrapFuncToErrFaultException.cs.cs" />
-    <Compile Include="ToDiscard\WrapInitializersMethods.cs" />
     <Compile Include="WrapErr.cs" />
-    <Compile Include="ToDiscard\WrapUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

@@ -11,66 +11,7 @@ namespace TestCases {
 
     public class TestHelpers {
 
-        //#region Exception Throwers
-
-        ///// <summary>
-        ///// Do not move this class - line number detection tested. This classed called by 
-        ///// another class
-        ///// </summary>
-        //public class InnerClass {
-
-        //    /// <summary>
-        //    /// Throw an exception from this method
-        //    /// </summary>
-        //    /// <param name="name"></param>
-        //    public void DoException(string name) {
-        //        throw new Exception("Throw from InnerClass.DoIt() with name:" + name);  // @ Line 26 DO NOT CHANGE
-        //    }
-
-        //}
-
-        ///// <summary>
-        ///// Do not move this class - line number detection tested
-        ///// </summary>
-        //public class OuterClass {
-
-        //    /// <summary>
-        //    /// Class another class method that throws an exception
-        //    /// </summary>
-        //    public void DoNestedException() {
-        //        new InnerClass().DoException("Fred"); // @ Line 39 DO NOT CHANGE
-        //    }
-
-        //    /// <summary>
-        //    /// Throw an exception from this method
-        //    /// </summary>
-        //    /// <param name="name"></param>
-        //    public void DoException(string name) {
-        //        throw new Exception("Throw from OuterClass.DoIt() with name:" + name);
-        //    }
-
-        //    public void DoNestedFaultException() {
-        //        WrapErr.ToErrorReportFaultException(9191, "Unexpected error", () => new InnerClass().DoException("George"));
-        //    }
-
-        //    public void DoNestedErrReportException() {
-        //        WrapErr.ToErrorReportException(9292, "Unexpected error", () => new InnerClass().DoException("Ziffle"));
-        //    }
-
-        //    public int RetDoNestedFaultException() {
-        //        WrapErr.ToErrorReportFaultException(9191, "Unexpected error", () => new InnerClass().DoException("George"));
-        //        return 1;
-        //    }
-
-        //    public int RetDoNestedErrReportException() {
-        //        WrapErr.ToErrorReportException(9292, "Unexpected error", () => new InnerClass().DoException("Ziffle"));
-        //        return 1;
-        //    }
-
-        //}
-
-        //#endregion
-
+        #region Non throwing methods
 
         public static void NonExceptionAction() {
         }
@@ -79,6 +20,7 @@ namespace TestCases {
             return 100;
         }
 
+        #endregion
 
         #region Test Wrappers
 
@@ -98,13 +40,6 @@ namespace TestCases {
             });
             Assert.AreNotEqual(-999999, err.Code, "The CatchExpected has put out its own error");
             TestHelpers.ValidateErrReport(err, code, atClass, atMethod, msg);
-
-            //TestHelpers.ErrToConsole(err);
-            //Assert.AreEqual(code, err.Code, "Mismatched error code");
-            //Assert.AreEqual(atClass, err.AtClass, "Class name of error does not match");
-            //Assert.AreEqual(atMethod, err.AtMethod, "Method name of error does not match");
-            //Assert.AreEqual(msg, err.Msg, "Error message does not match");
-
             return err;
         }
 
@@ -151,6 +86,8 @@ namespace TestCases {
         
         #endregion
 
+        #region Stack Trace Formating Helpers
+
         public static void SetSingleLineException() {
             ExceptionFormaterFactory.SetFormater(new SingleLineExceptionFormater());
         }
@@ -158,6 +95,8 @@ namespace TestCases {
         public static void SetMultiLineException() {
             ExceptionFormaterFactory.SetFormater(new MultiLineExceptionFormater());
         }
+
+        #endregion
 
     }
 }
