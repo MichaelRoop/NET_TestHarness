@@ -48,6 +48,7 @@
     <Compile Include="ExceptionFormating\ExceptionFormaterFactory.cs" />
     <Compile Include="ExceptionFormating\IExceptionOutputFormater.cs" />
     <Compile Include="ExceptionFormating\MultiLineExceptionFormater.cs" />
+    <Compile Include="ExceptionFormating\SingleLineExceptionFormater.cs" />
     <Compile Include="ExceptionParsers\XmlExceptionParser.cs" />
     <Compile Include="ToDiscard\ErrValidator.cs" />
     <Compile Include="ExceptionParsers\ExceptionExtraInfo.cs" />

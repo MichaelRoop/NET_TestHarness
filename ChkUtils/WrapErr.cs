@@ -741,7 +741,6 @@ namespace ChkUtils {
                 throw new ErrReportException(WrapErr.GetErrReport(code, WrapErr.SafeAction(errMsgFunc), e));
             }
             finally {
-                Console.WriteLine("Finally executing");
                 WrapErr.SafeAction(() => finallyAction.Invoke());
             }
         }
