@@ -88,7 +88,7 @@ namespace TestCases.ChkUtilsTests {
             ErrReport err;
             WrapErr.ToErrReport(out err, 1111, "Validate arg", () => {
                 WrapErr.ToErrorReportFaultException(12345, "Unexpected Error Processing Block", () => {
-                    new TestHelpers.OuterClass().DoNestedException();
+                    new ChkUtilsTestHelpers.OuterClass().DoNestedException();
                 });
             });
             this.Validate(err, 12345, "OnAction_Exception", "Unexpected Error Processing Block");
@@ -100,7 +100,7 @@ namespace TestCases.ChkUtilsTests {
             ErrReport err;
             WrapErr.ToErrReport(out err, 1111, "Validate arg", () => {
                 WrapErr.ToErrorReportFaultException(12345, () => { this.msgFormated = true; return "Unexpected Error Processing Block"; }, () => {
-                    new TestHelpers.OuterClass().DoNestedException();
+                    new ChkUtilsTestHelpers.OuterClass().DoNestedException();
                 });
             });
             this.Validate(err, 12345, "OnAction_Exception_MsgFormatInvoked", "Unexpected Error Processing Block");
@@ -114,7 +114,7 @@ namespace TestCases.ChkUtilsTests {
             WrapErr.ToErrReport(out err, 1111, "Validate arg", () => {
                 WrapErr.ToErrorReportFaultException(12345, "Unexpected Error Processing Block",
                     delegate {
-                        new TestHelpers.OuterClass().DoNestedException();
+                        new ChkUtilsTestHelpers.OuterClass().DoNestedException();
                     },
                     delegate {
                         Console.WriteLine("Immediately before the finally var is set to true");
@@ -192,7 +192,7 @@ namespace TestCases.ChkUtilsTests {
             ErrReport err;
             WrapErr.ToErrReport(out err, 1111, "Validate arg", () => {
                 s = WrapErr.ToErrorReportFaultException(12345, "Unexpected Error Processing Block", () => {
-                    new TestHelpers.OuterClass().DoNestedException();
+                    new ChkUtilsTestHelpers.OuterClass().DoNestedException();
                     return "This should not be";
                 });
             });
@@ -207,7 +207,7 @@ namespace TestCases.ChkUtilsTests {
             ErrReport err;
             WrapErr.ToErrReport(out err, 1111, "Validate arg", () => {
                 s = WrapErr.ToErrorReportFaultException(12345, () => { this.msgFormated = true; return "Unexpected Error Processing Block"; }, () => {
-                    new TestHelpers.OuterClass().DoNestedException();
+                    new ChkUtilsTestHelpers.OuterClass().DoNestedException();
                     return "This should not be";
                 });
             });
@@ -224,7 +224,7 @@ namespace TestCases.ChkUtilsTests {
             WrapErr.ToErrReport(out err, 1111, "Validate arg", () => {
                 s = WrapErr.ToErrorReportFaultException(12345, "Unexpected Error Processing Block",
                     delegate {
-                        new TestHelpers.OuterClass().DoNestedException();
+                        new ChkUtilsTestHelpers.OuterClass().DoNestedException();
                         return "This should not be";
                     },
                     delegate {
@@ -245,7 +245,7 @@ namespace TestCases.ChkUtilsTests {
             ErrReport err;
             WrapErr.ToErrReport(out err, 1111, "Validate arg", () => {
                 s = WrapErr.ToErrorReportFaultException(12345, "Unexpected Error Processing Block", () => {
-                    new TestHelpers.OuterClass().DoNestedException();
+                    new ChkUtilsTestHelpers.OuterClass().DoNestedException();
                     return "This should not be";
                 });
             });

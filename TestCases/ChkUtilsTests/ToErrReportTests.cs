@@ -54,7 +54,7 @@ namespace TestCases.ChkUtilsTests {
             // Confirms that the error message formating section is not invoked unless there is actually an error
             ErrReport err;
             WrapErr.ToErrReport(out err, 1111, "Woka woka error", () => {
-                new TestHelpers.OuterClass().DoNestedException();
+                new ChkUtilsTestHelpers.OuterClass().DoNestedException();
             });
             Validate(err, 1111, "Action_Caught_Exception_SimpleString", "Woka woka error");
         }
@@ -65,7 +65,7 @@ namespace TestCases.ChkUtilsTests {
             // Confirms that the error message formating section is not invoked unless there is actually an error
             ErrReport err;
             WrapErr.ToErrReport(out err, 1111, () => { return "The error formating has been invoked"; }, () => {
-                new TestHelpers.OuterClass().DoNestedException();
+                new ChkUtilsTestHelpers.OuterClass().DoNestedException();
             });
             Validate(err, 1111, "Action_Caught_Exception_ErrorFormater", "The error formating has been invoked");
         }
@@ -74,7 +74,7 @@ namespace TestCases.ChkUtilsTests {
         public void Action_Caught_FaultException() {
             ErrReport err;
             WrapErr.ToErrReport(out err, 1111, "Unexpected error", () => {
-                new TestHelpers.OuterClass().DoNestedFaultException();
+                new ChkUtilsTestHelpers.OuterClass().DoNestedFaultException();
             });
             Assert.AreEqual(9191, err.Code);
             Assert.AreEqual("OuterClass", err.AtClass);
@@ -90,7 +90,7 @@ namespace TestCases.ChkUtilsTests {
         public void Action_Caught_ErrReportException() {
             ErrReport err;
             WrapErr.ToErrReport(out err, 1111, "Unexpected error", () => {
-                new TestHelpers.OuterClass().DoNestedErrReportException();
+                new ChkUtilsTestHelpers.OuterClass().DoNestedErrReportException();
             });
             Assert.AreEqual(9292, err.Code);
             Assert.AreEqual("OuterClass", err.AtClass);
@@ -147,7 +147,7 @@ namespace TestCases.ChkUtilsTests {
             // Confirms that the error message formating section is not invoked unless there is actually an error
             ErrReport err;
             int ret = WrapErr.ToErrReport(out err, 1111, "Woka woka error", () => {
-                new TestHelpers.OuterClass().DoNestedException();
+                new ChkUtilsTestHelpers.OuterClass().DoNestedException();
                 return 1;
             });
             Validate(err, 1111, "Func_Caught_Exception_SimpleString", "Woka woka error");
@@ -159,7 +159,7 @@ namespace TestCases.ChkUtilsTests {
             // Confirms that the error message formating section is not invoked unless there is actually an error
             ErrReport err;
             int ret = WrapErr.ToErrReport(out err, 1111, () => { return "The error formating has been invoked"; }, () => {
-                new TestHelpers.OuterClass().DoNestedException();
+                new ChkUtilsTestHelpers.OuterClass().DoNestedException();
                 return 1;
             });
             Validate(err, 1111, "Func_Caught_Exception_ErrorFormater", "The error formating has been invoked");
@@ -169,7 +169,7 @@ namespace TestCases.ChkUtilsTests {
         public void Func_Caught_FaultException() {
             ErrReport err;
             int ret = WrapErr.ToErrReport(out err, 1111, "Unexpected error", () => {
-                return new TestHelpers.OuterClass().RetDoNestedFaultException();
+                return new ChkUtilsTestHelpers.OuterClass().RetDoNestedFaultException();
             });
             Assert.AreEqual(9191, err.Code);
             Assert.AreEqual("OuterClass", err.AtClass);
@@ -185,7 +185,7 @@ namespace TestCases.ChkUtilsTests {
         public void Func_Caught_ErrReportException() {
             ErrReport err;
             int ret = WrapErr.ToErrReport(out err, 1111, "Unexpected error", () => {
-                return new TestHelpers.OuterClass().RetDoNestedErrReportException();
+                return new ChkUtilsTestHelpers.OuterClass().RetDoNestedErrReportException();
             });
             Assert.AreEqual(9292, err.Code);
             Assert.AreEqual("OuterClass", err.AtClass);
