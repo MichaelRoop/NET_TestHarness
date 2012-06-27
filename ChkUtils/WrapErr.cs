@@ -106,6 +106,19 @@ namespace ChkUtils {
         /// <param name="code">The error code</param>
         /// <param name="msg">The error message</param>
         /// <param name="action">The action to invoke</param>
+        public static void ToErrorReportException(int code, Action action) {
+            WrapErr.WrapTryToErrorReportException(code, () => { return "Unexpected Error Occured"; }, action, () => { ;});
+        }
+
+
+
+        /// <summary>
+        /// Wrap an action to catch and convert exceptions not previously caught and 
+        /// converted to ErrReportExceptions.
+        /// </summary>
+        /// <param name="code">The error code</param>
+        /// <param name="msg">The error message</param>
+        /// <param name="action">The action to invoke</param>
         public static void ToErrorReportException(int code, string msg, Action action) {
             WrapErr.WrapTryToErrorReportException(code, () => { return msg; }, action, () => { ;});
         }

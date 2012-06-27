@@ -1,0 +1,41 @@
+<Errors>
+  <!-- SpStateMachine -->
+
+
+  <!-- SpStateMachine.WinSimpleTimer -->
+  <Error code="50000" class="WinSimpleTimer" method="SetInterval" message="The interval cannot be 0 milliseconds total" />
+  <Error code="50001" class="WinSimpleTimer" method="SetInterval" message="Unexpected Error" />
+  <Error code="50002" class="WinSimpleTimer" method="SetInterval" message="Attempting to Use After Object Disposed" />
+  <Error code="50003" class="WinSimpleTimer" method="Start" message="Attempting to Use After Object Disposed" />
+  <Error code="50004" class="WinSimpleTimer" method="Start" message="Unexpected Error" />
+  <Error code="50005" class="WinSimpleTimer" method="Stop" message="Attempting to Use After Object Disposed" />
+  <Error code="50006" class="WinSimpleTimer" method="" message="" />
+  <Error code="50007" class="" method="" message="" />
+  <Error code="50008" class="" method="" message="" />
+  <Error code="50009" class="" method="" message="" />
+  <Error code="50010" class="" method="" message="" />
+  <Error code="50011" class="" method="" message="" />
+  <Error code="50012" class="" method="" message="" />
+  <Error code="50013" class="" method="" message="" />
+  <Error code="50014" class="" method="" message="" />
+  <Error code="50015" class="" method="" message="" />
+  <Error code="50016" class="" method="" message="" />
+  <Error code="50017" class="" method="" message="" />
+  <Error code="50018" class="" method="" message="" />
+  <Error code="50019" class="" method="" message="" />
+  <Error code="" class="" method="" message="" />
+  <Error code="" class="" method="" message="" />
+  <Error code="" class="" method="" message="" />
+  <Error code="" class="" method="" message="" />
+  <Error code="" class="" method="" message="" />
+  <Error code="" class="" method="" message="" />
+  <Error code="" class="" method="" message="" />
+  <Error code="" class="" method="" message="" />
+  <Error code="" class="" method="" message="" />
+  <Error code="" class="" method="" message="" />
+  <Error code="" class="" method="" message="" />
+  <Error code="" class="" method="" message="" />
+  <Error code="" class="" method="" message="" />
+  <Error code="" class="" method="" message="" />
+  <Error code="" class="" method="" message="" />
+</Errors>

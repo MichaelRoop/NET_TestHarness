@@ -29,11 +29,13 @@ namespace TestCases {
             WrapErr.ToErrReport(out err, -1, "Unexpected Error running Test", () => {
                 action.Invoke();
             });
-            TestHelpers.ErrToConsole(err);
-            Assert.Fail("Unexpected Exception Occured on test:{0} {1}", err.Code, err.Msg);
+            if (err.Code != 0) {
+                TestHelpers.ErrToConsole(err);
+                Assert.Fail("Unexpected Exception Occured on test:{0} {1}", err.Code, err.Msg);
+            }
         }
 
-        public static ErrReport CatchExpected(Action action, int code, string atClass, string atMethod, string msg) {
+        public static ErrReport CatchExpected(int code, string atClass, string atMethod, string msg, Action action) {
             ErrReport err = new ErrReport();
             WrapErr.ToErrReport(out err, -999999, "Unexpected Error running Test", () => {
                 action.Invoke();
