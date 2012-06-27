@@ -14,7 +14,7 @@ namespace SpStateMachine.Core {
     /// together to drive events and behavior
     /// </summary>
     /// <typeparam name="TEventObject"></typeparam>
-    public sealed class SpStateMachineEngine<T> : IDisposable {
+    public sealed class SpStateMachineEngine : IDisposable {
 
         #region Data
 
