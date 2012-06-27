@@ -5,9 +5,9 @@ using System.Text;
 
 namespace SpStateMachine.Interfaces {
 
-    public interface ISpEventListner <TEventObject> {
+    public interface ISpEventListner <T> {
 
-        event Action<TEventObject> EventReceived;
+        event Action<ISpEvent<T>> EventReceived;
 
     }
 }

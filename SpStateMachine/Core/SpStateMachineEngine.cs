@@ -14,7 +14,7 @@ namespace SpStateMachine.Core {
     /// together to drive events and behavior
     /// </summary>
     /// <typeparam name="TEventObject"></typeparam>
-    public sealed class SpStateMachineEngine<TEventObject> : IDisposable {
+    public sealed class SpStateMachineEngine<T> : IDisposable {
 
         #region Data
 
@@ -24,15 +24,15 @@ namespace SpStateMachine.Core {
 
         ISpPeriodicTimer timer = null;
 
-        ISpStateMachine<TEventObject> stateMachine = null;
+        ISpStateMachine<T> stateMachine = null;
 
-        ISpEventStore<TEventObject> eventStore = null;
+        ISpEventStore<T> eventStore = null;
 
-        ISpEventListner <TEventObject> eventListner = null;
+        ISpEventListner <T> eventListner = null;
 
         Action wakeUpAction = null;
 
-        Action<TEventObject> eventReceivedAction = null;
+        Action<ISpEvent<T>> eventReceivedAction = null;
 
         ManualResetEvent threadWakeEvent = new ManualResetEvent(false);
 
@@ -58,14 +58,14 @@ namespace SpStateMachine.Core {
         /// <param name="eventStore">The object that stores events</param>
         /// <param name="stateMachine">The state machine that interprets the events</param>
         /// <param name="timer">The periodic timer</param>
-        public SpStateMachineEngine(ISpEventListner<TEventObject> eventListner, ISpEventStore<TEventObject> eventStore, ISpStateMachine<TEventObject> stateMachine, ISpPeriodicTimer timer) {
+        public SpStateMachineEngine(ISpEventListner<T> eventListner, ISpEventStore<T> eventStore, ISpStateMachine<T> stateMachine, ISpPeriodicTimer timer) {
             WrapErr.ChkParam(eventStore, "eventStore", 99999);
             WrapErr.ChkParam(eventListner, "eventListner", 99999);
             WrapErr.ChkParam(stateMachine, "stateMachine", 99999);
             WrapErr.ChkParam(timer, "timer", 99999);
 
             this.wakeUpAction = new Action(timer_OnWakeup);
-            this.eventReceivedAction = new Action<TEventObject>(eventListner_EventReceived);
+            this.eventReceivedAction = new Action<ISpEvent<T>>(eventListner_EventReceived);
 
             this.eventListner = eventListner;
             this.eventStore = eventStore;
@@ -187,7 +187,7 @@ namespace SpStateMachine.Core {
         /// Event from the event listner gets stuffed in the store
         /// </summary>
         /// <param name="eventObject"></param>
-        void eventListner_EventReceived(TEventObject eventObject) {
+        void eventListner_EventReceived(ISpEvent<T> eventObject) {
             this.eventStore.Add(eventObject);
         }
 

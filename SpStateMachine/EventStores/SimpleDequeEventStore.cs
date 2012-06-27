@@ -14,10 +14,10 @@ namespace SpStateMachine.EventStores {
         private object queueLock = new object();
 
         /// <summary>Event queue</summary>
-        private Queue<T> queue = new Queue<T>();
+        private Queue<ISpEvent<T>> queue = new Queue<ISpEvent<T>>();
 
         /// <summary>Used to hold the tick event when there are no queued event objects</summary>
-        private T defaultTick = default(T);
+        private ISpEvent<T> defaultTick = null;
 
         #endregion
 
@@ -36,7 +36,7 @@ namespace SpStateMachine.EventStores {
         /// <param name="defaultTick">
         /// The default tick event if to provide if there are no queued event objects
         /// </param>
-        public SimpleDequeEventStore(T defaultTick) {
+        public SimpleDequeEventStore(ISpEvent<T> defaultTick) {
             this.defaultTick = defaultTick;
         }
         
@@ -48,7 +48,7 @@ namespace SpStateMachine.EventStores {
         /// Add and event object to the store
         /// </summary>
         /// <param name="eventObject"></param>
-        public void Add(T eventObject) {
+        public void Add(ISpEvent<T> eventObject) {
             lock (this.queueLock) {
                 this.queue.Enqueue(eventObject);
             }
@@ -59,10 +59,10 @@ namespace SpStateMachine.EventStores {
         /// Pop the next event object from the store
         /// </summary>
         /// <returns>The T object</returns>
-        public T Get() {
+        public ISpEvent<T> Get() {
             // Make stack variable and only lock the queue for the duration of the copy to
             // free it up for other threads to add other events
-            T eventCopy = default(T);
+            ISpEvent<T> eventCopy = null;
             lock (this.queueLock) {
                 eventCopy = this.queue.Count > 0 ? this.queue.Dequeue() : this.defaultTick;
             }
