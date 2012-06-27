@@ -9,9 +9,10 @@ namespace SpStateMachine.Interfaces {
     /// <summary>
     /// Interface for a generic event type for the SpStateMachine architecture
     /// </summary>
-    /// <typeparam name="T">The payload type</typeparam>
     /// <author>Michael Roop</author>
-    public interface ISpEvent<T> {
+    public interface ISpEvent {
+
+        // TODO - may need a GUID to correlate it to the event response
 
         /// <summary>
         /// The unique event ID
@@ -23,12 +24,6 @@ namespace SpStateMachine.Interfaces {
         /// The event priority
         /// </summary>
         SpEventPriority Priority { get; set; }
-
-
-        /// <summary>
-        /// The event payload
-        /// </summary>
-        T Payload { get; set; }
 
     }
 }

@@ -11,9 +11,8 @@ namespace SpStateMachine.EventStores {
     /// Base class for event stores that handle locking and using
     /// default tick object for non sent event ticks
     /// </summary>
-    /// <typeparam name="T">The payload type</typeparam>
     /// <author>Michael Roop</author>
-    public abstract class BaseEventStore<T> : ISpEventStore<T> {
+    public abstract class BaseEventStore : ISpEventStore {
         
         #region Data
 
@@ -21,7 +20,7 @@ namespace SpStateMachine.EventStores {
         private object queueLock = new object();
 
         /// <summary>Used to hold the tick event when there are no queued event objects</summary>
-        private ISpEvent<T> defaultTick = null;
+        private ISpEvent defaultTick = null;
 
         #endregion
 
@@ -40,7 +39,7 @@ namespace SpStateMachine.EventStores {
         /// <param name="defaultTick">
         /// The default tick event if to provide if there are no queued event objects
         /// </param>
-        public BaseEventStore(ISpEvent<T> defaultTick) {
+        public BaseEventStore(ISpEvent defaultTick) {
             this.defaultTick = defaultTick;
         }
         
@@ -52,7 +51,7 @@ namespace SpStateMachine.EventStores {
         /// Add and event object to the store
         /// </summary>
         /// <param name="eventObject"></param>
-        public void Add(ISpEvent<T> eventObject) {
+        public void Add(ISpEvent eventObject) {
             lock (this.queueLock) {
                 this.AddEvent(eventObject);
             }
@@ -63,10 +62,10 @@ namespace SpStateMachine.EventStores {
         /// Pop the next event object from the store
         /// </summary>
         /// <returns>The T object</returns>
-        public ISpEvent<T> Get() {
+        public ISpEvent Get() {
             // Make stack variable and only lock the queue for the duration of the copy to
             // free it up for other threads to add events
-            ISpEvent<T> eventCopy = null;
+            ISpEvent eventCopy = null;
             lock (this.queueLock) {
                 eventCopy = this.GetEvent();
             }
@@ -81,14 +80,14 @@ namespace SpStateMachine.EventStores {
         /// Get an event from the store child implementation
         /// </summary>
         /// <returns>The next event or null if none found</returns>
-        protected abstract ISpEvent<T> GetEvent();
+        protected abstract ISpEvent GetEvent();
 
 
         /// <summary>
         /// Add an event to the child implementation
         /// </summary>
         /// <param name="eventObject">The event object to add</param>
-        protected abstract void AddEvent(ISpEvent<T> eventObject);
+        protected abstract void AddEvent(ISpEvent eventObject);
 
         #endregion
 

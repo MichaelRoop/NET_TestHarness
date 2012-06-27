@@ -24,15 +24,15 @@ namespace SpStateMachine.Core {
 
         ISpPeriodicTimer timer = null;
 
-        ISpStateMachine<T> stateMachine = null;
+        ISpStateMachine stateMachine = null;
 
-        ISpEventStore<T> eventStore = null;
+        ISpEventStore eventStore = null;
 
-        ISpEventListner <T> eventListner = null;
+        ISpEventListner eventListner = null;
 
         Action wakeUpAction = null;
 
-        Action<ISpEvent<T>> eventReceivedAction = null;
+        Action<ISpEvent> eventReceivedAction = null;
 
         ManualResetEvent threadWakeEvent = new ManualResetEvent(false);
 
@@ -58,14 +58,14 @@ namespace SpStateMachine.Core {
         /// <param name="eventStore">The object that stores events</param>
         /// <param name="stateMachine">The state machine that interprets the events</param>
         /// <param name="timer">The periodic timer</param>
-        public SpStateMachineEngine(ISpEventListner<T> eventListner, ISpEventStore<T> eventStore, ISpStateMachine<T> stateMachine, ISpPeriodicTimer timer) {
+        public SpStateMachineEngine(ISpEventListner eventListner, ISpEventStore eventStore, ISpStateMachine stateMachine, ISpPeriodicTimer timer) {
             WrapErr.ChkParam(eventStore, "eventStore", 99999);
             WrapErr.ChkParam(eventListner, "eventListner", 99999);
             WrapErr.ChkParam(stateMachine, "stateMachine", 99999);
             WrapErr.ChkParam(timer, "timer", 99999);
 
             this.wakeUpAction = new Action(timer_OnWakeup);
-            this.eventReceivedAction = new Action<ISpEvent<T>>(eventListner_EventReceived);
+            this.eventReceivedAction = new Action<ISpEvent>(eventListner_EventReceived);
 
             this.eventListner = eventListner;
             this.eventStore = eventStore;
@@ -187,7 +187,7 @@ namespace SpStateMachine.Core {
         /// Event from the event listner gets stuffed in the store
         /// </summary>
         /// <param name="eventObject"></param>
-        void eventListner_EventReceived(ISpEvent<T> eventObject) {
+        void eventListner_EventReceived(ISpEvent eventObject) {
             this.eventStore.Add(eventObject);
         }
 

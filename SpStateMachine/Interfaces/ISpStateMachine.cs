@@ -5,9 +5,9 @@ using System.Text;
 
 namespace SpStateMachine.Interfaces {
 
-    public interface ISpStateMachine<T> {
+    public interface ISpStateMachine {
 
-        void Tick(ISpEvent<T> eventObject);
+        void Tick(ISpEvent eventObject);
 
     }
 }

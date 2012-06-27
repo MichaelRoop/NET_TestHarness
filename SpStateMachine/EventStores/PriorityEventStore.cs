@@ -12,33 +12,25 @@ namespace SpStateMachine.EventStores {
     /// line. Using a queue for each priority to prevent sorting
     /// and maintain order of same priority events
     /// </summary>
-    /// <typeparam name="T">The payload type</typeparam>
-    public class PriorityEventStore<T> : BaseEventStore<T> {
+    public class PriorityEventStore : BaseEventStore {
 
         #region Data
 
         /// <summary>Low Priority Event queue</summary>
-        private Queue<ISpEvent<T>> lowPriorityQueue = new Queue<ISpEvent<T>>();
+        private Queue<ISpEvent> lowPriorityQueue = new Queue<ISpEvent>();
 
         /// <summary>Normal Priority Event queue</summary>
-        private Queue<ISpEvent<T>> NormalPriorityQueue = new Queue<ISpEvent<T>>();
+        private Queue<ISpEvent> NormalPriorityQueue = new Queue<ISpEvent>();
 
         /// <summary>Hight Priority Event queue</summary>
-        private Queue<ISpEvent<T>> HighPriorityQueue = new Queue<ISpEvent<T>>();
+        private Queue<ISpEvent> HighPriorityQueue = new Queue<ISpEvent>();
 
         /// <summary>Urgent Priority Event queue</summary>
-        private Queue<ISpEvent<T>> UrgentPriorityQueue = new Queue<ISpEvent<T>>();
+        private Queue<ISpEvent> UrgentPriorityQueue = new Queue<ISpEvent>();
         
         #endregion
         
         #region Constructors
-
-        /// <summary>
-        /// Default constructor in private scope to prevent usage
-        /// </summary>
-        private PriorityEventStore() {
-        }
-
 
         /// <summary>
         /// Constructor
@@ -46,8 +38,8 @@ namespace SpStateMachine.EventStores {
         /// <param name="defaultTick">
         /// The default tick event if to provide if there are no queued event objects
         /// </param>
-        public PriorityEventStore(ISpEvent<T> defaultTick) {
-            this.defaultTick = defaultTick;
+        public PriorityEventStore(ISpEvent defaultTick)
+            : base(defaultTick) {
         }
         
         #endregion
@@ -58,7 +50,7 @@ namespace SpStateMachine.EventStores {
         /// Get an event from the highest level queue descending
         /// </summary>
         /// <returns>The next event or null if none found</returns>
-        protected override ISpEvent<T> GetEvent() {
+        protected override ISpEvent GetEvent() {
             if (this.UrgentPriorityQueue.Count > 0) {
                 return this.UrgentPriorityQueue.Dequeue();
             }
@@ -79,7 +71,7 @@ namespace SpStateMachine.EventStores {
         /// Add an event to the proper priority queue
         /// </summary>
         /// <param name="eventObject">The event object to add</param>
-        protected override void AddEvent(ISpEvent<T> eventObject) {
+        protected override void AddEvent(ISpEvent eventObject) {
             switch (eventObject.Priority) {
                 case SpEventPriority.Low:
                     this.lowPriorityQueue.Enqueue(eventObject);

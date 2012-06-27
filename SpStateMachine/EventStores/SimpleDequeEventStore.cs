@@ -11,12 +11,12 @@ namespace SpStateMachine.EventStores {
     /// </summary>
     /// <typeparam name="T">The payload type of the event object</typeparam>
     /// <author>Michael Roop</author>
-    public class SimpleDequeEventStore<T> : BaseEventStore<T> { 
+    public class SimpleDequeEventStore : BaseEventStore { 
 
         #region Data
 
         /// <summary>Event queue</summary>
-        private Queue<ISpEvent<T>> queue = new Queue<ISpEvent<T>>();
+        private Queue<ISpEvent> queue = new Queue<ISpEvent>();
 
         #endregion
 
@@ -28,7 +28,7 @@ namespace SpStateMachine.EventStores {
         /// <param name="defaultTick">
         /// The default tick event if to provide if there are no queued event objects
         /// </param>
-        public SimpleDequeEventStore(ISpEvent<T> defaultTick)
+        public SimpleDequeEventStore(ISpEvent defaultTick)
             : base(defaultTick) {
         }
         
@@ -40,7 +40,7 @@ namespace SpStateMachine.EventStores {
         /// Get an event from the queue
         /// </summary>
         /// <returns>The next event or null if none found</returns>
-        protected override ISpEvent<T> GetEvent() {
+        protected override ISpEvent GetEvent() {
             return this.queue.Count == 0 ? null : this.queue.Dequeue();
         }
 
@@ -49,7 +49,7 @@ namespace SpStateMachine.EventStores {
         /// Add an event to the queue
         /// </summary>
         /// <param name="eventObject">The event object to add</param>
-        protected override void AddEvent(ISpEvent<T> eventObject) {
+        protected override void AddEvent(ISpEvent eventObject) {
             this.queue.Enqueue(eventObject);
         }
 

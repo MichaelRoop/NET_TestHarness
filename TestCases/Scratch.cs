@@ -11,6 +11,54 @@ namespace TestCases {
     [TestFixture, Explicit]
     public class Scratch {
 
+        #region Cast from Interface
+
+        public interface ITestInt {
+            int Id { get; set; }
+        }
+
+        public class ChildBase : ITestInt {
+            private int id = 1;
+
+            public int Id {
+                get { return id; }
+                set { id = value; }
+            }
+
+            public ChildBase(int id) {
+                this.id = id;
+            }
+        }
+
+        public class Child1 : ChildBase {
+            private int intProp = 99;
+            public Child1(int id) : base(id) { }
+            public int IntProperty { get { return this.intProp; } set { this.intProp = value; } }
+        }
+
+        public class Child2 : ChildBase {
+            string stringProp = "Hi";
+            public Child2(int id) : base(id) { }
+            public string StringProperty { get { return this.stringProp; } set { this.stringProp = value; } }
+        }
+
+
+        [Test, Explicit]
+        public void TestCastFromInterface() {
+
+            ITestInt intProp = new Child1(22);
+            ITestInt strProp = new Child2(33);
+            Console.WriteLine("Child1 cast id:{0} - int prop:{1}", ((Child1)intProp).Id, ((Child1)intProp).IntProperty);
+            Console.WriteLine("Child2 cast id:{0} - str prop:{1}", ((Child2)strProp).Id, ((Child2)strProp).StringProperty);
+
+        }
+
+
+        #endregion
+
+
+
+
         [Test, Explicit]
         public void DoScratch() {
 
