@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SpStateMachine.Interfaces {
 
-    public interface IEventStore <T> {
+    public interface ISpEventStore <T> {
 
         /// <summary>
         /// Add and event object to the store
@@ -16,7 +16,7 @@ namespace SpStateMachine.Interfaces {
         /// <summary>
         /// Pop the next event object from the store
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The T object</returns>
         T Get();
 
 

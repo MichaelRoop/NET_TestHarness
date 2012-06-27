@@ -5,10 +5,16 @@ using System.Text;
 using SpStateMachine.Interfaces;
 using ChkUtils;
 using System.Threading;
+using ChkUtils.ErrObjects;
 
 namespace SpStateMachine.Core {
 
-    public sealed class SpStateMachineEngine<TEventObject> {
+    /// <summary>
+    /// Combines the different elements of the State Machine architecture
+    /// together to drive events and behavior
+    /// </summary>
+    /// <typeparam name="TEventObject"></typeparam>
+    public sealed class SpStateMachineEngine<TEventObject> : IDisposable {
 
         #region Data
 
@@ -16,13 +22,13 @@ namespace SpStateMachine.Core {
 
         bool isBusy =  false;
 
-        IPeriodicTimer timer = null;
+        ISpPeriodicTimer timer = null;
 
         ISpStateMachine<TEventObject> stateMachine = null;
 
-        IEventStore<TEventObject> eventStore = null;
+        ISpEventStore<TEventObject> eventStore = null;
 
-        IEventListner <TEventObject> eventListner = null;
+        ISpEventListner <TEventObject> eventListner = null;
 
         Action wakeUpAction = null;
 
@@ -31,6 +37,8 @@ namespace SpStateMachine.Core {
         ManualResetEvent threadWakeEvent = new ManualResetEvent(false);
 
         private bool terminateThread = false;
+
+        private Thread driverThread = null;
 
         #endregion
 
@@ -50,7 +58,7 @@ namespace SpStateMachine.Core {
         /// <param name="eventStore">The object that stores events</param>
         /// <param name="stateMachine">The state machine that interprets the events</param>
         /// <param name="timer">The periodic timer</param>
-        public SpStateMachineEngine(IEventListner<TEventObject> eventListner, IEventStore<TEventObject> eventStore, ISpStateMachine<TEventObject> stateMachine, IPeriodicTimer timer) {
+        public SpStateMachineEngine(ISpEventListner<TEventObject> eventListner, ISpEventStore<TEventObject> eventStore, ISpStateMachine<TEventObject> stateMachine, ISpPeriodicTimer timer) {
             WrapErr.ChkParam(eventStore, "eventStore", 99999);
             WrapErr.ChkParam(eventListner, "eventListner", 99999);
             WrapErr.ChkParam(stateMachine, "stateMachine", 99999);
@@ -64,12 +72,20 @@ namespace SpStateMachine.Core {
             this.stateMachine = stateMachine;
             this.timer = timer;
 
+            this.driverThread = new Thread(new ThreadStart(this.DriverThread));
+            this.driverThread.Start();
+
             this.eventListner.EventReceived += this.eventReceivedAction;
             this.timer.OnWakeup += this.wakeUpAction;
         }
 
 
-        // TODO IDisposable
+        /// <summary>
+        /// Finalizer
+        /// </summary>
+        ~SpStateMachineEngine() {
+            this.Dispose(false);
+        }
 
         #endregion
 
@@ -87,16 +103,22 @@ namespace SpStateMachine.Core {
 
         #region Private Thread Methods
 
+        /// <summary>
+        /// Thread to drive the state machine
+        /// </summary>
         private void DriverThread() {
-
+            // Prevent any exceptions from propagating from thread
+            ErrReport err = new ErrReport();
             while (!this.terminateThread) {
-                this.SetBusyState(false);
-                this.threadWakeEvent.WaitOne();
-                this.SetBusyState(true);
-                this.threadWakeEvent.Reset();
+                WrapErr.ToErrReport(out err, 9999, () => {
+                    // Return from push and wait
+                    this.ThreadAction(() => { this.SetBusy(false); });
+                    this.ThreadAction(() => { this.threadWakeEvent.WaitOne(); });
 
-                // Get the event from the event object and push to state machine
-                this.stateMachine.Tick(this.eventStore.Get());
+                    // Wakeup and push next event to state machine
+                    this.ThreadAction(() => { this.SetBusy(true, () => { this.threadWakeEvent.Reset(); }); });
+                    this.ThreadAction(() => { this.stateMachine.Tick(this.eventStore.Get()); });
+                });
             }
         }
         
@@ -105,22 +127,45 @@ namespace SpStateMachine.Core {
         #region Private Methods
 
         /// <summary>
+        /// Wrap an action in a check to see first if thread is terminated
+        /// </summary>
+        /// <param name="action">The action to invoke</param>
+        private void ThreadAction(Action action) {
+            if (!this.terminateThread) {
+                WrapErr.SafeAction(action);
+            }
+        }
+
+
+        /// <summary>
         /// Thread safe query of busy state
         /// </summary>
-        /// <returns></returns>
+        /// <returns>true if busy, otherwise false</returns>
         private bool IsBusy() {
             lock (this.busyLock) {
                 return this.isBusy;
             }
         }
 
+
         /// <summary>
-        /// Thread safe set of busy state
+        /// Set the busy state with no actions
         /// </summary>
-        /// <param name="isBusy">busy state status</param>
-        private void SetBusyState(bool isBusy) {
+        /// <param name="isBusy">true is state is to be busy, otherwise false</param>
+        private void SetBusy(bool isBusy) {
+            this.SetBusy(isBusy, () => { });
+        }
+
+
+        /// <summary>
+        /// Set the state busy and invoke an action within the state lock
+        /// </summary>
+        /// <param name="isBusy">true is state is to be busy, otherwise false</param>
+        /// <param name="action">The action to invoke within the busy state lock</param>
+        private void SetBusy(bool isBusy, Action action) {
             lock (this.busyLock) {
-                this.isBusy = isBusy;
+                this.isBusy = false;
+                WrapErr.SafeAction(() => action.Invoke());
             }
         }
 
@@ -148,6 +193,50 @@ namespace SpStateMachine.Core {
 
         #endregion
 
+        #region IDisposable
 
+        private bool disposed = false;
+
+        public void Dispose() {
+            this.Dispose(true);
+
+            // Prevent finalizer call if already released
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing) {
+            if (!disposed) {
+                WrapErr.SafeAction(() => this.timer.Stop());
+
+                // always save to shut down the thread first on Dispose even if called by Finalizer
+                this.terminateThread = true;
+                WrapErr.SafeAction(() => this.threadWakeEvent.Set());
+
+                if (this.driverThread != null) {
+                    if (!this.driverThread.Join(5000)) {
+                        WrapErr.SafeAction(() => this.driverThread.Abort());
+                    }
+                }
+
+
+                if (disposing) {
+                    if (this.timer != null) {
+                        WrapErr.SafeAction(() => this.timer.Dispose());
+                        this.timer = null;
+                    }
+                    if (this.threadWakeEvent != null) {
+                        WrapErr.SafeAction(() => this.threadWakeEvent.Dispose());
+                        this.threadWakeEvent = null;
+                    }
+
+                    // TODO - find if others are to be disposed
+                }
+                disposed = true;
+            }
+
+        }
+
+
+        #endregion
     }
 }

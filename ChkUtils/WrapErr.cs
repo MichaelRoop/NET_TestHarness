@@ -352,6 +352,17 @@ namespace ChkUtils {
         /// </summary>
         /// <param name="report">The ErrReport object to initialise</param>
         /// <param name="code">The error code on error</param>
+        /// <param name="action">The action to invoke</param>
+        public static void ToErrReport(out ErrReport report, int code, Action action) {
+            report = WrapErr.WrapTryToErrReport(code, () => { return "Unexpected Error"; }, action, () => { ; });
+        }
+
+
+        /// <summary>
+        /// Wrap an action and report the results with an ErrReport object. No exceptions will propegate
+        /// </summary>
+        /// <param name="report">The ErrReport object to initialise</param>
+        /// <param name="code">The error code on error</param>
         /// <param name="msg">The error message on error</param>
         /// <param name="action">The action to invoke</param>
         public static void ToErrReport(out ErrReport report, int code, string msg, Action action) {

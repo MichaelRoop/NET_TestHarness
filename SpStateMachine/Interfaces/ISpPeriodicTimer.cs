@@ -9,7 +9,7 @@ namespace SpStateMachine.Interfaces {
     /// Interface to define a periodic timer to pulse
     /// the state machine
     /// </summary>
-    public interface IPeriodicTimer {
+    public interface ISpPeriodicTimer : IDisposable {
 
         /// <summary>
         /// This event will be raised when the period expires and

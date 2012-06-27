@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SpStateMachine.Interfaces {
 
-    public interface IEventListner <TEventObject> {
+    public interface ISpEventListner <TEventObject> {
 
         event Action<TEventObject> EventReceived;
 

@@ -41,10 +41,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Core\SpEventPriority.cs" />
     <Compile Include="Core\SpStateMachineEngine.cs" />
-    <Compile Include="Interfaces\IEventListner.cs" />
-    <Compile Include="Interfaces\IEventStore.cs" />
-    <Compile Include="Interfaces\IPeriodicTimer.cs" />
+    <Compile Include="EventStores\SimpleDequeEventStore.cs" />
+    <Compile Include="Interfaces\ISpEvent.cs" />
+    <Compile Include="Interfaces\ISpEventListner.cs" />
+    <Compile Include="Interfaces\ISpEventStore.cs" />
+    <Compile Include="Interfaces\ISpPeriodicTimer.cs" />
     <Compile Include="Interfaces\ISpStateMachine.cs" />
     <Compile Include="PeriodicTimers\WinSimpleTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -14,7 +14,7 @@ namespace SpStateMachine.PeriodicTimers {
     /// System.Timers.Timer class
     /// </summary>
     /// <author>Michael Roop</author>
-    public sealed class WinSimpleTimer : IPeriodicTimer, IDisposable {
+    public sealed class WinSimpleTimer : ISpPeriodicTimer {
 
         #region Data
 
