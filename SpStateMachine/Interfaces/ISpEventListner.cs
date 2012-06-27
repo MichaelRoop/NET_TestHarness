@@ -16,5 +16,16 @@ namespace SpStateMachine.Interfaces {
         event Action<ISpMessage> MsgReceived;
 
         #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Post an ISpMessage response to an ISpMessage
+        /// </summary>
+        /// <param name="msg">The reponse to post</param>
+        void PostResponse(ISpMessage msg);
+
+        #endregion
+
     }
 }

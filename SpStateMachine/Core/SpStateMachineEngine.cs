@@ -29,8 +29,6 @@ namespace SpStateMachine.Core {
 
         ISpEventListner msgListner = null;
 
-        ISpEventResponder msgResponder = null;
-
         Action wakeUpAction = null;
 
         Action<ISpMessage> msgReceivedAction = null;
@@ -59,9 +57,8 @@ namespace SpStateMachine.Core {
         /// <param name="eventStore">The object that stores events</param>
         /// <param name="stateMachine">The state machine that interprets the events</param>
         /// <param name="timer">The periodic timer</param>
-        public SpStateMachineEngine(ISpEventListner msgListner, ISpEventResponder msgResponder, ISpEventStore msgStore, ISpStateMachine stateMachine, ISpPeriodicTimer timer) {
+        public SpStateMachineEngine(ISpEventListner msgListner, ISpEventStore msgStore, ISpStateMachine stateMachine, ISpPeriodicTimer timer) {
             WrapErr.ChkParam(msgListner, "msgListner", 99999);
-            WrapErr.ChkParam(msgResponder, "msgResponder", 99999);
             WrapErr.ChkParam(msgStore, "eventStore", 99999);
             WrapErr.ChkParam(stateMachine, "stateMachine", 99999);
             WrapErr.ChkParam(timer, "timer", 99999);
@@ -70,7 +67,6 @@ namespace SpStateMachine.Core {
             this.msgReceivedAction = new Action<ISpMessage>(this.eventListner_MsgReceived);
 
             this.msgListner = msgListner;
-            this.msgResponder = msgResponder;
             this.msgStore = msgStore;
             this.stateMachine = stateMachine;
             this.timer = timer;
@@ -125,7 +121,7 @@ namespace SpStateMachine.Core {
                         }); 
                     });
                     this.ThreadAction(() => { 
-                        this.msgResponder.PostResponse(
+                        this.msgListner.PostResponse(
                             this.stateMachine.Tick(
                                 this.msgStore.Get())); 
                     });
