@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Core\SpEventPriority.cs" />
     <Compile Include="Core\SpStateMachineEngine.cs" />
+    <Compile Include="EventListners\SimpleEventListner.cs" />
     <Compile Include="EventStores\BaseEventStore.cs" />
     <Compile Include="EventStores\PriorityEventStore.cs" />
     <Compile Include="EventStores\SimpleDequeEventStore.cs" />
