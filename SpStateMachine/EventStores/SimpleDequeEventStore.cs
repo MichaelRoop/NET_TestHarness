@@ -6,29 +6,21 @@ using SpStateMachine.Interfaces;
 
 namespace SpStateMachine.EventStores {
 
-    public class SimpleDequeEventStore<T> : ISpEventStore<T> {
+    /// <summary>
+    /// Simple event object store using a queue
+    /// </summary>
+    /// <typeparam name="T">The payload type of the event object</typeparam>
+    /// <author>Michael Roop</author>
+    public class SimpleDequeEventStore<T> : BaseEventStore<T> { 
 
         #region Data
-
-        /// <summary>Thread safe lock for the queue</summary>
-        private object queueLock = new object();
 
         /// <summary>Event queue</summary>
         private Queue<ISpEvent<T>> queue = new Queue<ISpEvent<T>>();
 
-        /// <summary>Used to hold the tick event when there are no queued event objects</summary>
-        private ISpEvent<T> defaultTick = null;
-
         #endregion
 
         #region Constructors
-
-        /// <summary>
-        /// Default constructor in private scope to prevent usage
-        /// </summary>
-        private SimpleDequeEventStore() {
-        }
-
 
         /// <summary>
         /// Constructor
@@ -36,37 +28,29 @@ namespace SpStateMachine.EventStores {
         /// <param name="defaultTick">
         /// The default tick event if to provide if there are no queued event objects
         /// </param>
-        public SimpleDequeEventStore(ISpEvent<T> defaultTick) {
-            this.defaultTick = defaultTick;
+        public SimpleDequeEventStore(ISpEvent<T> defaultTick)
+            : base(defaultTick) {
         }
         
         #endregion
 
-        #region IEventStore
+        #region BaseEventStore overrides
 
         /// <summary>
-        /// Add and event object to the store
+        /// Get an event from the queue
         /// </summary>
-        /// <param name="eventObject"></param>
-        public void Add(ISpEvent<T> eventObject) {
-            lock (this.queueLock) {
-                this.queue.Enqueue(eventObject);
-            }
+        /// <returns>The next event or null if none found</returns>
+        protected override ISpEvent<T> GetEvent() {
+            return this.queue.Count == 0 ? null : this.queue.Dequeue();
         }
 
 
         /// <summary>
-        /// Pop the next event object from the store
+        /// Add an event to the queue
         /// </summary>
-        /// <returns>The T object</returns>
-        public ISpEvent<T> Get() {
-            // Make stack variable and only lock the queue for the duration of the copy to
-            // free it up for other threads to add other events
-            ISpEvent<T> eventCopy = null;
-            lock (this.queueLock) {
-                eventCopy = this.queue.Count > 0 ? this.queue.Dequeue() : this.defaultTick;
-            }
-            return eventCopy;
+        /// <param name="eventObject">The event object to add</param>
+        protected override void AddEvent(ISpEvent<T> eventObject) {
+            this.queue.Enqueue(eventObject);
         }
 
         #endregion

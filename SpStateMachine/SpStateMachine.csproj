@@ -43,6 +43,7 @@
     <Compile Include="Class1.cs" />
     <Compile Include="Core\SpEventPriority.cs" />
     <Compile Include="Core\SpStateMachineEngine.cs" />
+    <Compile Include="EventStores\PriorityEventStore.cs" />
     <Compile Include="EventStores\SimpleDequeEventStore.cs" />
     <Compile Include="Interfaces\ISpEvent.cs" />
     <Compile Include="Interfaces\ISpEventListner.cs" />
