@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,11 +46,14 @@
     <Compile Include="EventStores\BaseEventStore.cs" />
     <Compile Include="EventStores\PriorityEventStore.cs" />
     <Compile Include="EventStores\SimpleDequeEventStore.cs" />
-    <Compile Include="Interfaces\ISpEvent.cs" />
+    <Compile Include="Interfaces\ISpEventResponder.cs" />
+    <Compile Include="Interfaces\ISpMessage.cs" />
     <Compile Include="Interfaces\ISpEventListner.cs" />
     <Compile Include="Interfaces\ISpEventStore.cs" />
     <Compile Include="Interfaces\ISpPeriodicTimer.cs" />
     <Compile Include="Interfaces\ISpStateMachine.cs" />
+    <Compile Include="Messages\BaseMsg.cs" />
+    <Compile Include="Messages\BaseResponse.cs" />
     <Compile Include="PeriodicTimers\WinSimpleTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

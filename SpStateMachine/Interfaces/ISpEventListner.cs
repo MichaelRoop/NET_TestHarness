@@ -1,13 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SpStateMachine.Interfaces {
 
+    /// <summary>
+    /// Interface to define a listner for ISpMessages
+    /// </summary>
+    /// <author>Michael Roop</author>
     public interface ISpEventListner {
 
-        event Action<ISpEvent> EventReceived;
+        #region Events
 
+        /// <summary>
+        /// Event raised when a message is received
+        /// </summary>
+        event Action<ISpMessage> MsgReceived;
+
+        #endregion
     }
 }

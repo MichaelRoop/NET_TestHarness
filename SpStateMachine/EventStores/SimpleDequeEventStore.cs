@@ -16,7 +16,7 @@ namespace SpStateMachine.EventStores {
         #region Data
 
         /// <summary>Event queue</summary>
-        private Queue<ISpEvent> queue = new Queue<ISpEvent>();
+        private Queue<ISpMessage> queue = new Queue<ISpMessage>();
 
         #endregion
 
@@ -28,7 +28,7 @@ namespace SpStateMachine.EventStores {
         /// <param name="defaultTick">
         /// The default tick event if to provide if there are no queued event objects
         /// </param>
-        public SimpleDequeEventStore(ISpEvent defaultTick)
+        public SimpleDequeEventStore(ISpMessage defaultTick)
             : base(defaultTick) {
         }
         
@@ -40,7 +40,7 @@ namespace SpStateMachine.EventStores {
         /// Get an event from the queue
         /// </summary>
         /// <returns>The next event or null if none found</returns>
-        protected override ISpEvent GetEvent() {
+        protected override ISpMessage GetEvent() {
             return this.queue.Count == 0 ? null : this.queue.Dequeue();
         }
 
@@ -49,7 +49,7 @@ namespace SpStateMachine.EventStores {
         /// Add an event to the queue
         /// </summary>
         /// <param name="eventObject">The event object to add</param>
-        protected override void AddEvent(ISpEvent eventObject) {
+        protected override void AddEvent(ISpMessage eventObject) {
             this.queue.Enqueue(eventObject);
         }
 

@@ -15,13 +15,13 @@ namespace SpStateMachine.Interfaces {
         /// Add and event object to the store
         /// </summary>
         /// <param name="eventObject"></param>
-        void Add(ISpEvent eventObject);
+        void Add(ISpMessage eventObject);
 
         /// <summary>
         /// Pop the next event object from the store
         /// </summary>
         /// <returns>The event object</returns>
-        ISpEvent Get();
+        ISpMessage Get();
         
     }
 }

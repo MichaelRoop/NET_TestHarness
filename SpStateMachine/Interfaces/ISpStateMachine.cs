@@ -7,7 +7,7 @@ namespace SpStateMachine.Interfaces {
 
     public interface ISpStateMachine {
 
-        void Tick(ISpEvent eventObject);
+        ISpMessage Tick(ISpMessage eventObject);
 
     }
 }

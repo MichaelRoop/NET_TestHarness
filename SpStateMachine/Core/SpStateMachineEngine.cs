@@ -13,7 +13,6 @@ namespace SpStateMachine.Core {
     /// Combines the different elements of the State Machine architecture
     /// together to drive events and behavior
     /// </summary>
-    /// <typeparam name="TEventObject"></typeparam>
     public sealed class SpStateMachineEngine : IDisposable {
 
         #region Data
@@ -26,13 +25,15 @@ namespace SpStateMachine.Core {
 
         ISpStateMachine stateMachine = null;
 
-        ISpEventStore eventStore = null;
+        ISpEventStore msgStore = null;
 
-        ISpEventListner eventListner = null;
+        ISpEventListner msgListner = null;
+
+        ISpEventResponder msgResponder = null;
 
         Action wakeUpAction = null;
 
-        Action<ISpEvent> eventReceivedAction = null;
+        Action<ISpMessage> msgReceivedAction = null;
 
         ManualResetEvent threadWakeEvent = new ManualResetEvent(false);
 
@@ -58,24 +59,26 @@ namespace SpStateMachine.Core {
         /// <param name="eventStore">The object that stores events</param>
         /// <param name="stateMachine">The state machine that interprets the events</param>
         /// <param name="timer">The periodic timer</param>
-        public SpStateMachineEngine(ISpEventListner eventListner, ISpEventStore eventStore, ISpStateMachine stateMachine, ISpPeriodicTimer timer) {
-            WrapErr.ChkParam(eventStore, "eventStore", 99999);
-            WrapErr.ChkParam(eventListner, "eventListner", 99999);
+        public SpStateMachineEngine(ISpEventListner msgListner, ISpEventResponder msgResponder, ISpEventStore msgStore, ISpStateMachine stateMachine, ISpPeriodicTimer timer) {
+            WrapErr.ChkParam(msgListner, "msgListner", 99999);
+            WrapErr.ChkParam(msgResponder, "msgResponder", 99999);
+            WrapErr.ChkParam(msgStore, "eventStore", 99999);
             WrapErr.ChkParam(stateMachine, "stateMachine", 99999);
             WrapErr.ChkParam(timer, "timer", 99999);
 
             this.wakeUpAction = new Action(timer_OnWakeup);
-            this.eventReceivedAction = new Action<ISpEvent>(eventListner_EventReceived);
+            this.msgReceivedAction = new Action<ISpMessage>(this.eventListner_MsgReceived);
 
-            this.eventListner = eventListner;
-            this.eventStore = eventStore;
+            this.msgListner = msgListner;
+            this.msgResponder = msgResponder;
+            this.msgStore = msgStore;
             this.stateMachine = stateMachine;
             this.timer = timer;
 
             this.driverThread = new Thread(new ThreadStart(this.DriverThread));
             this.driverThread.Start();
 
-            this.eventListner.EventReceived += this.eventReceivedAction;
+            this.msgListner.MsgReceived += this.msgReceivedAction;
             this.timer.OnWakeup += this.wakeUpAction;
         }
 
@@ -116,8 +119,16 @@ namespace SpStateMachine.Core {
                     this.ThreadAction(() => { this.threadWakeEvent.WaitOne(); });
 
                     // Wakeup and push next event to state machine
-                    this.ThreadAction(() => { this.SetBusy(true, () => { this.threadWakeEvent.Reset(); }); });
-                    this.ThreadAction(() => { this.stateMachine.Tick(this.eventStore.Get()); });
+                    this.ThreadAction(() => { 
+                        this.SetBusy(true, () => { 
+                            this.threadWakeEvent.Reset(); 
+                        }); 
+                    });
+                    this.ThreadAction(() => { 
+                        this.msgResponder.PostResponse(
+                            this.stateMachine.Tick(
+                                this.msgStore.Get())); 
+                    });
                 });
             }
         }
@@ -187,8 +198,8 @@ namespace SpStateMachine.Core {
         /// Event from the event listner gets stuffed in the store
         /// </summary>
         /// <param name="eventObject"></param>
-        void eventListner_EventReceived(ISpEvent eventObject) {
-            this.eventStore.Add(eventObject);
+        void eventListner_MsgReceived(ISpMessage eventObject) {
+            this.msgStore.Add(eventObject);
         }
 
         #endregion
