@@ -13,6 +13,7 @@ using SpStateMachine.EventListners;
 using SpStateMachine.EventStores;
 using SpStateMachine.PeriodicTimers;
 using System.Threading;
+using LogUtils;
 
 namespace TestCases {
 
@@ -22,6 +23,21 @@ namespace TestCases {
         //bool onEntryRaised = false;
         //bool onTickRaised = false;
         //bool onExitRaised = false;
+
+        ConsoleWriter consoleWriter = new ConsoleWriter();
+
+        [TestFixtureSetUp]
+        public void Setup() {
+            Log.SetVerbosity(MsgLevel.Info);
+
+            Log.SetMsgNumberThreshold(1);
+            this.consoleWriter.StartLogging();
+        }
+
+        //[TearDown]
+        //public void Teardown() {
+        //    this.consoleWriter.StopLogging();
+        //}
 
 
         #region Cast from Interface
@@ -83,19 +99,19 @@ namespace TestCases {
             public MyState(DataClass dataClass) : base(dataClass) {
             }
 
-            protected override ISpMessage ExecOnOnEntry(ISpMessage msg) {
-                Console.WriteLine("Raised On Entry {0}", msg.EventId);
+            protected override ISpMessage ExecOnEntry(ISpMessage msg) {
+                Log.Info("MyState", "ExecOnEntry", String.Format("Raised {0}", msg.EventId));
                 return msg;
             }
 
-            protected override ISpMessage ExecOnOnTick(ISpMessage msg) {
-                Console.WriteLine("Raised On Tick {0}", msg.EventId);
+            protected override ISpMessage ExecOnTick(ISpMessage msg) {
+                Log.Info("MyState", "ExecOnTick", String.Format("Raised {0}", msg.EventId));
                 return msg;
             }
 
 
-            protected override ISpMessage ExecOnOnExit(ISpMessage msg) {
-                Console.WriteLine("Raised On Exit {0}", msg.EventId);
+            protected override ISpMessage ExecOnExit(ISpMessage msg) {
+                Log.Info("MyState", "ExecOnExit", String.Format("Raised {0}", msg.EventId));
                 return msg;
             }
         
@@ -114,14 +130,14 @@ namespace TestCases {
             ISpState s = new MyState(dataClass);
             ISpStateMachine sm = new MyStateMachine(dataClass, s);
 
-            sm.Tick(new BaseMsg(99, 456));
+           // sm.Tick(new BaseMsg(99, 456));
 
             ISpEventListner listner = new SimpleEventListner();
             listner.ResponseReceived+=new Action<ISpMessage>((msg) => {});
-            ISpMessage defaultTickMsg = new BaseMsg(0, 999);
+            ISpMessage defaultTickMsg = new BaseMsg(0, 0);
 
             // TODO - Need a default response msg
-
+            
             SpStateMachineEngine engine = 
                 new SpStateMachineEngine(
                     listner,

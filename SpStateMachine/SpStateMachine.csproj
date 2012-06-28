@@ -69,6 +69,10 @@
       <Project>{8AF7DD7E-394E-4816-B738-0764E1E60DD8}</Project>
       <Name>ChkUtils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LogUtils\LogUtils.csproj">
+      <Project>{CD5DF2DD-AA37-41F7-A585-2F2A1F44A7F5}</Project>
+      <Name>LogUtils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

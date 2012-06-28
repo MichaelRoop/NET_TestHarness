@@ -4,10 +4,16 @@ using System.Threading;
 using ChkUtils;
 using ChkUtils.ErrObjects;
 using SpStateMachine.Interfaces;
+using LogUtils;
 
 namespace SpStateMachine.EventListners {
 
-    public class SimpleEventListner : ISpEventListner {
+    /// <summary>
+    /// A simple event listner. This class could be shared between the the
+    /// state machine engine and a communications module like WCF as a bridge
+    /// to push messages into the state machine and get back the responses
+    /// </summary>
+    public sealed class SimpleEventListner : ISpEventListner {
 
         #region ISpEventListner Events
 
@@ -30,7 +36,8 @@ namespace SpStateMachine.EventListners {
         #region ISpEventListner Methods
 
         /// <summary>
-        /// Post an ISpMessage to those listening
+        /// Post an ISpMessage to those listening. This will raise the 
+        /// MsgReceived event
         /// </summary>
         /// <param name="msg">The message to post</param>
         public void PostMessage(ISpMessage msg) {
@@ -39,7 +46,8 @@ namespace SpStateMachine.EventListners {
 
 
         /// <summary>
-        /// Post an ISpMessage response to an ISpMessage
+        /// Post an ISpMessage response to an ISpMessage. This will raise the 
+        /// ResponseReceived event
         /// </summary>
         /// <param name="msg">The reponse to post</param>
         public void PostResponse(ISpMessage msg) {
@@ -65,10 +73,10 @@ namespace SpStateMachine.EventListners {
         /// <param name="msg">The message or response to push</param>
         /// <param name="type">Either message or response identifier string</param>
         private void RaiseEvent(Action<ISpMessage> action, ISpMessage msg, string type) {
-            //Debug.WriteLine(String.Format("Raising Event:{0}", type));
+            Log.Info("SimpleEventListner", "RaiseEvent", String.Format("Raising Event:{0} type:{1} Event Id:{2}", type, msg.TypeId, msg.EventId));
 
             ErrReport err = new ErrReport();
-            WrapErr.ToErrReport(out err, 9999,
+            WrapErr.ToErrReport(out err, 50030,
                 () => { return String.Format("Unexpected Error Raising Event {0}", type); },
                 () => {
                     if (action != null) {
@@ -78,14 +86,12 @@ namespace SpStateMachine.EventListners {
                                 action.Invoke(msg);
                             }
                             else {
-                                // TODO log it
-                                Debug.WriteLine(String.Format("No subscribers to {0} message", type));
+                                Log.Warning(50031, String.Format("No subscribers to {0} message", type));
                             }
                         });
                     }
                     else {
-                        // TODO log it
-                        Debug.WriteLine(String.Format("No subscribers to {0} message", type));
+                        Log.Warning(50031, String.Format("No subscribers to {0} message", type));
                     }
                 });
         }

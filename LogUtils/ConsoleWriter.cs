@@ -35,7 +35,12 @@ namespace LogUtils {
         }
         
         private void LogToConsole(MsgLevel level, ErrReport report) {
-            Console.WriteLine("{0}\t{1}\t{2}.{3} - {4}{5}", report.Code, level.ShortName(), report.AtClass, report.AtMethod, report.Msg, Environment.NewLine, report.StackTrace);
+            if (report.StackTrace.Length > 0) {
+                Console.WriteLine("{0}\t{1}\t{2}.{3} - {4}{5}{6}", report.Code, level.ShortName(), report.AtClass, report.AtMethod, report.Msg, Environment.NewLine, report.StackTrace);
+            }
+            else {
+                Console.WriteLine("{0}\t{1}\t{2}.{3} - {4}", report.Code, level.ShortName(), report.AtClass, report.AtMethod, report.Msg);
+            }
         }
 
 

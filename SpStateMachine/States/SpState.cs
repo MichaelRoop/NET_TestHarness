@@ -28,26 +28,26 @@ namespace SpStateMachine.States {
         #endregion
 
         public ISpMessage OnEntry(ISpMessage msg) {
-            return this.ExecOnOnEntry(msg);
+            return this.ExecOnEntry(msg);
         }
 
         public ISpMessage OnTick(ISpMessage msg) {
-            return this.ExecOnOnTick(msg);
+            return this.ExecOnTick(msg);
         }
 
         public ISpMessage OnExit(ISpMessage msg) {
-            return this.ExecOnOnExit(msg);
+            return this.ExecOnExit(msg);
         }
 
-        protected virtual ISpMessage ExecOnOnEntry(ISpMessage msg) {
+        protected virtual ISpMessage ExecOnEntry(ISpMessage msg) {
             return new BaseResponse(0, (BaseMsg)msg, 0, "");
         }
 
-        protected virtual ISpMessage ExecOnOnExit(ISpMessage msg) {
+        protected virtual ISpMessage ExecOnExit(ISpMessage msg) {
             return new BaseResponse(0, (BaseMsg)msg, 0, "");
         }
 
-        protected virtual ISpMessage ExecOnOnTick(ISpMessage msg) {
+        protected virtual ISpMessage ExecOnTick(ISpMessage msg) {
             return new BaseResponse(0, (BaseMsg)msg, 0, "");
         }
 
