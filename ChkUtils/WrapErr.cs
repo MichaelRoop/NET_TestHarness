@@ -482,7 +482,34 @@ namespace ChkUtils {
         #endregion
 
         #region Public Object Validators
-        
+
+        #region ChkDisposed
+
+        /// <summary>
+        /// Validates a condition to be true
+        /// </summary>
+        /// <param name="condition">The condition to evaluate</param>
+        /// <param name="code">The error code if false</param>
+        /// <param name="msg">The error message</param>
+        public static void ChkDisposed(bool disposed, int code) {
+            WrapErr.ChkDisposed(ExceptionType.Regular, disposed, code);
+        }
+
+
+        /// <summary>
+        /// Validates a condition to be true, otherwise throw the 
+        /// defined exception type
+        /// </summary>
+        /// <param name="type">The exception type on failure</param>
+        /// <param name="condition">The condition to evaluate</param>
+        /// <param name="code">The error code if false</param>
+        /// <param name="msg">The error message</param>
+        public static void ChkDisposed(ExceptionType type, bool disposed, int code) {
+            WrapErr.ChkFalse(type, disposed, code, "Attempting to use Disposed Object");
+        }
+
+        #endregion
+
         #region ChkParam
 
         /// <summary>

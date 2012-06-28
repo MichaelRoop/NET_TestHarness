@@ -138,6 +138,48 @@ namespace TestCases.ChkUtilsTests {
 
         #endregion
 
+        #region Disposed
+
+        [Test]
+        public void Disposed_Fail() {
+            ErrReport err;
+            WrapErr.ToErrReport(out err, 1111, "Validate arg", () => {
+                WrapErr.ChkDisposed(true, 8888);
+            });
+            this.Validate(err, 8888, "Disposed_Fail", "Attempting to use Disposed Object");
+        }
+
+        [Test]
+        public void Disposed_Valid() {
+            ErrReport err;
+            WrapErr.ToErrReport(out err, 1111, "Validate arg", () => {
+                WrapErr.ChkDisposed(false, 8888);
+            });
+            Assert.AreEqual(0, err.Code, "Should not have been an error");
+        }
+
+        [Test]
+        public void Disposed_Fail_FaultException() {
+            ErrReport err;
+            WrapErr.ToErrReport(out err, 1111, "Validate arg", () => {
+                WrapErr.ChkDisposed(ExceptionType.Fault, true, 8888);
+            });
+            this.Validate(err, 8888, "Disposed_Fail_FaultException", "Attempting to use Disposed Object");
+        }
+
+        [Test]
+        public void Disposed_Valid_FaultException() {
+            ErrReport err;
+            WrapErr.ToErrReport(out err, 1111, "Validate arg", () => {
+                WrapErr.ChkDisposed(ExceptionType.Fault, false, 8888);
+            });
+            Assert.AreEqual(0, err.Code, "Should not have been an error");
+        }
+
+        #endregion
+
+
+
         #region False
 
         [Test]
