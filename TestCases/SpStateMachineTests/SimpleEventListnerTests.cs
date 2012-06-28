@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using SpStateMachine.Interfaces;
-using SpStateMachine.EventListners;
-using SpStateMachine.Messages;
 using System.Threading;
+using NUnit.Framework;
+using SpStateMachine.EventListners;
+using SpStateMachine.Interfaces;
+using SpStateMachine.Messages;
 
 namespace TestCases.SpStateMachineTests {
 

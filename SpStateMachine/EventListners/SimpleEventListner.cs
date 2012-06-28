@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SpStateMachine.Interfaces;
-using ChkUtils.ErrObjects;
-using ChkUtils;
-using System.Threading;
 using System.Diagnostics;
+using System.Threading;
+using ChkUtils;
+using ChkUtils.ErrObjects;
+using SpStateMachine.Interfaces;
 
 namespace SpStateMachine.EventListners {
 
