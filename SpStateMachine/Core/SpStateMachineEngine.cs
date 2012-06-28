@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SpStateMachine.Interfaces;
-using ChkUtils;
 using System.Threading;
+using ChkUtils;
 using ChkUtils.ErrObjects;
+using SpStateMachine.Interfaces;
 
 namespace SpStateMachine.Core {
 
@@ -91,10 +88,12 @@ namespace SpStateMachine.Core {
         #region Public Methods
 
         public void Start() {
+            WrapErr.ChkDisposed(this.disposed, 9999);
             this.timer.Start();
         }
 
         public void Stop() {
+            WrapErr.ChkDisposed(this.disposed, 9999);
             this.timer.Stop();
         }
 
@@ -198,6 +197,23 @@ namespace SpStateMachine.Core {
             this.msgStore.Add(eventObject);
         }
 
+
+        /// <summary>
+        /// Stop the timer and tick thread
+        /// </summary>
+        private void ShutDownThread() {
+            WrapErr.SafeAction(() => this.timer.Stop());
+
+            this.terminateThread = true;
+            WrapErr.SafeAction(() => this.threadWakeEvent.Set());
+
+            if (this.driverThread != null) {
+                if (!this.driverThread.Join(5000)) {
+                    WrapErr.SafeAction(() => this.driverThread.Abort());
+                }
+            }
+        }
+
         #endregion
 
         #region IDisposable
@@ -211,39 +227,49 @@ namespace SpStateMachine.Core {
             GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool disposing) {
+
+        /// <summary>
+        /// Dispose resources
+        /// </summary>
+        /// <param name="disposeManagedResources">
+        /// If true it was called by the Dispose method rather than finalizer
+        /// </param>
+        private void Dispose(bool disposeManagedResources) {
             if (!disposed) {
-                WrapErr.SafeAction(() => this.timer.Stop());
+                this.ShutDownThread();
 
-                // always save to shut down the thread first on Dispose even if called by Finalizer
-                this.terminateThread = true;
-                WrapErr.SafeAction(() => this.threadWakeEvent.Set());
-
-                if (this.driverThread != null) {
-                    if (!this.driverThread.Join(5000)) {
-                        WrapErr.SafeAction(() => this.driverThread.Abort());
-                    }
+                if (disposeManagedResources) {
+                    this.DisposeManagedResources();
                 }
-
-
-                if (disposing) {
-                    if (this.timer != null) {
-                        WrapErr.SafeAction(() => this.timer.Dispose());
-                        this.timer = null;
-                    }
-                    if (this.threadWakeEvent != null) {
-                        WrapErr.SafeAction(() => this.threadWakeEvent.Dispose());
-                        this.threadWakeEvent = null;
-                    }
-
-                    // TODO - find if others are to be disposed
-                }
-                disposed = true;
+                this.DisposeNativeResources();
             }
-
+            this.disposed = true;
         }
 
 
+        /// <summary>
+        /// Dispose managed resources (those with Dispose methods)
+        /// </summary>
+        private void DisposeManagedResources() {
+            if (this.timer != null) {
+                WrapErr.SafeAction(() => this.timer.Dispose());
+                this.timer = null;
+            }
+            if (this.threadWakeEvent != null) {
+                WrapErr.SafeAction(() => this.threadWakeEvent.Dispose());
+                this.threadWakeEvent = null;
+            }
+            // TODO - find if others are to be disposed
+        }
+
+
+        /// <summary>
+        /// Dispose unmanaged native resources (InPtr, file handles)
+        /// </summary>
+        private void DisposeNativeResources() {
+            // Nothing to cleanup
+        }
+        
         #endregion
     }
 }

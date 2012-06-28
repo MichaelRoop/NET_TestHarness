@@ -9,7 +9,7 @@ namespace SpStateMachine.Interfaces {
     /// Interface for an SpEvent object with generic payload
     /// </summary>
     /// <author>Michael Roop</author>
-    public interface ISpEventStore {
+    public interface ISpEventStore : IDisposable {
 
         /// <summary>
         /// Add and event object to the store

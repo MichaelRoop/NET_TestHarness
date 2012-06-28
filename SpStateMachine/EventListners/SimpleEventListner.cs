@@ -48,6 +48,14 @@ namespace SpStateMachine.EventListners {
 
         #endregion
 
+        #region IDisposable Members
+
+        public void Dispose() {
+            // There are no resources to dispose of in this implementation
+        }
+
+        #endregion
+
         #region Private Methods
 
         /// <summary>
@@ -84,7 +92,6 @@ namespace SpStateMachine.EventListners {
 
 
         #endregion
-
 
     }
 }

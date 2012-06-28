@@ -27,9 +27,7 @@ namespace SpStateMachine.PeriodicTimers {
         /// <summary>Interval object with default 1 second pulse</summary>
         private TimeSpan timespan = new TimeSpan(0, 0, 1);
 
-        /// <summary>
-        /// The handler for the timer Elapsed event
-        /// </summary>
+        /// <summary>The handler for the timer Elapsed event</summary>
         private ElapsedEventHandler onTimerWakeup = null;
 
         /// <summary>Disposed flag</summary>
@@ -77,7 +75,7 @@ namespace SpStateMachine.PeriodicTimers {
         /// </summary>
         /// <param name="interval">The interval in </param>
         public void SetInterval(TimeSpan interval) {
-            WrapErr.ChkFalse(this.disposed, 50002, "Attempting to Use After Object Disposed");
+            WrapErr.ChkDisposed(this.disposed, 50002);
             WrapErr.ChkTrue(interval.TotalMilliseconds > 0, 50000, "The interval cannot be 0 milliseconds total");
             WrapErr.ToErrorReportException(50001, () => {
                 this.timespan = interval;
@@ -89,7 +87,7 @@ namespace SpStateMachine.PeriodicTimers {
         /// Start the periodic timer
         /// </summary>
         public void Start() {
-            WrapErr.ChkFalse(this.disposed, 50003, "Attempting to Use After Object Disposed");
+            WrapErr.ChkDisposed(this.disposed, 50003);
             WrapErr.ToErrorReportException(50004, () => {
                 lock (this.timerLock) {
                     this.Stop();
@@ -106,7 +104,7 @@ namespace SpStateMachine.PeriodicTimers {
         /// Stop the periodic timer
         /// </summary>
         public void Stop() {
-            WrapErr.ChkFalse(this.disposed, 50005, "Attempting to Use After Object Disposed");
+            WrapErr.ChkDisposed(this.disposed, 50005);
             this.DisposeTimer();
         }
 
@@ -116,22 +114,41 @@ namespace SpStateMachine.PeriodicTimers {
 
         public void Dispose() {
             this.Dispose(true);
-
-            // Prevent finalizer call if already released
+            // Prevent finalizer call since we are releasing resources early
             GC.SuppressFinalize(this);
         }
 
 
-        private void Dispose(bool disposing) {
-            // TODO - rework this code
+        /// <summary>
+        /// Dispose resources
+        /// </summary>
+        /// <param name="disposeManagedResources">
+        /// If true it was called by the Dispose method rather than finalizer
+        /// </param>
+        private void Dispose(bool disposeManagedResources) {
             if (!disposed) {
-                if (disposing) {
-                    this.DisposeTimer();
+                if (disposeManagedResources) {
+                    this.DisposeManagedResources();
                 }
+                this.DisposeNativeResources();
             }
             this.disposed = true;
         }
 
+        /// <summary>
+        /// Dispose managed resources (those with Dispose methods)
+        /// </summary>
+        private void DisposeManagedResources() {
+            this.DisposeTimer();
+        }
+
+        /// <summary>
+        /// Dispose unmanaged native resources (InPtr, file handles)
+        /// </summary>
+        private void DisposeNativeResources() {
+            // Nothing to cleanup
+        }
+        
         #endregion
 
         #region Private Methods
@@ -166,9 +183,7 @@ namespace SpStateMachine.PeriodicTimers {
             });
             // We will have no decision based on results
         }
-
-
-
+        
         #endregion
 
     }

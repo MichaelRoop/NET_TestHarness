@@ -44,7 +44,7 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _50002_SetInterval_Disposed() {
-            TestHelpers.CatchExpected(50002, "WinSimpleTimer", "SetInterval", "Attempting to Use After Object Disposed", () => {
+            TestHelpers.CatchExpected(50002, "WinSimpleTimer", "SetInterval", "Attempting to use Disposed Object", () => {
                 this.timer.Dispose();
                 this.timer.SetInterval(new TimeSpan());
             });
@@ -112,7 +112,7 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _50003_Start_Disposed() {
-            TestHelpers.CatchExpected(50003, "WinSimpleTimer", "Start", "Attempting to Use After Object Disposed", () => {
+            TestHelpers.CatchExpected(50003, "WinSimpleTimer", "Start", "Attempting to use Disposed Object", () => {
                 this.timer.Dispose();
                 this.timer.Start();
             });
@@ -133,7 +133,7 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _50005_Start_Disposed() {
-            TestHelpers.CatchExpected(50005, "WinSimpleTimer", "Stop", "Attempting to Use After Object Disposed", () => {
+            TestHelpers.CatchExpected(50005, "WinSimpleTimer", "Stop", "Attempting to use Disposed Object", () => {
                 this.timer.Dispose();
                 this.timer.Stop();
             });

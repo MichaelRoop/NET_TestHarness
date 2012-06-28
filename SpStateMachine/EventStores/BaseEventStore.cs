@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SpStateMachine.Interfaces;
+using ChkUtils;
 
 
 namespace SpStateMachine.EventStores {
@@ -42,7 +43,15 @@ namespace SpStateMachine.EventStores {
         public BaseEventStore(ISpMessage defaultTick) {
             this.defaultTick = defaultTick;
         }
-        
+
+
+        /// <summary>
+        /// Finalizer
+        /// </summary>
+        ~BaseEventStore() {
+            this.Dispose(false);
+        }
+
         #endregion
 
         #region IEventStore
@@ -73,7 +82,52 @@ namespace SpStateMachine.EventStores {
         }
 
         #endregion
-        
+
+        #region IDisposable Members
+
+        private bool disposed = false;
+
+        /// <summary>
+        /// Dispose any resources in the object
+        /// </summary>
+        public void Dispose() {
+            this.Dispose(true);
+            // Prevent finalizer call since we are releasing resources early
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Dispose resources
+        /// </summary>
+        /// <param name="disposeManagedResources">
+        /// If true it was called by the Dispose method rather than finalizer
+        /// </param>
+        private void Dispose(bool disposeManagedResources) {
+            if (!disposed) {
+                if (disposeManagedResources) {
+                    WrapErr.SafeAction(() => this.DisposeManagedResources());
+                }
+                WrapErr.SafeAction(() => this.DisposeNativeResources());
+            }
+            this.disposed = true;
+        }
+
+        /// <summary>
+        /// Dispose managed resources (those with Dispose methods)
+        /// </summary>
+        protected virtual void DisposeManagedResources() {
+            // Nothing to cleanup
+        }
+
+        /// <summary>
+        /// Dispose unmanaged native resources (InPtr, file handles)
+        /// </summary>
+        protected virtual void DisposeNativeResources() {
+            // Nothing to cleanup
+        }
+
+        #endregion
+                
         #region Abstract Methods
 
         /// <summary>
@@ -90,6 +144,7 @@ namespace SpStateMachine.EventStores {
         protected abstract void AddEvent(ISpMessage eventObject);
 
         #endregion
+
 
 
     }
