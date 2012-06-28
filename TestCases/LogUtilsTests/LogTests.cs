@@ -151,9 +151,6 @@ namespace TestCases.LogUtilsTests {
             catch (Exception e) {
                 Log.Exception(1000, "This is my exception error string", e);
                 this.CheckLogValues(MsgLevel.Off, 0, "", "", "", "");
-
-
-                //this.CheckLogValues(MsgLevel.Exception, 1000, "Exception_Valid", "This is my exception error string", "Blah blah exception");
             }
 
             Log.SetVerbosity(MsgLevel.Exception);

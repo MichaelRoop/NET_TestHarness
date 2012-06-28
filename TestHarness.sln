@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChkUtils", "ChkUtils\ChkUti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpStateMachine", "SpStateMachine\SpStateMachine.csproj", "{7DD2FEF1-CAC1-46AC-8CF6-A27ECEB43A6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogUtils", "..\LogUtils\LogUtils.csproj", "{CD5DF2DD-AA37-41F7-A585-2F2A1F44A7F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogUtils", "LogUtils\LogUtils.csproj", "{CD5DF2DD-AA37-41F7-A585-2F2A1F44A7F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
