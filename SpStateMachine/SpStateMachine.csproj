@@ -52,11 +52,14 @@
     <Compile Include="Interfaces\ISpEventListner.cs" />
     <Compile Include="Interfaces\ISpEventStore.cs" />
     <Compile Include="Interfaces\ISpPeriodicTimer.cs" />
+    <Compile Include="Interfaces\ISpState.cs" />
     <Compile Include="Interfaces\ISpStateMachine.cs" />
     <Compile Include="Messages\BaseMsg.cs" />
     <Compile Include="Messages\BaseResponse.cs" />
     <Compile Include="PeriodicTimers\WinSimpleTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="States\SpState.cs" />
+    <Compile Include="States\SpStateMachine.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="StateClasses\" />

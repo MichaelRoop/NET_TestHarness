@@ -57,7 +57,7 @@ namespace SpStateMachine.EventListners {
         /// <param name="msg">The message or response to push</param>
         /// <param name="type">Either message or response identifier string</param>
         private void RaiseEvent(Action<ISpMessage> action, ISpMessage msg, string type) {
-            Debug.WriteLine(String.Format("Raising Event:{0}", type));
+            //Debug.WriteLine(String.Format("Raising Event:{0}", type));
 
             ErrReport err = new ErrReport();
             WrapErr.ToErrReport(out err, 9999,
