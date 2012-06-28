@@ -55,6 +55,8 @@
     <Compile Include="ChkUtilsTests\ToErrorReportFaultExceptionTests.cs" />
     <Compile Include="ChkUtilsTests\ToErrReportTests.cs" />
     <Compile Include="ChkUtilsTests\ValidatorTests.cs" />
+    <Compile Include="LogUtilsTests\LogTests.cs" />
+    <Compile Include="LogUtilsTests\MsgLevelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scratch.cs" />
     <Compile Include="SpStateMachineTests\IPeriodicTimer.cs" />
@@ -64,6 +66,10 @@
     <Compile Include="TestHelperTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\LogUtils\LogUtils.csproj">
+      <Project>{CD5DF2DD-AA37-41F7-A585-2F2A1F44A7F5}</Project>
+      <Name>LogUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ChkUtils\ChkUtils.csproj">
       <Project>{8AF7DD7E-394E-4816-B738-0764E1E60DD8}</Project>
       <Name>ChkUtils</Name>
