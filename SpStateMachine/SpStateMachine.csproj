@@ -45,6 +45,7 @@
     <Compile Include="Core\BehaviorResponseEventType.cs" />
     <Compile Include="Core\SpEventPriority.cs" />
     <Compile Include="Core\SpStateMachineEngine.cs" />
+    <Compile Include="Core\SpStateTransition.cs" />
     <Compile Include="EventListners\SimpleEventListner.cs" />
     <Compile Include="EventStores\BaseEventStore.cs" />
     <Compile Include="EventStores\PriorityEventStore.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Interfaces\ISpPeriodicTimer.cs" />
     <Compile Include="Interfaces\ISpState.cs" />
     <Compile Include="Interfaces\ISpStateMachine.cs" />
+    <Compile Include="Interfaces\ISpStateTransition.cs" />
     <Compile Include="Messages\BaseMsg.cs" />
     <Compile Include="Messages\BaseResponse.cs" />
     <Compile Include="PeriodicTimers\WinSimpleTimer.cs" />

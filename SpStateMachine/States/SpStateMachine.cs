@@ -63,7 +63,8 @@ namespace SpStateMachine.States {
 
         public ISpMessage Tick(ISpMessage msg) {
             WrapErr.ChkParam(msg, "msg", 9999);
-            return this.state.OnTick(msg);
+            // TODO - figure out if this will work
+            return this.state.OnTick(msg).ReturnMessage;
         }
 
         #endregion
