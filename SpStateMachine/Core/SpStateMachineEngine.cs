@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading;
 using ChkUtils;
-using ChkUtils.ErrObjects;
-using SpStateMachine.Interfaces;
 using LogUtils;
+using SpStateMachine.Interfaces;
 
 namespace SpStateMachine.Core {
 
@@ -11,13 +10,10 @@ namespace SpStateMachine.Core {
     /// Combines the different elements of the State Machine architecture
     /// together to drive events and behavior
     /// </summary>
+    /// <author>Michael Roop</author>
     public sealed class SpStateMachineEngine : IDisposable {
 
         #region Data
-
-        //object busyLock = new object();
-
-        //bool isBusy =  false;
 
         ISpPeriodicTimer timer = null;
 
@@ -32,8 +28,6 @@ namespace SpStateMachine.Core {
         Action wakeUpAction = null;
 
         Action<ISpMessage> msgReceivedAction = null;
-
-        //ManualResetEvent threadWakeEvent = new ManualResetEvent(false);
 
         private bool terminateThread = false;
 
@@ -53,8 +47,9 @@ namespace SpStateMachine.Core {
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="eventListner">The event listner object that receives events</param>
-        /// <param name="eventStore">The object that stores events</param>
+        /// <param name="msgListner">The event listner object that receives events</param>
+        /// <param name="msgStore">The object that stores the messages</param>
+        /// <param name="eventBehavior">The behavior object that interacts with incoming events</param>
         /// <param name="stateMachine">The state machine that interprets the events</param>
         /// <param name="timer">The periodic timer</param>
         public SpStateMachineEngine(ISpEventListner msgListner, ISpEventStore msgStore, ISpBehaviorOnEvent eventBehavior, ISpStateMachine stateMachine, ISpPeriodicTimer timer) {
@@ -110,25 +105,10 @@ namespace SpStateMachine.Core {
         /// Thread to drive the state machine
         /// </summary>
         private void DriverThread() {
-            // Prevent any exceptions from propagating from thread
-            ErrReport err = new ErrReport();
             while (!this.terminateThread) {
-                WrapErr.ToErrReport(out err, 9999, () => {
-                    // Return from push and wait
-                    //this.ThreadAction(() => { this.SetBusy(false); });
-                    //this.ThreadAction(() => { this.threadWakeEvent.WaitOne(); });
+                WrapErr.ToErrReport(9999, () => {
                     this.ThreadAction(() => { this.eventBehavior.WaitOnEvent(); });
-
-                    //// Wakeup and push next event to state machine
-                    //this.ThreadAction(() => { 
-                    //    this.SetBusy(true, () => { 
-                    //        this.threadWakeEvent.Reset(); 
-                    //    }); 
-                    //});
-                    this.ThreadAction(() => { 
-                        this.msgListner.PostResponse(
-                            this.stateMachine.Tick(
-                                this.msgStore.Get())); 
+                    this.ThreadAction(() => { this.msgListner.PostResponse(this.stateMachine.Tick(this.msgStore.Get())); 
                     });
                 });
             }
@@ -149,52 +129,11 @@ namespace SpStateMachine.Core {
         }
 
 
-        ///// <summary>
-        ///// Thread safe query of busy state
-        ///// </summary>
-        ///// <returns>true if busy, otherwise false</returns>
-        //private bool IsBusy() {
-        //    lock (this.busyLock) {
-        //        return this.isBusy;
-        //    }
-        //}
-
-
-        ///// <summary>
-        ///// Set the busy state with no actions
-        ///// </summary>
-        ///// <param name="isBusy">true is state is to be busy, otherwise false</param>
-        //private void SetBusy(bool isBusy) {
-        //    this.SetBusy(isBusy, () => { });
-        //}
-
-
-        ///// <summary>
-        ///// Set the state busy and invoke an action within the state lock
-        ///// </summary>
-        ///// <param name="isBusy">true is state is to be busy, otherwise false</param>
-        ///// <param name="action">The action to invoke within the busy state lock</param>
-        //private void SetBusy(bool isBusy, Action action) {
-        //    lock (this.busyLock) {
-        //        this.isBusy = isBusy;
-        //        WrapErr.SafeAction(() => action.Invoke());
-        //    }
-        //}
-
-
         /// <summary>
         /// Action that is fired on timer wakeup
         /// </summary>
         void timer_OnWakeup() {
             this.eventBehavior.EventReceived(BehaviorResponseEventType.PeriodicWakeup);
-
-            //if (this.IsBusy()) {
-            //    // TODO - We leave here and loose a period. Could inject custom behaviors
-            //    Log.Error(9999, "Worker Thread Still Busy When the Periodic Timer Woke Up");
-            //}
-            //else {
-            //    this.threadWakeEvent.Set();
-            //}
         }
 
 
@@ -213,15 +152,15 @@ namespace SpStateMachine.Core {
         /// </summary>
         private void ShutDownThread() {
             WrapErr.SafeAction(() => this.timer.Stop());
-
             this.terminateThread = true;
-            //WrapErr.SafeAction(() => this.threadWakeEvent.Set());
-            this.eventBehavior.EventReceived(BehaviorResponseEventType.TerminateRequest);
+            WrapErr.SafeAction(() => 
+                this.eventBehavior.EventReceived(BehaviorResponseEventType.TerminateRequest));
 
             if (this.driverThread != null) {
                 if (!this.driverThread.Join(5000)) {
                     WrapErr.SafeAction(() => this.driverThread.Abort());
                 }
+                this.driverThread = null;
             }
         }
 
@@ -264,14 +203,12 @@ namespace SpStateMachine.Core {
         private void DisposeManagedResources() {
             this.DisposeObject(this.timer, "timer");
             this.DisposeObject(this.eventBehavior, "eventBehavior");
-            //this.DisposeObject(this.threadWakeEvent, "threadWakeEvent");
             this.DisposeObject(this.stateMachine, "stateMachine");
             this.DisposeObject(this.msgStore, "msgStore");
             this.DisposeObject(this.msgListner, "msgListner");
 
             this.timer = null;
             this.eventBehavior = null;
-            //this.threadWakeEvent = null;
             this.stateMachine = null;
             this.msgStore = null;
             this.msgListner = null;
@@ -285,7 +222,7 @@ namespace SpStateMachine.Core {
         /// <param name="name"></param>
         private void DisposeObject(IDisposable disposableObject, string name) {
             Log.Debug("SpStateMachineEngine", "DisposeObject", String.Format("Object name:{0}", name));
-            WrapErr.ToErrReport(9999, String.Format("Disposing Object:{0}", name), () => {
+            WrapErr.ToErrReport(9999, String.Format("Error Disposing Object:{0}", name), () => {
                 if (disposableObject != null) {
                     disposableObject.Dispose();
                 }
