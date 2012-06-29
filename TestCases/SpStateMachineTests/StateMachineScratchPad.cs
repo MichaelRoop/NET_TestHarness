@@ -13,6 +13,7 @@ using SpStateMachine.EventStores;
 using SpStateMachine.PeriodicTimers;
 using System.Threading;
 using SpStateMachine.Behaviours;
+using ChkUtils;
 
 namespace TestCases.SpStateMachineTests {
 
@@ -20,12 +21,27 @@ namespace TestCases.SpStateMachineTests {
 
     public enum MyStateID : int {
         Default,
+        NotStarted,           // Super state
+        WaitingForUserInput,  // State level
         Active,
+        Undefined,
     }
 
+
+    /// <summary>
+    /// Sample use of enums to provide strong typing for ids
+    /// </summary>
     public static class MyStateIdExtensions {
         public static int Int(this MyStateID self) {
             return (int)self;
+        }
+
+        public static MyStateID ToStateId(this int value) {
+            MyStateID id = MyStateID.Undefined;
+            WrapErr.ToErrReport(9999, () => { return String.Format(""); }, () => {
+                id = (MyStateID)Enum.Parse(typeof(MyStateID), value.ToString());
+            });
+            return id;
         }
     }
 
@@ -80,9 +96,30 @@ namespace TestCases.SpStateMachineTests {
     /// </summary>
     /// <remarks>Note usage of enum to enforce strong typing at implementation level</remarks>
     public class MyState : SpState<DataClass> {
+
+        string name = "";
+
         public MyState(MyStateID id, DataClass dataClass)
             : base(id.Int(), dataClass) {
         }
+
+        public MyState(ISpState parent, MyStateID id, DataClass dataClass)
+            : base(parent, id.Int(), dataClass) {
+        }
+
+        public override string Name {
+            get {
+                if (this.name.Length == 0) {
+                    StringBuilder sb = new StringBuilder(75);
+                    this.IdChain.ForEach((item) => {
+                        sb.Append(String.Format(".{0}", item.ToStateId().ToString()));
+                    });
+                    this.name = sb.Length > 0 ? sb.ToString(1, sb.Length - 1) : "NameSearchFailed";
+                }
+                return this.name; 
+            }
+        }
+
 
         protected override ISpMessage ExecOnEntry(ISpMessage msg) {
             Log.Info("MyState", "ExecOnEntry", String.Format("Raised {0}", msg.EventId));
@@ -146,7 +183,10 @@ namespace TestCases.SpStateMachineTests {
         public void TestInitialGenericSpState() {
             DataClass dataClass = new DataClass();
             // This would normally be the main superstate which includes all other states cascading within it's and it's children's constructors
-            ISpState s = new MyState(MyStateID.Active, dataClass); 
+
+            ISpState sParent = new MyState(MyStateID.NotStarted, dataClass); 
+
+            ISpState s = new MyState(sParent, MyStateID.WaitingForUserInput, dataClass); 
             ISpStateMachine sm = new MyStateMachine(dataClass, s);
             ISpMessage defaultTickMsg = new BaseMsg(0, 0);
             ISpEventStore store = new SimpleDequeEventStore(defaultTickMsg);
@@ -156,6 +196,8 @@ namespace TestCases.SpStateMachineTests {
 
             listner.ResponseReceived += new Action<ISpMessage>((msg) => { });
 
+
+            Console.WriteLine("State name:{0}", s.Name);
 
             // TODO - Need a default response msg
 

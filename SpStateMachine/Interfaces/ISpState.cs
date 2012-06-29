@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 namespace SpStateMachine.Interfaces {
 
     /// <summary>
@@ -18,7 +19,20 @@ namespace SpStateMachine.Interfaces {
         /// <summary>
         /// The unique state identifier
         /// </summary>
-        int StateId { get; }
+        int Id { get; }
+
+
+        /// <summary>
+        /// Get the full id by combining nested ids
+        /// </summary>
+        List<int> IdChain { get; }
+
+        /// <summary>
+        /// Get the fully resolved state name in format
+        /// parent.parent.state
+        /// </summary>
+        string Name { get; }
+
 
         #endregion
 

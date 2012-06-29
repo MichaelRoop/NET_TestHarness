@@ -14,7 +14,7 @@ namespace SpStateMachine.States {
     /// </summary>
     /// <typeparam name="T">Generic type that the state represents</typeparam>
     /// <author>Michael Roop</author>
-    public class SpState<T> : ISpState {
+    public abstract class SpState<T> : ISpState {
 
         #region Data
 
@@ -34,12 +34,13 @@ namespace SpStateMachine.States {
         private bool isEntered = false;
 
 
-        int stateId = 0;
+        int id = 0;
 
+        List<int> idChain = new List<int>();
 
         #endregion
 
-        #region Property
+        #region Properties
 
         /// <summary>
         /// Returns the core object which is state wrapped by the state machine
@@ -67,11 +68,26 @@ namespace SpStateMachine.States {
         /// <summary>
         /// The unique state identifier
         /// </summary>
-        public int StateId {
+        public int Id {
             get {
-                return this.stateId;
+                return this.id;
             }
         }
+
+        /// <summary>
+        /// Get the full id by combining nested ids
+        /// </summary>
+        public List<int> IdChain {
+            get {
+                return this.idChain;
+            }
+        }
+
+        /// <summary>
+        /// Get the fully resolved state name in format
+        /// parent.parent.state
+        /// </summary>
+        public abstract string Name { get; }
         
         #endregion
 
@@ -85,13 +101,30 @@ namespace SpStateMachine.States {
 
 
         /// <summary>
-        /// Constructor
+        /// Constructor for first level state
         /// </summary>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpState(int id, T wrappedObject) {
-            this.stateId = id;
-            ;
+        public SpState(int id, T wrappedObject)
+            : this(null, id, wrappedObject) {
+        }
+
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="parent">The parent state</param>
+        /// <param name="id">Unique state id</param>
+        /// <param name="wrappedObject">The generic object that the states represent</param>
+        public SpState(ISpState parent, int id, T wrappedObject) {
+            this.id = id;
+
+            // The sum of the id chain is all ancestors then this state id as leaf
+            if (parent != null) {
+                this.idChain = parent.IdChain;
+            }
+            this.idChain.Add(this.Id);
+
             this.wrappedObject = wrappedObject;
         }
 
