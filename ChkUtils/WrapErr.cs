@@ -348,6 +348,44 @@ namespace ChkUtils {
         #region Wrap Action To ErrReport
 
         /// <summary>
+        /// Wrap to an ErrReport that is not accessible by user. The results will
+        /// be logged if the delegate is assigned to the Wrap architecture
+        /// </summary>
+        /// <param name="code">The error code on error</param>
+        /// <param name="action">The action to invoke</param>
+        /// <param name="code"></param>
+        public static void ToErrReport(int code, Action action) {
+            ErrReport err = WrapErr.WrapTryToErrReport(code, () => { return "Unexpected Error"; }, action, () => { ; });
+        }
+
+
+        /// <summary>
+        /// Wrap to an ErrReport that is not accessible by user. The results will
+        /// be logged if the delegate is assigned to the Wrap architecture
+        /// </summary>
+        /// <param name="code">The error code on error</param>
+        /// <param name="msg">The message</param>
+        /// <param name="action">The action to invoke</param>
+        /// <param name="code"></param>
+        public static void ToErrReport(int code, string msg, Action action) {
+            ErrReport err = WrapErr.WrapTryToErrReport(code, () => { return msg; }, action, () => { ; });
+        }
+
+
+        /// <summary>
+        /// Wrap to an ErrReport that is not accessible by user. The results will
+        /// be logged if the delegate is assigned to the Wrap architecture
+        /// </summary>
+        /// <param name="code">The error code on error</param>
+        /// <param name="msg">The message formating function</param>
+        /// <param name="action">The action to invoke</param>
+        /// <param name="code"></param>
+        public static void ToErrReport(int code, Func<string> msg, Action action) {
+            ErrReport err = WrapErr.WrapTryToErrReport(code, msg, action, () => { ; });
+        }
+
+
+        /// <summary>
         /// Wrap an action and report the results with an ErrReport object. No exceptions will propegate
         /// </summary>
         /// <param name="report">The ErrReport object to initialise</param>

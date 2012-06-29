@@ -20,26 +20,6 @@ namespace TestCases {
     [TestFixture, Explicit]
     public class Scratch {
 
-        //bool onEntryRaised = false;
-        //bool onTickRaised = false;
-        //bool onExitRaised = false;
-
-        ConsoleWriter consoleWriter = new ConsoleWriter();
-
-        [TestFixtureSetUp]
-        public void Setup() {
-            Log.SetVerbosity(MsgLevel.Info);
-
-            Log.SetMsgNumberThreshold(1);
-            this.consoleWriter.StartLogging();
-        }
-
-        //[TearDown]
-        //public void Teardown() {
-        //    this.consoleWriter.StopLogging();
-        //}
-
-
         #region Cast from Interface
 
         public interface ITestInt {
@@ -82,91 +62,6 @@ namespace TestCases {
 
         }
 
-
-        #endregion
-
-        #region SpState generic
-
-        public class DataClass {
-            private int intVal = 0;
-            private string strVal = "";
-
-            public int IntVal { get { return this.intVal; } set { this.intVal = value; } }
-            public string StrVal { get { return this.strVal; } set { this.strVal = value; } }
-        }
-
-        public class MyState : SpState<DataClass> {
-            public MyState(DataClass dataClass) : base(dataClass) {
-            }
-
-            protected override ISpMessage ExecOnEntry(ISpMessage msg) {
-                Log.Info("MyState", "ExecOnEntry", String.Format("Raised {0}", msg.EventId));
-                return msg;
-            }
-
-            protected override ISpMessage ExecOnTick(ISpMessage msg) {
-                Log.Info("MyState", "ExecOnTick", String.Format("Raised {0}", msg.EventId));
-                return msg;
-            }
-
-
-            protected override ISpMessage ExecOnExit(ISpMessage msg) {
-                Log.Info("MyState", "ExecOnExit", String.Format("Raised {0}", msg.EventId));
-                return msg;
-            }
-        
-        }
-
-        public class MyStateMachine : SpStateMachine<DataClass> {
-            public MyStateMachine(DataClass dataClass, ISpState state)
-                : base(dataClass, state) {
-            }
-        }
-
-
-        [Test, Explicit]
-        public void TestInitialGenericSpState() {
-            DataClass dataClass = new DataClass();
-            ISpState s = new MyState(dataClass);
-            ISpStateMachine sm = new MyStateMachine(dataClass, s);
-
-           // sm.Tick(new BaseMsg(99, 456));
-
-            ISpEventListner listner = new SimpleEventListner();
-            listner.ResponseReceived+=new Action<ISpMessage>((msg) => {});
-            ISpMessage defaultTickMsg = new BaseMsg(0, 0);
-
-            // TODO - Need a default response msg
-            
-            SpStateMachineEngine engine = 
-                new SpStateMachineEngine(
-                    listner,
-                    new SimpleDequeEventStore(defaultTickMsg),
-                    sm,
-                    new WinSimpleTimer(new TimeSpan(0, 0, 0, 0, 1000)));
-
-            engine.Start();
-
-            Thread.Sleep(3000);
-
-            //sm.Tick(new BaseMsg(99, 456));
-
-            listner.PostMessage(new BaseMsg(777, 12345));
-
-            Thread.Sleep(3000);
-            engine.Stop();
-
-            Console.WriteLine("Disposing Engine - thread should cease while I want");
-            engine.Dispose();
-
-            Thread.Sleep(3000);
-            Console.WriteLine("Done");
-
-
-            //SpState<DataClass> state = new SpState<DataClass>(dataClass);
-            //SpStateMachine<DataClass> stateMachine = new SpStateMachine<DataClass>(dataClass, state);
-
-        }
 
         #endregion
 
@@ -223,7 +118,6 @@ namespace TestCases {
         }
 
         #endregion
-
 
 
     }

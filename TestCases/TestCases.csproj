@@ -61,6 +61,7 @@
     <Compile Include="Scratch.cs" />
     <Compile Include="SpStateMachineTests\IPeriodicTimer.cs" />
     <Compile Include="SpStateMachineTests\SimpleEventListnerTests.cs" />
+    <Compile Include="SpStateMachineTests\StateMachineScratchPad.cs" />
     <Compile Include="SpStateMachineTests\WinSimplePeriodicTimerTests.cs" />
     <Compile Include="TestHelpers.cs" />
     <Compile Include="TestHelperTests.cs" />

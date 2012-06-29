@@ -3,6 +3,7 @@ using System.Threading;
 using ChkUtils;
 using ChkUtils.ErrObjects;
 using SpStateMachine.Interfaces;
+using LogUtils;
 
 namespace SpStateMachine.Core {
 
@@ -170,7 +171,7 @@ namespace SpStateMachine.Core {
         /// <param name="action">The action to invoke within the busy state lock</param>
         private void SetBusy(bool isBusy, Action action) {
             lock (this.busyLock) {
-                this.isBusy = false;
+                this.isBusy = isBusy;
                 WrapErr.SafeAction(() => action.Invoke());
             }
         }
@@ -181,7 +182,8 @@ namespace SpStateMachine.Core {
         /// </summary>
         void timer_OnWakeup() {
             if (this.IsBusy()) {
-                // Log error - if we leave here we will loose a period
+                // TODO - We leave here and loose a period. Could inject custom behaviors
+                Log.Error(9999, "Worker Thread Still Busy When the Periodic Timer Woke Up");
             }
             else {
                 this.threadWakeEvent.Set();
@@ -251,17 +253,33 @@ namespace SpStateMachine.Core {
         /// Dispose managed resources (those with Dispose methods)
         /// </summary>
         private void DisposeManagedResources() {
-            if (this.timer != null) {
-                WrapErr.SafeAction(() => this.timer.Dispose());
-                this.timer = null;
-            }
-            if (this.threadWakeEvent != null) {
-                WrapErr.SafeAction(() => this.threadWakeEvent.Dispose());
-                this.threadWakeEvent = null;
-            }
-            // TODO - find if others are to be disposed
+            this.DisposeObject(this.timer, "timer");
+            this.DisposeObject(this.threadWakeEvent, "threadWakeEvent");
+            this.DisposeObject(this.stateMachine, "stateMachine");
+            this.DisposeObject(this.msgStore, "msgStore");
+            this.DisposeObject(this.msgListner, "msgListner");
+
+            this.timer = null;
+            this.threadWakeEvent = null;
+            this.stateMachine = null;
+            this.msgStore = null;
+            this.msgListner = null;
         }
 
+
+        /// <summary>
+        /// Factor out the disposal of objects
+        /// </summary>
+        /// <param name="disposableObject"></param>
+        /// <param name="name"></param>
+        private void DisposeObject(IDisposable disposableObject, string name) {
+            Log.Debug("SpStateMachineEngine", "DisposeObject", String.Format("Object name:{0}", name));
+            WrapErr.ToErrReport(9999, String.Format("Disposing Object:{0}", name), () => {
+                if (disposableObject != null) {
+                    disposableObject.Dispose();
+                }
+            });
+        }
 
         /// <summary>
         /// Dispose unmanaged native resources (InPtr, file handles)

@@ -11,7 +11,23 @@ namespace SpStateMachine.States {
 
         #region Data
 
-        T statifiedObject = default(T);
+        /// <summary>
+        /// Holds data and method accessible to all states
+        /// </summary>
+        private T wrappedObject = default(T);
+
+        #endregion
+
+        #region Property
+
+        /// <summary>
+        /// Returns the core object which is state wrapped by the state machine
+        /// </summary>
+        public T This {
+            get {
+                return this.wrappedObject;
+            }
+        }
 
         #endregion
 
@@ -21,8 +37,8 @@ namespace SpStateMachine.States {
         }
 
 
-        public SpState(T statifiedObject) {
-            this.statifiedObject = statifiedObject;
+        public SpState(T wrappedObject) {
+            this.wrappedObject = wrappedObject;
         }
 
         #endregion

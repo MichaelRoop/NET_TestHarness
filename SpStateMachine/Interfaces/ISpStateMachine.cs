@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SpStateMachine.Interfaces {
 
-    public interface ISpStateMachine {
+    public interface ISpStateMachine : IDisposable {
 
         ISpMessage Tick(ISpMessage eventObject);
 
