@@ -15,9 +15,9 @@ namespace SpStateMachine.Core {
 
         #region Data
 
-        object busyLock = new object();
+        //object busyLock = new object();
 
-        bool isBusy =  false;
+        //bool isBusy =  false;
 
         ISpPeriodicTimer timer = null;
 
@@ -27,11 +27,13 @@ namespace SpStateMachine.Core {
 
         ISpEventListner msgListner = null;
 
+        ISpBehaviorOnEvent eventBehavior = null;
+
         Action wakeUpAction = null;
 
         Action<ISpMessage> msgReceivedAction = null;
 
-        ManualResetEvent threadWakeEvent = new ManualResetEvent(false);
+        //ManualResetEvent threadWakeEvent = new ManualResetEvent(false);
 
         private bool terminateThread = false;
 
@@ -55,9 +57,10 @@ namespace SpStateMachine.Core {
         /// <param name="eventStore">The object that stores events</param>
         /// <param name="stateMachine">The state machine that interprets the events</param>
         /// <param name="timer">The periodic timer</param>
-        public SpStateMachineEngine(ISpEventListner msgListner, ISpEventStore msgStore, ISpStateMachine stateMachine, ISpPeriodicTimer timer) {
+        public SpStateMachineEngine(ISpEventListner msgListner, ISpEventStore msgStore, ISpBehaviorOnEvent eventBehavior, ISpStateMachine stateMachine, ISpPeriodicTimer timer) {
             WrapErr.ChkParam(msgListner, "msgListner", 99999);
             WrapErr.ChkParam(msgStore, "eventStore", 99999);
+            WrapErr.ChkParam(eventBehavior, "eventBehavior", 99999);
             WrapErr.ChkParam(stateMachine, "stateMachine", 99999);
             WrapErr.ChkParam(timer, "timer", 99999);
 
@@ -66,6 +69,7 @@ namespace SpStateMachine.Core {
 
             this.msgListner = msgListner;
             this.msgStore = msgStore;
+            this.eventBehavior = eventBehavior;
             this.stateMachine = stateMachine;
             this.timer = timer;
 
@@ -111,15 +115,16 @@ namespace SpStateMachine.Core {
             while (!this.terminateThread) {
                 WrapErr.ToErrReport(out err, 9999, () => {
                     // Return from push and wait
-                    this.ThreadAction(() => { this.SetBusy(false); });
-                    this.ThreadAction(() => { this.threadWakeEvent.WaitOne(); });
+                    //this.ThreadAction(() => { this.SetBusy(false); });
+                    //this.ThreadAction(() => { this.threadWakeEvent.WaitOne(); });
+                    this.ThreadAction(() => { this.eventBehavior.WaitOnEvent(); });
 
-                    // Wakeup and push next event to state machine
-                    this.ThreadAction(() => { 
-                        this.SetBusy(true, () => { 
-                            this.threadWakeEvent.Reset(); 
-                        }); 
-                    });
+                    //// Wakeup and push next event to state machine
+                    //this.ThreadAction(() => { 
+                    //    this.SetBusy(true, () => { 
+                    //        this.threadWakeEvent.Reset(); 
+                    //    }); 
+                    //});
                     this.ThreadAction(() => { 
                         this.msgListner.PostResponse(
                             this.stateMachine.Tick(
@@ -144,50 +149,52 @@ namespace SpStateMachine.Core {
         }
 
 
-        /// <summary>
-        /// Thread safe query of busy state
-        /// </summary>
-        /// <returns>true if busy, otherwise false</returns>
-        private bool IsBusy() {
-            lock (this.busyLock) {
-                return this.isBusy;
-            }
-        }
+        ///// <summary>
+        ///// Thread safe query of busy state
+        ///// </summary>
+        ///// <returns>true if busy, otherwise false</returns>
+        //private bool IsBusy() {
+        //    lock (this.busyLock) {
+        //        return this.isBusy;
+        //    }
+        //}
 
 
-        /// <summary>
-        /// Set the busy state with no actions
-        /// </summary>
-        /// <param name="isBusy">true is state is to be busy, otherwise false</param>
-        private void SetBusy(bool isBusy) {
-            this.SetBusy(isBusy, () => { });
-        }
+        ///// <summary>
+        ///// Set the busy state with no actions
+        ///// </summary>
+        ///// <param name="isBusy">true is state is to be busy, otherwise false</param>
+        //private void SetBusy(bool isBusy) {
+        //    this.SetBusy(isBusy, () => { });
+        //}
 
 
-        /// <summary>
-        /// Set the state busy and invoke an action within the state lock
-        /// </summary>
-        /// <param name="isBusy">true is state is to be busy, otherwise false</param>
-        /// <param name="action">The action to invoke within the busy state lock</param>
-        private void SetBusy(bool isBusy, Action action) {
-            lock (this.busyLock) {
-                this.isBusy = isBusy;
-                WrapErr.SafeAction(() => action.Invoke());
-            }
-        }
+        ///// <summary>
+        ///// Set the state busy and invoke an action within the state lock
+        ///// </summary>
+        ///// <param name="isBusy">true is state is to be busy, otherwise false</param>
+        ///// <param name="action">The action to invoke within the busy state lock</param>
+        //private void SetBusy(bool isBusy, Action action) {
+        //    lock (this.busyLock) {
+        //        this.isBusy = isBusy;
+        //        WrapErr.SafeAction(() => action.Invoke());
+        //    }
+        //}
 
 
         /// <summary>
         /// Action that is fired on timer wakeup
         /// </summary>
         void timer_OnWakeup() {
-            if (this.IsBusy()) {
-                // TODO - We leave here and loose a period. Could inject custom behaviors
-                Log.Error(9999, "Worker Thread Still Busy When the Periodic Timer Woke Up");
-            }
-            else {
-                this.threadWakeEvent.Set();
-            }
+            this.eventBehavior.EventReceived(BehaviorResponseEventType.PeriodicWakeup);
+
+            //if (this.IsBusy()) {
+            //    // TODO - We leave here and loose a period. Could inject custom behaviors
+            //    Log.Error(9999, "Worker Thread Still Busy When the Periodic Timer Woke Up");
+            //}
+            //else {
+            //    this.threadWakeEvent.Set();
+            //}
         }
 
 
@@ -197,6 +204,7 @@ namespace SpStateMachine.Core {
         /// <param name="eventObject"></param>
         void eventListner_MsgReceived(ISpMessage eventObject) {
             this.msgStore.Add(eventObject);
+            this.eventBehavior.EventReceived(BehaviorResponseEventType.MsgArrived);
         }
 
 
@@ -207,7 +215,8 @@ namespace SpStateMachine.Core {
             WrapErr.SafeAction(() => this.timer.Stop());
 
             this.terminateThread = true;
-            WrapErr.SafeAction(() => this.threadWakeEvent.Set());
+            //WrapErr.SafeAction(() => this.threadWakeEvent.Set());
+            this.eventBehavior.EventReceived(BehaviorResponseEventType.TerminateRequest);
 
             if (this.driverThread != null) {
                 if (!this.driverThread.Join(5000)) {
@@ -254,13 +263,15 @@ namespace SpStateMachine.Core {
         /// </summary>
         private void DisposeManagedResources() {
             this.DisposeObject(this.timer, "timer");
-            this.DisposeObject(this.threadWakeEvent, "threadWakeEvent");
+            this.DisposeObject(this.eventBehavior, "eventBehavior");
+            //this.DisposeObject(this.threadWakeEvent, "threadWakeEvent");
             this.DisposeObject(this.stateMachine, "stateMachine");
             this.DisposeObject(this.msgStore, "msgStore");
             this.DisposeObject(this.msgListner, "msgListner");
 
             this.timer = null;
-            this.threadWakeEvent = null;
+            this.eventBehavior = null;
+            //this.threadWakeEvent = null;
             this.stateMachine = null;
             this.msgStore = null;
             this.msgListner = null;

@@ -41,12 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\SpPeriodicWakeupOnly.cs" />
+    <Compile Include="Core\BehaviorResponseEventType.cs" />
     <Compile Include="Core\SpEventPriority.cs" />
     <Compile Include="Core\SpStateMachineEngine.cs" />
     <Compile Include="EventListners\SimpleEventListner.cs" />
     <Compile Include="EventStores\BaseEventStore.cs" />
     <Compile Include="EventStores\PriorityEventStore.cs" />
     <Compile Include="EventStores\SimpleDequeEventStore.cs" />
+    <Compile Include="Interfaces\ISpBehaviorOnEvent.cs" />
     <Compile Include="Interfaces\ISpEventResponder.cs" />
     <Compile Include="Interfaces\ISpMessage.cs" />
     <Compile Include="Interfaces\ISpEventListner.cs" />

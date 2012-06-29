@@ -12,6 +12,7 @@ using SpStateMachine.Core;
 using SpStateMachine.EventStores;
 using SpStateMachine.PeriodicTimers;
 using System.Threading;
+using SpStateMachine.Behaviours;
 
 namespace TestCases.SpStateMachineTests {
 
@@ -96,7 +97,7 @@ namespace TestCases.SpStateMachineTests {
             }
 
             protected override ISpMessage ExecOnTick(ISpMessage msg) {
-                Thread.Sleep(300);
+                Thread.Sleep(200);
                 Log.Info("MyState", "ExecOnTick", String.Format("Raised {0} StrVal:{1} IntVal:{2}", msg.EventId, This.StrVal, This.IntVal));
                 return msg;
             }
@@ -130,12 +131,15 @@ namespace TestCases.SpStateMachineTests {
             listner.ResponseReceived += new Action<ISpMessage>((msg) => { });
             ISpMessage defaultTickMsg = new BaseMsg(0, 0);
 
+            ISpBehaviorOnEvent behavior = new SpPeriodicWakeupOnly();
+
             // TODO - Need a default response msg
 
             SpStateMachineEngine engine = 
                 new SpStateMachineEngine(
                     listner,
                     new SimpleDequeEventStore(defaultTickMsg),
+                    behavior,
                     sm,
                     new WinSimpleTimer(new TimeSpan(0, 0, 0, 0, 500)));
 
