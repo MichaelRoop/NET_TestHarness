@@ -62,6 +62,15 @@
     <Compile Include="SpStateMachineTests\IPeriodicTimer.cs" />
     <Compile Include="SpStateMachineTests\SimpleEventListnerTests.cs" />
     <Compile Include="SpStateMachineTests\StateMachineScratchPad.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\Messages\MyTickMsg.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\MyDataClass.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\MyEventType.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\MyMsgType.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\MyState.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\MyStateId.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\MyStateMachine.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\Messages\MyBaseMsg.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\MySuperState.cs" />
     <Compile Include="SpStateMachineTests\WinSimplePeriodicTimerTests.cs" />
     <Compile Include="TestHelpers.cs" />
     <Compile Include="TestHelperTests.cs" />
@@ -80,6 +89,7 @@
       <Name>SpStateMachine</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
