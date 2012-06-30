@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using SpStateMachine.Core;
 namespace SpStateMachine.Interfaces {
 
     /// <summary>
@@ -58,6 +59,22 @@ namespace SpStateMachine.Interfaces {
         /// Always invoked on object exit
         /// </summary>
         void OnExit();
+
+
+        /// <summary>
+        /// Register a state transition from incoming event
+        /// </summary>
+        /// <param name="eventId">The id of the incoming event</param>
+        /// <param name="transition">The transition object</param>
+        void RegisterOnEventTransition(int eventId, ISpStateTransition transition);
+
+        /// <summary>
+        /// Register a state transition from the result of state processing
+        /// </summary>
+        /// <param name="responseId">The id of the event as the result of state processing</param>
+        /// <param name="transition">The transition object</param>
+        void RegisterOnResultTransition(int responseId, ISpStateTransition transition); 
+
 
         #endregion
 

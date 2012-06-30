@@ -125,13 +125,13 @@ namespace TestCases.SpStateMachineTests {
             Log.Info("MyState", "ExecOnEntry", String.Format("Raised {0}", msg.EventId));
             This.StrVal = "The message set on Entry";
             This.IntVal = 9876;
-            return msg;
+            return this.GetDefaultReturnMsg(msg);
         }
 
         protected override ISpMessage ExecOnTick(ISpMessage msg) {
             Thread.Sleep(200);
             Log.Info("MyState", "ExecOnTick", String.Format("Raised {0} StrVal:{1} IntVal:{2}", msg.EventId, This.StrVal, This.IntVal));
-            return msg;
+            return this.GetDefaultReturnMsg(msg);
         }
 
 
@@ -139,6 +139,25 @@ namespace TestCases.SpStateMachineTests {
             Log.Info("MyState", "ExecOnExit", "");
         }
 
+
+        /// <summary>
+        /// Provides the default return msg
+        /// </summary>
+        /// <param name="msg">The incomming message</param>
+        protected override ISpMessage GetDefaultReturnMsg(ISpMessage msg) {
+            // Temp
+            return msg;
+
+        }
+
+
+
+        protected override ISpMessage GetReponseMsg(int responseId, ISpMessage msg) {
+            // will get it from a factory eventually
+            return new BaseResponse(responseId, (BaseMsg)msg);
+
+            //throw new NotImplementedException();
+        }
     }
 
     #endregion
@@ -186,12 +205,18 @@ namespace TestCases.SpStateMachineTests {
 
             ISpState sParent = new MyState(MyStateID.NotStarted, dataClass); 
 
-            ISpState s = new MyState(sParent, MyStateID.WaitingForUserInput, dataClass); 
+            ISpState s = new MyState(sParent, MyStateID.WaitingForUserInput, dataClass);
+            ISpState s2 = new MyState(sParent, MyStateID.Active, dataClass);
+
+
+            s.RegisterOnEventTransition(12345, new SpStateTransition(true, s2, null));
+
+
             ISpStateMachine sm = new MyStateMachine(dataClass, s);
             ISpMessage defaultTickMsg = new BaseMsg(0, 0);
             ISpEventStore store = new SimpleDequeEventStore(defaultTickMsg);
             ISpBehaviorOnEvent behavior = new SpPeriodicWakeupOnly();
-            ISpPeriodicTimer timer = new WinSimpleTimer(new TimeSpan(0, 0, 0, 0, 500));
+            ISpPeriodicTimer timer = new WinSimpleTimer(new TimeSpan(0, 0, 0, 0, 1000));
             ISpEventListner listner = new SimpleEventListner();
 
             listner.ResponseReceived += new Action<ISpMessage>((msg) => { });

@@ -6,6 +6,7 @@ using SpStateMachine.Interfaces;
 using SpStateMachine.Messages;
 using SpStateMachine.Core;
 using ChkUtils;
+using LogUtils;
 
 namespace SpStateMachine.States {
 
@@ -15,6 +16,16 @@ namespace SpStateMachine.States {
     /// <typeparam name="T">Generic type that the state represents</typeparam>
     /// <author>Michael Roop</author>
     public abstract class SpState<T> : ISpState {
+
+        #region Internal Classes
+
+        //class TransitionInfo {
+        //    SpStateTransitionType type = SpStateTransitionType.OnEvent;
+        //    ISpStateTransition transition = null;
+        //    int responseId = 0;
+        //}
+        
+        #endregion
 
         #region Data
 
@@ -32,11 +43,21 @@ namespace SpStateMachine.States {
         /// Tracks the current state of the state
         /// </summary>
         private bool isEntered = false;
-
-
+        
         int id = 0;
 
         List<int> idChain = new List<int>();
+
+        /// <summary>
+        /// List of transitions that are provoqued by incoming events directly
+        /// </summary>
+        private Dictionary<int, ISpStateTransition> onEventTransitions = new Dictionary<int, ISpStateTransition>();
+
+        /// <summary>
+        /// List of transitions that are provoqued by the results of state processing
+        /// </summary>
+        private Dictionary<int, ISpStateTransition> onResultTransitions = new Dictionary<int, ISpStateTransition>();
+
 
         #endregion
 
@@ -82,12 +103,6 @@ namespace SpStateMachine.States {
                 return this.idChain;
             }
         }
-
-        /// <summary>
-        /// Get the fully resolved state name in format
-        /// parent.parent.state
-        /// </summary>
-        public abstract string Name { get; }
         
         #endregion
 
@@ -140,7 +155,8 @@ namespace SpStateMachine.States {
         public ISpStateTransition OnEntry(ISpMessage msg) {
             WrapErr.ChkFalse(this.IsEntryExcecuted, 9999, "OnEntry Cannot be Executed More Than Once Until OnExit is Called");
             this.isEntered = true;
-            return this.tempGenerator(this.ExecOnEntry(msg));
+            return this.GetTransition(msg, this.ExecOnEntry);
+
         }
 
 
@@ -150,7 +166,7 @@ namespace SpStateMachine.States {
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
         public ISpStateTransition OnTick(ISpMessage msg) {
-            return this.tempGenerator(this.ExecOnTick(msg));
+            return this.GetTransition(msg, this.ExecOnTick);
         }
 
 
@@ -160,6 +176,32 @@ namespace SpStateMachine.States {
         public void OnExit() {
             this.isEntered = false;
             this.ExecOnExit();
+        }
+
+
+        /// <summary>
+        /// Register a state transition from incoming event
+        /// </summary>
+        /// <param name="eventId">The id of the incoming event</param>
+        /// <param name="transition">The transition object</param>
+        public void RegisterOnEventTransition(int eventId, ISpStateTransition transition) {
+            this.ValidateNotFound(eventId, transition);
+
+            // This one will respond to the incoming id and will require a corresponding response msg from factory
+            this.onEventTransitions.Add(eventId, transition);
+        }
+        
+
+        /// <summary>
+        /// Register a state transition from the result of state processing
+        /// </summary>
+        /// <param name="responseId">The id of the event as the result of state processing</param>
+        /// <param name="transition">The transition object</param>
+        public void RegisterOnResultTransition(int responseId, ISpStateTransition transition) {
+            this.ValidateNotFound(responseId, transition);
+
+            // This one will respond to the result id and will require a corresponding response msg from factory
+            this.onResultTransitions.Add(responseId, transition);
         }
 
         #endregion
@@ -195,12 +237,135 @@ namespace SpStateMachine.States {
         protected virtual void ExecOnExit() {
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        protected virtual ISpStateTransition GetDefaultTransition(ISpMessage msg) {
+            return new SpStateTransition(false, null, this.GetDefaultReturnMsg(msg));
+        }
+
+
+        //protected virtual ISpStateTransition GetResultTransition(ISpMessage msg) {
+        //    // always check
+            
+        //    //ISpStateTransition st = 
+
+
+        //    // for now just get default
+        //    return this.GetDefaultTransition(msg);
+
+        //    //return new SpStateTransition(false, null, this.GetDefaultReturnMsg(msg));
+        //}
+
         #endregion
 
-        // TODO - develop the transition registration and generation
-        ISpStateTransition tempGenerator(ISpMessage msg) {
-            return new SpStateTransition(false, null, msg);
+
+
+        /// <summary>
+        /// Validate against duplicate transitions by id both within a container and between containers
+        /// </summary>
+        /// <param name="eventId"></param>
+        /// <param name="transition"></param>
+        private void ValidateNotFound(int eventId, ISpStateTransition transition) {
+            WrapErr.ChkFalse(this.onEventTransitions.Keys.Contains(eventId), 9999, () => {
+                return String.Format("OnEvent Already Contains Transition for Id:{0}", eventId);
+            });
+            WrapErr.ChkFalse(this.onResultTransitions.Keys.Contains(eventId), 9999, () => {
+                return String.Format("OnResult Already Contains Transition for Id:{0}", eventId);
+            });
         }
+
+
+        private ISpStateTransition GetTransition(ISpMessage msg, Func<ISpMessage, ISpMessage> func) {
+            // Check event driven transitions before calling into the func
+            //if (this.onEventTransitions.Keys.Contains(msg.EventId)) {
+            //    ISpStateTransition tr = this.onEventTransitions[msg.EventId];
+            //    // Runtime copy of response message into transition object
+            //    tr.ReturnMessage = this.GetReponseMsg(msg.EventId, msg);
+            //    return tr;
+            //}
+
+            //// pass the message to the state for processing and retrieve the returned message.
+            //ISpMessage response = func.Invoke(msg);
+            //if (this.onResultTransitions.Keys.Contains(response.EventId)) {
+            //    ISpStateTransition tr = this.onResultTransitions[msg.EventId];
+            //    tr.ReturnMessage = response;
+            //    return tr;
+            //}
+
+            //// No specialised behavior registered so return default
+            //return this.GetDefaultTransition(msg);
+
+
+            ISpStateTransition st = null;
+            if ((st = this.GetTransition(this.onEventTransitions, msg)) == null) {
+                if ((st = this.GetTransition(this.onResultTransitions, func.Invoke(msg))) == null) {
+                    st = this.GetDefaultTransition(msg);
+                }
+            }
+
+            //if (st.HasTransition) {
+            //    Log.Debug("SpState", "GetTransition", "**************** Has transition *******************");
+            //}
+
+            //Log.Debug("SpState", "GetTransition", 
+            //    String.Format(
+            //        "HasTransition:{0} to state:{1} with Return Msg Event id:{2}" , 
+            //        st.HasTransition, 
+            //        st.NextState == null ? "null" : st.NextState.Name,
+            //        st.ReturnMessage == null ? "null" : st.ReturnMessage.EventId.ToString()));
+            return st;
+        }
+
+
+        ISpStateTransition GetTransition(Dictionary<int, ISpStateTransition> store, ISpMessage msg) {
+            //Log.Debug("SpState", "GetTransition $$$$$$$$$  ", String.Format("$$$ - incoming event:{0}", msg.EventId));
+            if (store.Keys.Contains(msg.EventId)) {
+                Log.Debug("SpState", "GetTransition", String.Format("Found transition for event:{0}", msg.EventId));
+                ISpStateTransition tr = store[msg.EventId];
+
+                Log.Debug("SpState", "GetTransition",
+                    String.Format(
+                        "** Found transition object. HasTransition:{0} to state:{1} with Return Msg Event id:{2}",
+                        tr.HasTransition,
+                        tr.NextState == null ? "null" : tr.NextState.Name,
+                        tr.ReturnMessage == null ? "null" : tr.ReturnMessage.EventId.ToString()));
+
+                tr.ReturnMessage = msg;
+                return tr;
+            }
+            else {
+                //Log.Debug("SpState", "GetTransition", String.Format("### - Nothing found for incoming event:{0}", msg.EventId));
+            }
+            return null;
+        }
+
+
+
+        #region abstract Properties and Methods
+
+        /// <summary>
+        /// Get the fully resolved state name in format
+        /// parent.parent.state
+        /// </summary>
+        public abstract string Name { get; }
+
+        /// <summary>
+        /// Provides the default return msg
+        /// </summary>
+        /// <param name="msg">The incomming message</param>
+        protected abstract ISpMessage GetDefaultReturnMsg(ISpMessage msg);
+
+
+        protected abstract ISpMessage GetReponseMsg(int responseId, ISpMessage msg);
+
+
+        #endregion
+
+
 
 
 
