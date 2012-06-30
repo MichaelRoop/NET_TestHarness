@@ -15,7 +15,7 @@ namespace SpStateMachine.States {
     /// </summary>
     /// <typeparam name="T">Generic type that the state represents</typeparam>
     /// <author>Michael Roop</author>
-    public abstract class SpState<T> : ISpState {
+    public abstract class SpState<T> : ISpState where T : class {
 
         #region Data
 
@@ -24,9 +24,6 @@ namespace SpStateMachine.States {
 
         /// <summary>Tracks the current state of the state</summary>
         private bool isEntered = false;
-
-        /// <summary>State Identifier</summary>
-        int id = 0;
 
         /// <summary>List that contains the state id chain build on construction</summary>
         List<int> idChain = new List<int>();
@@ -73,7 +70,8 @@ namespace SpStateMachine.States {
         /// </summary>
         public int Id {
             get {
-                return this.id;
+                WrapErr.ChkTrue(this.idChain.Count > 0, 9999, "The state has no id");
+                return this.IdChain[this.idChain.Count - 1];
             }
         }
 
@@ -114,14 +112,8 @@ namespace SpStateMachine.States {
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
         public SpState(ISpState parent, int id, T wrappedObject) {
-            this.id = id;
-
-            // The sum of the id chain is all ancestors then this state id as leaf
-            if (parent != null) {
-                this.idChain = parent.IdChain;
-            }
-            this.idChain.Add(this.Id);
-
+            WrapErr.ChkParam(wrappedObject, "wrappedObject", 9999);
+            this.InitStateIds(parent, id);
             this.wrappedObject = wrappedObject;
         }
 
@@ -134,11 +126,10 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
-        public ISpStateTransition OnEntry(ISpMessage msg) {
+        public virtual ISpStateTransition OnEntry(ISpMessage msg) {
             WrapErr.ChkFalse(this.IsEntryExcecuted, 9999, "OnEntry Cannot be Executed More Than Once Until OnExit is Called");
-            this.isEntered = true;
+            this.SetEntered(true);
             return this.GetTransition(msg, this.ExecOnEntry);
-
         }
 
 
@@ -147,7 +138,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
-        public ISpStateTransition OnTick(ISpMessage msg) {
+        public virtual ISpStateTransition OnTick(ISpMessage msg) {
             return this.GetTransition(msg, this.ExecOnTick);
         }
 
@@ -156,7 +147,7 @@ namespace SpStateMachine.States {
         /// Always invoked on object exit
         /// </summary>
         public void OnExit() {
-            this.isEntered = false;
+            this.SetEntered(false);
             this.ExecOnExit();
         }
 
@@ -261,6 +252,28 @@ namespace SpStateMachine.States {
 
         #endregion
 
+        #region Protected Methods
+
+        /// <summary>
+        /// Set the entered flag
+        /// </summary>
+        /// <param name="isEntered"></param>
+        protected void SetEntered(bool isEntered) {
+            this.isEntered = isEntered;
+        }
+
+
+        protected ISpStateTransition GetOnEventTransition(ISpMessage msg) {
+            return this.GetTransition(this.onEventTransitions, msg);
+        }
+
+        protected ISpStateTransition GetOnResultTransition(ISpMessage msg) {
+            return this.GetTransition(this.onResultTransitions, msg);
+        }
+
+
+        #endregion
+
         #region Private Methods
 
         /// <summary>
@@ -291,7 +304,7 @@ namespace SpStateMachine.States {
         private ISpStateTransition GetTransition(ISpMessage msg, Func<ISpMessage, ISpMessage> func) {
 
             // We used the event id in the incoming message against the OnEvent list
-            ISpStateTransition tr = this.GetTransition(this.onEventTransitions, msg);
+            ISpStateTransition tr = this.GetOnEventTransition(msg); // this.GetTransition(this.onEventTransitions, msg);
             if (tr != null) {
                 // Call to derived class to replace the incoming message with its paired return message
                 // The user can override the OnGetResponse on a state by state basis to stuff data in
@@ -301,7 +314,8 @@ namespace SpStateMachine.States {
             }
 
             // we use the event id after processing so the return message is already selected
-            if ((tr = this.GetTransition(this.onResultTransitions, func.Invoke(msg))) != null) {
+            //if ((tr = this.GetTransition(this.onResultTransitions, func.Invoke(msg))) != null) {
+            if ((tr = this.GetOnResultTransition(func.Invoke(msg))) != null) {
                 return tr;
             }
             return this.GetDefaultTransition(msg);
@@ -321,7 +335,7 @@ namespace SpStateMachine.States {
                 if (tr.HasTransition) {
                     Log.Debug("SpState", "GetTransition",
                         String.Format(
-                            "Found transition object. HasTransition:{0} From:{1} To:{2} Return Msg Type: {3} Return Msg Event id:{4}",
+                            "Has Transition:{0} From:{1} To:{2} Return Msg Type: {3} Return Msg Event id:{4}",
                             tr.HasTransition,
                             this.Name,
                             tr.NextState == null ? "null" : tr.NextState.Name,
@@ -335,6 +349,23 @@ namespace SpStateMachine.States {
                 return tr;
             }
             return null;
+        }
+
+
+        /// <summary>
+        /// Initialise the state id chain from ancestors to this state 
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="id"></param>
+        private void InitStateIds(ISpState parent, int id) {
+            // Add any ancestor state ids to the chain
+            if (parent != null) {
+                WrapErr.ChkVar(parent.IdChain, 9999, "The parent has a null id chain");
+                this.idChain.Clear();
+                parent.IdChain.ForEach((item) => this.idChain.Add(item));
+            }
+            // This state id is the leaf
+            this.idChain.Add(id);
         }
 
         #endregion

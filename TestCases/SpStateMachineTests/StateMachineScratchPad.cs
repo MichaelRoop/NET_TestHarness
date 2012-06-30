@@ -201,62 +201,70 @@ namespace TestCases.SpStateMachineTests {
 
         [Test, Explicit]
         public void TestInitialGenericSpState() {
-            DataClass dataClass = new DataClass();
-            // This would normally be the main superstate which includes all other states cascading within it's and it's children's constructors
 
-            ISpState sParent = new MyState(MyStateID.NotStarted, dataClass); 
+            TestHelpers.CatchUnexpected(() => {
 
-            ISpState s = new MyState(sParent, MyStateID.WaitingForUserInput, dataClass);
-            ISpState s2 = new MyState(sParent, MyStateID.Active, dataClass);
+                DataClass dataClass = new DataClass();
+                // This would normally be the main superstate which includes all other states cascading within it's and it's children's constructors
 
+                ISpState sParent = new MyState(MyStateID.NotStarted, dataClass);
 
-            s.RegisterOnEventTransition(12345, new SpStateTransition(true, s2, null));
-
-
-            ISpStateMachine sm = new MyStateMachine(dataClass, s);
-            ISpMessage defaultTickMsg = new BaseMsg(0, 0);
-            ISpEventStore store = new SimpleDequeEventStore(defaultTickMsg);
-            ISpBehaviorOnEvent behavior = new SpPeriodicWakeupOnly();
-            ISpPeriodicTimer timer = new WinSimpleTimer(new TimeSpan(0, 0, 0, 0, 1000));
-            ISpEventListner listner = new SimpleEventListner();
-
-            listner.ResponseReceived += new Action<ISpMessage>((msg) => { });
+                ISpState s = new MyState(sParent, MyStateID.WaitingForUserInput, dataClass);
+                ISpState s2 = new MyState(sParent, MyStateID.Active, dataClass);
 
 
-            Console.WriteLine("State name:{0}", s.Name);
+                Console.WriteLine("SuperState sParent name:{0}", sParent.Name);
+                Console.WriteLine("State s name:{0}", s.Name);
+                Console.WriteLine("State s2 name:{0}", s2.Name);
 
-            // TODO - Need a default response msg
 
-            // Simulates DI
-            SpStateMachineEngine engine = 
+                s.RegisterOnEventTransition(12345, new SpStateTransition(true, s2, null));
+
+
+                ISpStateMachine sm = new MyStateMachine(dataClass, s);
+                ISpMessage defaultTickMsg = new BaseMsg(0, 0);
+                ISpEventStore store = new SimpleDequeEventStore(defaultTickMsg);
+                ISpBehaviorOnEvent behavior = new SpPeriodicWakeupOnly();
+                ISpPeriodicTimer timer = new WinSimpleTimer(new TimeSpan(0, 0, 0, 0, 1000));
+                ISpEventListner listner = new SimpleEventListner();
+
+                listner.ResponseReceived += new Action<ISpMessage>((msg) => { });
+
+
+
+                // TODO - Need a default response msg
+
+                // Simulates DI
+                SpStateMachineEngine engine = 
                 new SpStateMachineEngine(listner, store, behavior, sm, timer);
 
-            engine.Start();
+                engine.Start();
 
-            Thread.Sleep(3000);
+                Thread.Sleep(3000);
 
-            //sm.Tick(new BaseMsg(99, 456));
+                //sm.Tick(new BaseMsg(99, 456));
 
-            listner.PostMessage(new BaseMsg(777, 12345));
+                listner.PostMessage(new BaseMsg(777, 12345));
 
-            Thread.Sleep(3000);
-            engine.Stop();
+                Thread.Sleep(3000);
+                engine.Stop();
 
-            Console.WriteLine("Disposing Engine - thread should not output while I wait 3 seconds");
-            engine.Dispose();
+                Console.WriteLine("Disposing Engine - thread should not output while I wait 3 seconds");
+                engine.Dispose();
 
-            Thread.Sleep(3000);
-            Console.WriteLine("Done");
+                Thread.Sleep(3000);
+                Console.WriteLine("Done");
 
-            // Multi call test
-            engine.Dispose();
-            engine.Dispose();
-            engine.Dispose();
-            Console.WriteLine("Engine Disposed");
+                // Multi call test
+                engine.Dispose();
+                engine.Dispose();
+                engine.Dispose();
+                Console.WriteLine("Engine Disposed");
 
-            //SpState<DataClass> state = new SpState<DataClass>(dataClass);
-            //SpStateMachine<DataClass> stateMachine = new SpStateMachine<DataClass>(dataClass, state);
+                //SpState<DataClass> state = new SpState<DataClass>(dataClass);
+                //SpStateMachine<DataClass> stateMachine = new SpStateMachine<DataClass>(dataClass, state);
 
+            });
         }
 
 
