@@ -16,7 +16,6 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
     /// <remarks>Note usage of enum to enforce strong typing at implementation level</remarks>
     public class MyState : SpState<MyDataClass> {
 
-        string name = "";
 
         public MyState(MyStateID id, MyDataClass dataClass)
             : base(id.Int(), dataClass) {
@@ -26,18 +25,22 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
             : base(parent, id.Int(), dataClass) {
         }
 
-        public override string Name {
-            get {
-                if (this.name.Length == 0) {
-                    StringBuilder sb = new StringBuilder(75);
-                    this.IdChain.ForEach((item) => {
-                        sb.Append(String.Format(".{0}", item.ToStateId().ToString()));
-                    });
-                    this.name = sb.Length > 0 ? sb.ToString(1, sb.Length - 1) : "NameSearchFailed";
-                }
-                return this.name;
-            }
+        protected override string ConvertIdToString(int id) {
+            return id.ToStateId().ToString();
         }
+
+        //public override string Name {
+        //    get {
+        //        if (this.name.Length == 0) {
+        //            StringBuilder sb = new StringBuilder(75);
+        //            this.IdChain.ForEach((item) => {
+        //                sb.Append(String.Format(".{0}", item.ToStateId().ToString()));
+        //            });
+        //            this.name = sb.Length > 0 ? sb.ToString(1, sb.Length - 1) : "NameSearchFailed";
+        //        }
+        //        return this.name;
+        //    }
+        //}
 
 
         protected override ISpMessage ExecOnEntry(ISpMessage msg) {

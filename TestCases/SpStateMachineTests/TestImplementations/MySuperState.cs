@@ -11,7 +11,6 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
         #region Data
 
-        string name = "";
 
         #endregion
 
@@ -29,18 +28,23 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
         #region SpStateOverrides
 
-        public override string Name {
-            get {
-                if (this.name.Length == 0) {
-                    StringBuilder sb = new StringBuilder(75);
-                    this.IdChain.ForEach((item) => {
-                        sb.Append(String.Format(".{0}", item.ToStateId().ToString()));
-                    });
-                    this.name = sb.Length > 0 ? sb.ToString(1, sb.Length - 1) : "NameSearchFailed";
-                }
-                return this.name;
-            }
+        //public override string Name {
+        //    get {
+        //        if (this.name.Length == 0) {
+        //            StringBuilder sb = new StringBuilder(75);
+        //            this.IdChain.ForEach((item) => {
+        //                sb.Append(String.Format(".{0}", item.ToStateId().ToString()));
+        //            });
+        //            this.name = sb.Length > 0 ? sb.ToString(1, sb.Length - 1) : "NameSearchFailed";
+        //        }
+        //        return this.name;
+        //    }
+        //}
+
+        protected override string ConvertIdToString(int id) {
+            return id.ToStateId().ToString();
         }
+
 
         protected override ISpMessage GetDefaultReturnMsg(ISpMessage msg) {
             throw new NotImplementedException();

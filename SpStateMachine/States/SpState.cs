@@ -37,6 +37,9 @@ namespace SpStateMachine.States {
         /// List of transitions that are provoqued by the results of state processing
         /// </summary>
         private Dictionary<int, ISpStateTransition> onResultTransitions = new Dictionary<int, ISpStateTransition>();
+
+        /// <summary>Fully resolved state name</summary>
+        private string name = "";
         
         #endregion
 
@@ -83,7 +86,18 @@ namespace SpStateMachine.States {
                 return this.idChain;
             }
         }
-        
+
+
+        /// <summary>
+        /// From Get the fully resolved state name in format
+        /// grandparent.parent.state
+        /// </summary>
+        public string Name {
+            get {
+                return this.name;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -225,17 +239,23 @@ namespace SpStateMachine.States {
         protected virtual ISpMessage OnGetResponseMsg(ISpMessage msg) {
             return msg;
         }
-        
+
+
+        /// <summary>
+        /// Allows derived classes to convert the type to string if they are using strongly 
+        /// typed convetible enums. By default this level just calls int.ToString() so you
+        /// would end up with a name chaine some like '2.4.12'
+        /// </summary>
+        /// <param name="id">The id to convert to string</param>
+        /// <returns></returns>
+        protected virtual string ConvertIdToString(int id) {
+            return id.ToString();
+        }
+
         #endregion
 
         #region abstract Properties and Methods
-
-        /// <summary>
-        /// From ISpState Get the fully resolved state name in format
-        /// grandparent.parent.state
-        /// </summary>
-        public abstract string Name { get; }
-
+        
         /// <summary>
         /// Provides the default return msg
         /// </summary>
@@ -361,9 +381,23 @@ namespace SpStateMachine.States {
             }
             // This state id is the leaf
             this.idChain.Add(id);
+            this.BuildName();
+        }
+
+
+        /// <summary>
+        /// Builds the fully resolved name by iterating through the  the name based on the 
+        /// </summary>
+        private void BuildName() {
+            StringBuilder sb = new StringBuilder(75);
+            this.IdChain.ForEach((item) => {
+                sb.Append(String.Format(".{0}", this.ConvertIdToString(item)));
+            });
+            this.name = sb.Length > 0 ? sb.ToString(1, sb.Length - 1) : "NameSearchFailed";
         }
 
         #endregion
-        
+
+
     }
 }
