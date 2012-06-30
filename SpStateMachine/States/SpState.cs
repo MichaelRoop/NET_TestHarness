@@ -213,7 +213,7 @@ namespace SpStateMachine.States {
         /// <param name="msg">The incoming message</param>
         /// <returns>The default transition with no transition set</returns>
         protected virtual ISpStateTransition GetDefaultTransition(ISpMessage msg) {
-            return new SpStateTransition(false, null, this.GetDefaultReturnMsg(msg));
+            return new SpStateTransition(SpStateTransitionType.SameState, null, this.GetDefaultReturnMsg(msg));
         }
 
 
@@ -332,19 +332,14 @@ namespace SpStateMachine.States {
             if (store.Keys.Contains(msg.EventId)) {
                 Log.Debug("SpState", "GetTransition", String.Format("Found transition for event:{0}", msg.EventId));
                 ISpStateTransition tr = store[msg.EventId];
-                if (tr.HasTransition) {
-                    Log.Debug("SpState", "GetTransition",
-                        String.Format(
-                            "Has Transition:{0} From:{1} To:{2} Return Msg Type: {3} Return Msg Event id:{4}",
-                            tr.HasTransition,
-                            this.Name,
-                            tr.NextState == null ? "null" : tr.NextState.Name,
-                            tr.ReturnMessage == null ? "null" : tr.ReturnMessage.TypeId.ToString(),
-                            tr.ReturnMessage == null ? "null" : tr.ReturnMessage.EventId.ToString()));
-                }
-                else {
-                    Log.Warning(9999, "Found Non Transitioning Transition");
-                }
+                Log.Debug("SpState", "GetTransition",
+                    String.Format(
+                        "Type:{0} From:{1} To:{2} MsgType:{3} MsgEventId:{4}",
+                        tr.TransitionType,
+                        this.Name,
+                        tr.NextState == null ? "Null" : tr.NextState.Name,
+                        tr.ReturnMessage == null ? "Null" : tr.ReturnMessage.TypeId.ToString(),
+                        tr.ReturnMessage == null ? "Null" : tr.ReturnMessage.EventId.ToString()));
                 tr.ReturnMessage = msg;
                 return tr;
             }

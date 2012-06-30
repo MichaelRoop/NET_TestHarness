@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SpStateMachine.Interfaces;
+﻿using SpStateMachine.Interfaces;
 
 namespace SpStateMachine.Core {
 
-    public class SpStateTransition : ISpStateTransition {
+    /// <summary>
+    /// Contains the necessary information to execute a state transition
+    /// </summary>
+    /// <author>Michael Roop</author>
+    public sealed class SpStateTransition : ISpStateTransition {
 
         #region Data 
 
-        bool hasTransition = false;
+        SpStateTransitionType type = SpStateTransitionType.SameState;
 
         ISpState nextState = null;
 
@@ -18,17 +18,24 @@ namespace SpStateMachine.Core {
 
         #endregion
 
-
         #region ISpStateTransition Members
 
-        public bool HasTransition {
-            get { return this.hasTransition; 
+        /// <summary>
+        /// The type of transition to execute
+        /// </summary>
+        public SpStateTransitionType TransitionType {
+            get { 
+                return this.type; 
             }
             set {
-                this.hasTransition = value;
+                this.type = value;
             }
         }
 
+
+        /// <summary>
+        /// The registered next state for NextState transitions
+        /// </summary>
         public ISpState NextState {
             get {
                 return this.nextState;
@@ -38,6 +45,10 @@ namespace SpStateMachine.Core {
             }
         }
 
+
+        /// <summary>
+        /// The response message to return to caller
+        /// </summary>
         public ISpMessage ReturnMessage {
             get {
                 return this.returnMsg;
@@ -48,22 +59,29 @@ namespace SpStateMachine.Core {
         }
 
         #endregion
-
-
+        
         #region Constructors 
 
+        /// <summary>
+        /// Default constructor in private scope to prevent usage
+        /// </summary>
         private SpStateTransition() {
         }
 
 
-        public SpStateTransition(bool hasTransition, ISpState nextState, ISpMessage returnMsg) {
-            this.hasTransition = hasTransition;
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="type">The transition type</param>
+        /// <param name="nextState">The next state for next state transitions</param>
+        /// <param name="returnMsg">The repsponse to return to the caller</param>
+        public SpStateTransition(SpStateTransitionType type, ISpState nextState, ISpMessage returnMsg) {
+            this.type = type;
             this.nextState = nextState;
             this.returnMsg = returnMsg;
         }
 
         #endregion
-
-
+        
     }
 }

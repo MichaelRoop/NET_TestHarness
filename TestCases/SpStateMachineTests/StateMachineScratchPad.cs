@@ -218,7 +218,7 @@ namespace TestCases.SpStateMachineTests {
                 Console.WriteLine("State s2 name:{0}", s2.Name);
 
 
-                s.RegisterOnEventTransition(12345, new SpStateTransition(true, s2, null));
+                s.RegisterOnEventTransition(12345, new SpStateTransition(SpStateTransitionType.NextState, s2, null));
 
 
                 ISpStateMachine sm = new MyStateMachine(dataClass, s);
