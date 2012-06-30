@@ -152,12 +152,13 @@ namespace TestCases.SpStateMachineTests {
 
 
 
-        protected override ISpMessage GetReponseMsg(int responseId, ISpMessage msg) {
+        protected override ISpMessage GetReponseMsg(ISpMessage msg) {
             // will get it from a factory eventually
-            return new BaseResponse(responseId, (BaseMsg)msg);
-
-            //throw new NotImplementedException();
+            int responseMsgTypeId = 22;
+            return new BaseResponse(responseMsgTypeId, (BaseMsg)msg);
         }
+
+
     }
 
     #endregion

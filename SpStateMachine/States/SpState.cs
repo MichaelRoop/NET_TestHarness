@@ -17,35 +17,18 @@ namespace SpStateMachine.States {
     /// <author>Michael Roop</author>
     public abstract class SpState<T> : ISpState {
 
-        #region Internal Classes
-
-        //class TransitionInfo {
-        //    SpStateTransitionType type = SpStateTransitionType.OnEvent;
-        //    ISpStateTransition transition = null;
-        //    int responseId = 0;
-        //}
-        
-        #endregion
-
         #region Data
 
-        /// <summary>
-        /// Holds data and method accessible to all states
-        /// </summary>
+        /// <summary>Holds data and method accessible to all states</summary>
         private T wrappedObject = default(T);
 
-        /// <summary>
-        /// The default response if there are no responses registered
-        /// </summary>
-  //      private ISpMessage defaultResonse = null;
-
-        /// <summary>
-        /// Tracks the current state of the state
-        /// </summary>
+        /// <summary>Tracks the current state of the state</summary>
         private bool isEntered = false;
-        
+
+        /// <summary>State Identifier</summary>
         int id = 0;
 
+        /// <summary>List that contains the state id chain build on construction</summary>
         List<int> idChain = new List<int>();
 
         /// <summary>
@@ -57,14 +40,13 @@ namespace SpStateMachine.States {
         /// List of transitions that are provoqued by the results of state processing
         /// </summary>
         private Dictionary<int, ISpStateTransition> onResultTransitions = new Dictionary<int, ISpStateTransition>();
-
-
+        
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// Returns the core object which is state wrapped by the state machine
+        /// Returns the object which is represented by the state machine
         /// </summary>
         public T This {
             get {
@@ -186,8 +168,6 @@ namespace SpStateMachine.States {
         /// <param name="transition">The transition object</param>
         public void RegisterOnEventTransition(int eventId, ISpStateTransition transition) {
             this.ValidateNotFound(eventId, transition);
-
-            // This one will respond to the incoming id and will require a corresponding response msg from factory
             this.onEventTransitions.Add(eventId, transition);
         }
         
@@ -195,13 +175,11 @@ namespace SpStateMachine.States {
         /// <summary>
         /// Register a state transition from the result of state processing
         /// </summary>
-        /// <param name="responseId">The id of the event as the result of state processing</param>
+        /// <param name="eventId">The id of the event as the result of state processing</param>
         /// <param name="transition">The transition object</param>
-        public void RegisterOnResultTransition(int responseId, ISpStateTransition transition) {
-            this.ValidateNotFound(responseId, transition);
-
-            // This one will respond to the result id and will require a corresponding response msg from factory
-            this.onResultTransitions.Add(responseId, transition);
+        public void RegisterOnResultTransition(int eventId, ISpStateTransition transition) {
+            this.ValidateNotFound(eventId, transition);
+            this.onResultTransitions.Add(eventId, transition);
         }
 
         #endregion
@@ -215,8 +193,7 @@ namespace SpStateMachine.States {
         /// <param name="msg">The incoming message</param>
         /// <returns>A transition object</returns>
         protected virtual ISpMessage ExecOnEntry(ISpMessage msg) {
-            // If no override it will query to get default return
-            return new BaseResponse(0, (BaseMsg)msg, 0, "");
+            return GetDefaultReturnMsg(msg);
         }
 
 
@@ -227,7 +204,7 @@ namespace SpStateMachine.States {
         /// <param name="msg">The incoming message</param>
         /// <returns>A transition object</returns>
         protected virtual ISpMessage ExecOnTick(ISpMessage msg) {
-            return new BaseResponse(0, (BaseMsg)msg, 0, "");
+            return GetDefaultReturnMsg(msg);
         }
 
 
@@ -239,30 +216,52 @@ namespace SpStateMachine.States {
 
 
         /// <summary>
-        /// 
+        /// Returns a default transition object set to no transition, no next 
+        /// state and the default return message
         /// </summary>
-        /// <param name="msg"></param>
-        /// <returns></returns>
+        /// <param name="msg">The incoming message</param>
+        /// <returns>The default transition with no transition set</returns>
         protected virtual ISpStateTransition GetDefaultTransition(ISpMessage msg) {
             return new SpStateTransition(false, null, this.GetDefaultReturnMsg(msg));
         }
 
 
-        //protected virtual ISpStateTransition GetResultTransition(ISpMessage msg) {
-        //    // always check
-            
-        //    //ISpStateTransition st = 
+        /// <summary>
+        /// The user can override this method on a state by state basis to stuff
+        /// data into the return msg class if necessary. By default it is a pass through
+        /// </summary>
+        /// <param name="msg">The return message from the derived class</param>
+        protected virtual ISpMessage OnGetResponseMsg(ISpMessage msg) {
+            return msg;
+        }
+        
+        #endregion
+
+        #region abstract Properties and Methods
+
+        /// <summary>
+        /// From ISpState Get the fully resolved state name in format
+        /// grandparent.parent.state
+        /// </summary>
+        public abstract string Name { get; }
+
+        /// <summary>
+        /// Provides the default return msg
+        /// </summary>
+        /// <param name="msg">The incomming message</param>
+        protected abstract ISpMessage GetDefaultReturnMsg(ISpMessage msg);
 
 
-        //    // for now just get default
-        //    return this.GetDefaultTransition(msg);
-
-        //    //return new SpStateTransition(false, null, this.GetDefaultReturnMsg(msg));
-        //}
+        /// <summary>
+        /// Get the appropriate paired return message for the message
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        protected abstract ISpMessage GetReponseMsg(ISpMessage msg);
 
         #endregion
 
-
+        #region Private Methods
 
         /// <summary>
         /// Validate against duplicate transitions by id both within a container and between containers
@@ -279,95 +278,66 @@ namespace SpStateMachine.States {
         }
 
 
+        /// <summary>
+        /// Verifies transitions in order of onEvent, onResult and if not found will return the 
+        /// default transition
+        /// </summary>
+        /// <param name="msg">The incoming message to validate against the onEvent list</param>
+        /// <param name="func">
+        /// The function that is invoked that will return return message from the state processing
+        /// and use it to check against the onResult queue.
+        /// </param>
+        /// <returns>The OnEvent, OnResult or default transition</returns>
         private ISpStateTransition GetTransition(ISpMessage msg, Func<ISpMessage, ISpMessage> func) {
-            // Check event driven transitions before calling into the func
-            //if (this.onEventTransitions.Keys.Contains(msg.EventId)) {
-            //    ISpStateTransition tr = this.onEventTransitions[msg.EventId];
-            //    // Runtime copy of response message into transition object
-            //    tr.ReturnMessage = this.GetReponseMsg(msg.EventId, msg);
-            //    return tr;
-            //}
 
-            //// pass the message to the state for processing and retrieve the returned message.
-            //ISpMessage response = func.Invoke(msg);
-            //if (this.onResultTransitions.Keys.Contains(response.EventId)) {
-            //    ISpStateTransition tr = this.onResultTransitions[msg.EventId];
-            //    tr.ReturnMessage = response;
-            //    return tr;
-            //}
-
-            //// No specialised behavior registered so return default
-            //return this.GetDefaultTransition(msg);
-
-
-            ISpStateTransition st = null;
-            if ((st = this.GetTransition(this.onEventTransitions, msg)) == null) {
-                if ((st = this.GetTransition(this.onResultTransitions, func.Invoke(msg))) == null) {
-                    st = this.GetDefaultTransition(msg);
-                }
+            // We used the event id in the incoming message against the OnEvent list
+            ISpStateTransition tr = this.GetTransition(this.onEventTransitions, msg);
+            if (tr != null) {
+                // Call to derived class to replace the incoming message with its paired return message
+                // The user can override the OnGetResponse on a state by state basis to stuff data in
+                // particular return message types
+                tr.ReturnMessage = this.OnGetResponseMsg(this.GetReponseMsg(msg));
+                return tr;
             }
 
-            //if (st.HasTransition) {
-            //    Log.Debug("SpState", "GetTransition", "**************** Has transition *******************");
-            //}
-
-            //Log.Debug("SpState", "GetTransition", 
-            //    String.Format(
-            //        "HasTransition:{0} to state:{1} with Return Msg Event id:{2}" , 
-            //        st.HasTransition, 
-            //        st.NextState == null ? "null" : st.NextState.Name,
-            //        st.ReturnMessage == null ? "null" : st.ReturnMessage.EventId.ToString()));
-            return st;
+            // we use the event id after processing so the return message is already selected
+            if ((tr = this.GetTransition(this.onResultTransitions, func.Invoke(msg))) != null) {
+                return tr;
+            }
+            return this.GetDefaultTransition(msg);
         }
 
 
-        ISpStateTransition GetTransition(Dictionary<int, ISpStateTransition> store, ISpMessage msg) {
-            //Log.Debug("SpState", "GetTransition $$$$$$$$$  ", String.Format("$$$ - incoming event:{0}", msg.EventId));
+        /// <summary>
+        /// Get the transition object from the store or null if not found
+        /// </summary>
+        /// <param name="store">The store to search</param>
+        /// <param name="msg">The message to insert in the transition object</param>
+        /// <returns>The transition object from the store or null if not found</returns>
+        private ISpStateTransition GetTransition(Dictionary<int, ISpStateTransition> store, ISpMessage msg) {
             if (store.Keys.Contains(msg.EventId)) {
                 Log.Debug("SpState", "GetTransition", String.Format("Found transition for event:{0}", msg.EventId));
                 ISpStateTransition tr = store[msg.EventId];
-
-                Log.Debug("SpState", "GetTransition",
-                    String.Format(
-                        "** Found transition object. HasTransition:{0} to state:{1} with Return Msg Event id:{2}",
-                        tr.HasTransition,
-                        tr.NextState == null ? "null" : tr.NextState.Name,
-                        tr.ReturnMessage == null ? "null" : tr.ReturnMessage.EventId.ToString()));
-
+                if (tr.HasTransition) {
+                    Log.Debug("SpState", "GetTransition",
+                        String.Format(
+                            "Found transition object. HasTransition:{0} From:{1} To:{2} Return Msg Type: {3} Return Msg Event id:{4}",
+                            tr.HasTransition,
+                            this.Name,
+                            tr.NextState == null ? "null" : tr.NextState.Name,
+                            tr.ReturnMessage == null ? "null" : tr.ReturnMessage.TypeId.ToString(),
+                            tr.ReturnMessage == null ? "null" : tr.ReturnMessage.EventId.ToString()));
+                }
+                else {
+                    Log.Warning(9999, "Found Non Transitioning Transition");
+                }
                 tr.ReturnMessage = msg;
                 return tr;
-            }
-            else {
-                //Log.Debug("SpState", "GetTransition", String.Format("### - Nothing found for incoming event:{0}", msg.EventId));
             }
             return null;
         }
 
-
-
-        #region abstract Properties and Methods
-
-        /// <summary>
-        /// Get the fully resolved state name in format
-        /// parent.parent.state
-        /// </summary>
-        public abstract string Name { get; }
-
-        /// <summary>
-        /// Provides the default return msg
-        /// </summary>
-        /// <param name="msg">The incomming message</param>
-        protected abstract ISpMessage GetDefaultReturnMsg(ISpMessage msg);
-
-
-        protected abstract ISpMessage GetReponseMsg(int responseId, ISpMessage msg);
-
-
         #endregion
-
-
-
-
-
+        
     }
 }
