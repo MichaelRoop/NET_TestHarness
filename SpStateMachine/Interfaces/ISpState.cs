@@ -18,21 +18,26 @@ namespace SpStateMachine.Interfaces {
         bool IsEntryExcecuted { get; }
 
         /// <summary>
-        /// The unique state identifier
+        /// The unique state identifier as an integer
         /// </summary>
         int Id { get; }
 
 
         /// <summary>
-        /// Get the full id by combining nested ids
+        /// Get the full id by combining nested int ids
         /// </summary>
         List<int> IdChain { get; }
+
+        /// <summary>
+        /// Get the name of the state alone without reference to ancestors (i.e. parent.state)
+        /// </summary>
+        string Name { get; }
 
         /// <summary>
         /// Get the fully resolved state name in format
         /// parent.parent.state
         /// </summary>
-        string Name { get; }
+        string FullName { get; }
 
 
         #endregion

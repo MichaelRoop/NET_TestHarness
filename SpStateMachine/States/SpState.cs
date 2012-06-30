@@ -38,8 +38,11 @@ namespace SpStateMachine.States {
         /// </summary>
         private Dictionary<int, ISpStateTransition> onResultTransitions = new Dictionary<int, ISpStateTransition>();
 
-        /// <summary>Fully resolved state name</summary>
+        /// <summary>state name without reference to ancestors</summary>
         private string name = "";
+
+        /// <summary>Fully resolved state name</summary>
+        private string fullName = "";
         
         #endregion
 
@@ -89,12 +92,22 @@ namespace SpStateMachine.States {
 
 
         /// <summary>
-        /// From Get the fully resolved state name in format
-        /// grandparent.parent.state
+        /// The state name without reference to ancestors (i.e. parent.state)
         /// </summary>
         public string Name {
             get {
                 return this.name;
+            }
+        }
+
+
+        /// <summary>
+        /// From Get the fully resolved state name in format
+        /// grandparent.parent.state
+        /// </summary>
+        public string FullName {
+            get {
+                return this.fullName;
             }
         }
 
@@ -356,8 +369,8 @@ namespace SpStateMachine.States {
                     String.Format(
                         "Type:{0} From:{1} To:{2} MsgType:{3} MsgEventId:{4}",
                         tr.TransitionType,
-                        this.Name,
-                        tr.NextState == null ? "Null" : tr.NextState.Name,
+                        this.FullName,
+                        tr.NextState == null ? "Null" : tr.NextState.FullName,
                         tr.ReturnMessage == null ? "Null" : tr.ReturnMessage.TypeId.ToString(),
                         tr.ReturnMessage == null ? "Null" : tr.ReturnMessage.EventId.ToString()));
                 tr.ReturnMessage = msg;
@@ -393,7 +406,8 @@ namespace SpStateMachine.States {
             this.IdChain.ForEach((item) => {
                 sb.Append(String.Format(".{0}", this.ConvertIdToString(item)));
             });
-            this.name = sb.Length > 0 ? sb.ToString(1, sb.Length - 1) : "NameSearchFailed";
+            this.fullName = sb.Length > 0 ? sb.ToString(1, sb.Length - 1) : "FullNameSearchFailed";
+            this.name = this.idChain.Count > 0 ? this.ConvertIdToString(this.idChain[this.idChain.Count - 1]) : "NameSearchFailed";
         }
 
         #endregion

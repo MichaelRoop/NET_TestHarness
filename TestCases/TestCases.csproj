@@ -62,10 +62,13 @@
     <Compile Include="SpStateMachineTests\IPeriodicTimer.cs" />
     <Compile Include="SpStateMachineTests\SimpleEventListnerTests.cs" />
     <Compile Include="SpStateMachineTests\StateMachineScratchPad.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\Messages\MyBaseResponse.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\Messages\MySimpleOkResponse.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\Messages\MyTickMsg.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyDataClass.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyEventType.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyMsgType.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\MyReturnCode.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyState.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyStateId.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyStateMachine.cs" />

@@ -147,7 +147,7 @@ namespace SpStateMachine.States {
             WrapErr.ChkVar(tr.NextState, 9999, () => { return
                 String.Format(
                     "State {0} Specified Next State on Event {1} but Next State Null",
-                    this.currentState.Name, msg.EventId);
+                    this.currentState.FullName, msg.EventId);
             });
 
             // TODO - determine if return message is already attached or needs attaching
@@ -167,7 +167,7 @@ namespace SpStateMachine.States {
             WrapErr.ChkVar(tr, 9999, () => {
                 return String.Format(
                     "State {0} Specified Exit but SuperState {1} has no handlers for that event id:{2}", 
-                    this.currentState.Name, this.Name, msg.EventId);
+                    this.currentState.FullName, this.FullName, msg.EventId);
             });
 
             // At this point, the transition registered to the superstate should have everything set in it

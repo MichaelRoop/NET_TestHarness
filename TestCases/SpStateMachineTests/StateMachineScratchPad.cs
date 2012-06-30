@@ -59,9 +59,9 @@ namespace TestCases.SpStateMachineTests {
                 ISpState s2 = new MyState(sParent, MyStateID.Active, dataClass);
 
 
-                Console.WriteLine("SuperState sParent name:{0}", sParent.Name);
-                Console.WriteLine("State s name:{0}", s.Name);
-                Console.WriteLine("State s2 name:{0}", s2.Name);
+                Console.WriteLine("SuperState sParent name:{0}", sParent.FullName);
+                Console.WriteLine("State s name:{0}", s.FullName);
+                Console.WriteLine("State s2 name:{0}", s2.FullName);
 
 
                 s.RegisterOnEventTransition(12345, new SpStateTransition(SpStateTransitionType.NextState, s2, null));
