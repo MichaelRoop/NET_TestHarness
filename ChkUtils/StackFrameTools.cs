@@ -121,6 +121,36 @@ namespace ChkUtils {
         }
 
 
+        /// <summary>
+        /// Returns a list with the stack trace except the leading entries which are to be ignored
+        /// </summary>
+        /// <param name="typeToIgnore">The type to ignore on first entries</param>
+        /// <param name="trace">The stack trace</param>
+        /// <returns>A list with entries past the initial wraping type class</returns>
+        public static List<string> FirstNonWrappedTraceStack(Type typeToIgnore, StackTrace trace) {
+            bool firstNonWrapErr = false;
+            string name = typeToIgnore.Name;
+
+            List<string> stackFrames = new List<string>();
+            for (int i =0; i < trace.FrameCount; i++) {
+                StackFrame sf = trace.GetFrame(i);
+
+                // Skip over all entries until you hit the first not to ignore
+                if (!firstNonWrapErr) {
+                    if (StackFrameTools.ClassName(sf) != name) {
+                        firstNonWrapErr = true;
+                    }
+                    else {
+                        continue;
+                    }
+                }
+
+                stackFrames.Add(
+                    String.Format("\t{0} : Line:{1} - {2}.{3}", StackFrameTools.FileName(sf), StackFrameTools.Line(sf), StackFrameTools.ClassName(sf), StackFrameTools.MethodName(sf)));
+            }
+            return stackFrames;
+        }
+
 
     }
 }

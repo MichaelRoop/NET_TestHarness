@@ -4,6 +4,8 @@ using System.ServiceModel;
 using ChkUtils.ErrObjects;
 using ChkUtils.ErrOjbects;
 using ChkUtils.ExceptionFormating;
+using System.Collections.Generic;
+using System.Text;
 
 namespace ChkUtils {
 
@@ -628,13 +630,12 @@ namespace ChkUtils {
         /// <param name="code">The error code if null</param>
         /// <param name="msg">The error message</param>
         public static void ChkVar(ExceptionType type, object obj, int code, string msg) {
-            if (obj == null) {
-                ErrReport err = WrapErr.GetErrReport(code, msg);
+            if (obj == null) { 
                 if (type == ExceptionType.Regular) {
-                    throw new ErrReportException(err);
+                    throw new ErrReportException(WrapErr.GetErrReport(code, msg)); 
                 }
                 else {
-                    throw new FaultException<ErrReport>(err);
+                    throw new FaultException<ErrReport>(WrapErr.GetErrReport(code, msg));
                 }
             }
         }
@@ -1101,9 +1102,14 @@ namespace ChkUtils {
 
         private static ErrReport GetErrReport(int code, string msg) {
             try {
-                // Called directly from a method in an application. One level up and no stack trace
-                //                return new ErrReport(code, new StackTrace().GetFrame(1).GetMethod(), msg);
-                return WrapErr.LogErr(new ErrReport(code, StackFrameTools.FirstNonWrappedMethod(typeof(WrapErr)), msg));
+                ErrReport err = new ErrReport(code, StackFrameTools.FirstNonWrappedMethod(typeof(WrapErr)), msg);
+                List<string> stackFrames = StackFrameTools.FirstNonWrappedTraceStack(typeof(WrapErr), new StackTrace(1, true));
+
+                StringBuilder sb = new StringBuilder(100);
+                stackFrames.ForEach((item) => sb.AppendLine(item));
+                err.StackTrace = sb.ToString();  
+
+                return WrapErr.LogErr(err);
             }
             catch (Exception ex) {
                 Debug.WriteLine("{0} on call to WrapErr.GetErrReport:{1} - {2}", ex.GetType().Name, ex.Message, ex.StackTrace);
