@@ -191,7 +191,9 @@ namespace SpStateMachine.States {
         /// <param name="eventId">The id of the incoming event</param>
         /// <param name="transition">The transition object</param>
         public virtual void RegisterOnEventTransition(int eventId, ISpStateTransition transition) {
-            this.ValidateNotFound(eventId, transition);
+            WrapErr.ChkFalse(this.onEventTransitions.Keys.Contains(eventId), 9999, () => {
+                return String.Format("OnEvent Already Contains Transition for Id:{0}", eventId);
+            });
             this.onEventTransitions.Add(eventId, transition);
         }
         
@@ -202,7 +204,9 @@ namespace SpStateMachine.States {
         /// <param name="eventId">The id of the event as the result of state processing</param>
         /// <param name="transition">The transition object</param>
         public virtual void RegisterOnResultTransition(int eventId, ISpStateTransition transition) {
-            this.ValidateNotFound(eventId, transition);
+            WrapErr.ChkFalse(this.onResultTransitions.Keys.Contains(eventId), 9999, () => {
+                return String.Format("OnResult Already Contains Transition for Id:{0}", eventId);
+            });
             this.onResultTransitions.Add(eventId, transition);
         }
 
@@ -338,21 +342,6 @@ namespace SpStateMachine.States {
         #endregion
 
         #region Private Methods
-
-        /// <summary>
-        /// Validate against duplicate transitions by id both within a container and between containers
-        /// </summary>
-        /// <param name="eventId"></param>
-        /// <param name="transition"></param>
-        private void ValidateNotFound(int eventId, ISpStateTransition transition) {
-            WrapErr.ChkFalse(this.onEventTransitions.Keys.Contains(eventId), 9999, () => {
-                return String.Format("OnEvent Already Contains Transition for Id:{0}", eventId);
-            });
-            WrapErr.ChkFalse(this.onResultTransitions.Keys.Contains(eventId), 9999, () => {
-                return String.Format("OnResult Already Contains Transition for Id:{0}", eventId);
-            });
-        }
-
 
         /// <summary>
         /// Verifies transitions in order of onEvent, onResult and if not found will return the 
