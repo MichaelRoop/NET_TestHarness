@@ -10,8 +10,8 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
 
     public class NotStartedSs : MySuperState {
 
-        public NotStartedSs(MyDataClass dataClass)
-            : base(MyStateID.NotStarted, dataClass) {
+        public NotStartedSs(ISpState parent, MyDataClass dataClass)
+            : base(parent, MyStateID.NotStarted, dataClass) {
 
             MyState idle = new IdleSt(this, dataClass);
             MyState active = new ActiveSt(this, dataClass);

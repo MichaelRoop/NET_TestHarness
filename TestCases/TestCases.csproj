@@ -79,7 +79,9 @@
     <Compile Include="SpStateMachineTests\TestImplementations\States\FailedSt.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\States\IdleSt.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\States\WaitOnInput.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\SuperStates\MainSs.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\SuperStates\NotStartedSs.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\SuperStates\RecoverySs.cs" />
     <Compile Include="SpStateMachineTests\WinSimplePeriodicTimerTests.cs" />
     <Compile Include="TestHelpers.cs" />
     <Compile Include="TestHelperTests.cs" />

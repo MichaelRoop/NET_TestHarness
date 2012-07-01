@@ -10,9 +10,11 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
     public enum MyStateID : int {
 
-        Default,
-        NotStarted,             // Super state
-        Started,                // Super state
+        Default,        // Super state
+        Main,           // Super state
+        NotStarted,     // Super state
+        Started,        // Super state
+        Recovery,       // Super state
 
         //======================================
         // State level

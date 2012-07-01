@@ -124,7 +124,7 @@ namespace TestCases.SpStateMachineTests {
 
                 // Setting flip count will cause back and fourth between active and idle
                 MyDataClass dataClass = new MyDataClass() { FlipStateCount = 2 };
-                MySuperState notStartedSs = new NotStartedSs(dataClass);
+                MySuperState notStartedSs = new NotStartedSs(null, dataClass);
                 ISpEventListner listner;
                 SpStateMachineEngine engine = this.GetEngine(out listner, dataClass, notStartedSs);
 
@@ -145,7 +145,7 @@ namespace TestCases.SpStateMachineTests {
 
                 // Setting flip count will cause back and fourth between active and idle
                 MyDataClass dataClass = new MyDataClass();
-                MySuperState notStartedSs = new NotStartedSs(dataClass);
+                MySuperState notStartedSs = new NotStartedSs(null, dataClass);
                 ISpEventListner listner;
                 SpStateMachineEngine engine = this.GetEngine(out listner, dataClass, notStartedSs);
 
@@ -162,6 +162,44 @@ namespace TestCases.SpStateMachineTests {
             });
         }
 
+
+        [Test, Explicit]
+        public void TestExitStateTransitionsInSuperState() {
+
+            TestHelpers.CatchUnexpected(() => {
+
+                // Setting flip count will cause back and fourth between active and idle
+                MyDataClass dataClass = new MyDataClass();
+
+
+                MySuperState mainSs = new MainSs(dataClass);
+                ISpEventListner listner;
+                SpStateMachineEngine engine = this.GetEngine(out listner, dataClass, mainSs);
+
+                engine.Start();
+
+                // Just move the inner states around
+                Thread.Sleep(600);
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
+                Thread.Sleep(600);
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
+                Thread.Sleep(600);
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
+                Thread.Sleep(600);
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
+                Thread.Sleep(800);
+
+                // Should be back to Main.NotStarted.Idle by now - it has a ExitState transition registered to that state
+                Console.WriteLine("Sending the Abort event to provoke a ExitState transition");
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Abort));
+                Thread.Sleep(800);
+
+
+                engine.Stop();
+                engine.Dispose();
+                Console.WriteLine("Engine Disposed");
+            });
+        }
 
 
 
