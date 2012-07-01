@@ -10,7 +10,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
     public enum MyStateID : int {
 
-        Default,
+        Defaultz,
         NotStarted,             // Super state
         Idle,                   // Super state
         Started,                // Super state

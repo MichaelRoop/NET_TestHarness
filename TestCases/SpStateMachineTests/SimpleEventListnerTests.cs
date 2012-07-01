@@ -31,7 +31,7 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void MessageReceived_NoSubscribers() {
             Assert.DoesNotThrow(() => {
-                this.listner.PostMessage(new BaseMsg(1, 1));
+                this.listner.PostMessage(new SpBaseMsg(1, 1));
             });
         }
 
@@ -46,7 +46,7 @@ namespace TestCases.SpStateMachineTests {
                     received = true;
                     msgCopy = msg;
                 });
-                this.listner.PostMessage(new BaseMsg(25, 100));
+                this.listner.PostMessage(new SpBaseMsg(25, 100));
             });
             // On thread pool so have to wait for response
             Thread.Sleep(200);
@@ -71,7 +71,7 @@ namespace TestCases.SpStateMachineTests {
                     received = true;
                     msgCopy = msg;
                 });
-                this.listner.PostResponse(new BaseResponse(2, new BaseMsg(1, 58)));
+                this.listner.PostResponse(new SpBaseResponse(2, new SpBaseMsg(1, 58)));
             });
             // On thread pool so have to wait for response
             Thread.Sleep(200);
@@ -85,7 +85,7 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void ResponseReceived_NoSubscribers() {
             Assert.DoesNotThrow(() => {
-                this.listner.PostResponse(new BaseResponse(2, new BaseMsg(1, 1)));
+                this.listner.PostResponse(new SpBaseResponse(2, new SpBaseMsg(1, 1)));
             });
         }
 

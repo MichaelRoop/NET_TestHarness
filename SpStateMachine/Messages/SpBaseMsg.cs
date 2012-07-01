@@ -14,7 +14,7 @@ namespace SpStateMachine.Messages {
     /// </remarks>
     /// <author>Michael Roop</author>
     [DataContract]
-    public class BaseMsg : ISpMessage {
+    public class SpBaseMsg : ISpMessage {
 
         #region Data
 
@@ -124,7 +124,7 @@ namespace SpStateMachine.Messages {
         /// <summary>
         /// Default constructor in private scope to prevent usage
         /// </summary>
-        private BaseMsg() {
+        private SpBaseMsg() {
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace SpStateMachine.Messages {
         /// <param name="typeId">The type id to cast to derived for payload retrieval</param>
         /// <param name="eventId">The event identifier</param>
         /// <param name="priority">The priority of the message</param>
-        public BaseMsg(int typeId, int eventId, SpEventPriority priority) {
+        public SpBaseMsg(int typeId, int eventId, SpEventPriority priority) {
             this.typeId = typeId;
             this.eventId = eventId;
             this.priority = priority;
@@ -145,7 +145,7 @@ namespace SpStateMachine.Messages {
         /// </summary>
         /// <param name="typeId">The type id to cast to derived for payload retrieval</param>
         /// <param name="eventId">The event identifier</param>
-        public BaseMsg(int typeId, int eventId)
+        public SpBaseMsg(int typeId, int eventId)
             : this(typeId, eventId, SpEventPriority.Normal) {
         }
 

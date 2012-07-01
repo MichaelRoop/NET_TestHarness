@@ -261,9 +261,33 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="id">The id to convert to string</param>
         /// <returns></returns>
-        protected virtual string ConvertIdToString(int id) {
+        protected virtual string ConvertStateIdToString(int id) {
             return id.ToString();
         }
+
+        /// <summary>
+        /// Allows derived classes to convert the event id to string if they are using strongly 
+        /// typed convetible enums. By default this level just calls int.ToString(). It will also 
+        /// make the logs more readeable
+        /// </summary>
+        /// <param name="id">The id to convert to string</param>
+        /// <returns></returns>
+        protected virtual string ConvertEventIdToString(int id) {
+            return id.ToString();
+        }
+
+
+        /// <summary>
+        /// Allows derived classes to convert the message id to string if they are using strongly 
+        /// typed convetible enums. By default this level just calls int.ToString(). It will also 
+        /// make the logs more readeable
+        /// </summary>
+        /// <param name="id">The message id to convert to string</param>
+        /// <returns></returns>
+        protected virtual string ConvertMsgTypedToString(int id) {
+            return id.ToString();
+        }
+        
 
         #endregion
 
@@ -362,21 +386,26 @@ namespace SpStateMachine.States {
         /// <param name="msg">The message to insert in the transition object</param>
         /// <returns>The transition object from the store or null if not found</returns>
         private ISpStateTransition GetTransition(Dictionary<int, ISpStateTransition> store, ISpMessage msg) {
-            if (store.Keys.Contains(msg.EventId)) {
-                Log.Debug("SpState", "GetTransition", String.Format("Found transition for event:{0}", msg.EventId));
-                ISpStateTransition tr = store[msg.EventId];
-                Log.Debug("SpState", "GetTransition",
-                    String.Format(
-                        "Type:{0} From:{1} To:{2} MsgType:{3} MsgEventId:{4}",
-                        tr.TransitionType,
-                        this.FullName,
-                        tr.NextState == null ? "Null" : tr.NextState.FullName,
-                        tr.ReturnMessage == null ? "Null" : tr.ReturnMessage.TypeId.ToString(),
-                        tr.ReturnMessage == null ? "Null" : tr.ReturnMessage.EventId.ToString()));
-                tr.ReturnMessage = msg;
-                return tr;
-            }
-            return null;
+            return WrapErr.ToErrorReportException(9999, () => {
+                if (store.Keys.Contains(msg.EventId)) {
+                    Log.Debug("SpState", "GetTransition", String.Format("Found transition for event:{0}", this.ConvertEventIdToString(msg.EventId)));
+                    ISpStateTransition tr = store[msg.EventId];
+                    Log.Debug("SpState", "GetTransition",
+                        String.Format(
+                            "Type:{0} From:{1} To:{2} MsgType:{3} MsgEventId:{4}",
+                            tr.TransitionType,
+                            this.FullName,
+                            tr.NextState == null ? "Null" : tr.NextState.FullName,
+                            this.ConvertMsgTypedToString(msg.TypeId),
+                            this.ConvertEventIdToString(msg.EventId)));
+
+                            //tr.ReturnMessage == null ? "Null" : this.ConvertIdToString(tr.ReturnMessage.TypeId),
+                            //tr.ReturnMessage == null ? "Null" : this.ConvertEventIdToString(tr.ReturnMessage.EventId)));
+                    tr.ReturnMessage = msg;
+                    return tr;
+                }
+                return null;
+            });
         }
 
 
@@ -404,10 +433,10 @@ namespace SpStateMachine.States {
         private void BuildName() {
             StringBuilder sb = new StringBuilder(75);
             this.IdChain.ForEach((item) => {
-                sb.Append(String.Format(".{0}", this.ConvertIdToString(item)));
+                sb.Append(String.Format(".{0}", this.ConvertStateIdToString(item)));
             });
             this.fullName = sb.Length > 0 ? sb.ToString(1, sb.Length - 1) : "FullNameSearchFailed";
-            this.name = this.idChain.Count > 0 ? this.ConvertIdToString(this.idChain[this.idChain.Count - 1]) : "NameSearchFailed";
+            this.name = this.idChain.Count > 0 ? this.ConvertStateIdToString(this.idChain[this.idChain.Count - 1]) : "NameSearchFailed";
         }
 
         #endregion

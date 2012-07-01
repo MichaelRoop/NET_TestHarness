@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using SpStateMachine.States;
 using SpStateMachine.Interfaces;
+using TestCases.SpStateMachineTests.TestImplementations.Messages;
+using ChkUtils;
 
 namespace TestCases.SpStateMachineTests.TestImplementations {
 
@@ -28,29 +30,48 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
         #region SpStateOverrides
 
-        //public override string Name {
-        //    get {
-        //        if (this.name.Length == 0) {
-        //            StringBuilder sb = new StringBuilder(75);
-        //            this.IdChain.ForEach((item) => {
-        //                sb.Append(String.Format(".{0}", item.ToStateId().ToString()));
-        //            });
-        //            this.name = sb.Length > 0 ? sb.ToString(1, sb.Length - 1) : "NameSearchFailed";
-        //        }
-        //        return this.name;
-        //    }
-        //}
-
-        protected override string ConvertIdToString(int id) {
+        protected override string ConvertStateIdToString(int id) {
             return id.ToStateId().ToString();
         }
 
 
+        /// <summary>
+        /// Allows derived classes to convert the event id to string if they are using strongly 
+        /// typed convetible enums. By default this level just calls int.ToString(). It will also 
+        /// make the logs more readeable
+        /// </summary>
+        /// <param name="id">The id to convert to string</param>
+        /// <returns></returns>
+        protected override string ConvertEventIdToString(int id) {
+            return id.ToEventType().ToString();
+        }
+
+        /// <summary>
+        /// Allows derived classes to convert the message id to string if they are using strongly 
+        /// typed convetible enums. By default this level just calls int.ToString(). It will also 
+        /// make the logs more readeable
+        /// </summary>
+        /// <param name="id">The message id to convert to string</param>
+        /// <returns></returns>
+        protected override string ConvertMsgTypedToString(int id) {
+            return id.ToMsgType().ToString();
+        }
+
+
+
+
+        /// <summary>
+        /// Get the default return message for the success
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
         protected override ISpMessage GetDefaultReturnMsg(ISpMessage msg) {
-            throw new NotImplementedException();
+            return MySpTools.GetDefaultReturnMsg(msg);
         }
 
         protected override ISpMessage GetReponseMsg(ISpMessage msg) {
+            // TODO - build a factory to get the right response message
+
             throw new NotImplementedException();
         }
 

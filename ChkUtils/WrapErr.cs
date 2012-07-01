@@ -224,6 +224,18 @@ namespace ChkUtils {
         #region Wrap Function to ErrReportException
 
         /// <summary>
+        /// Wrap a function to catch and convert exceptions not previously caught and 
+        /// converted to ErrReportExceptions.
+        /// </summary>
+        /// <param name="code">The error code</param>
+        /// <param name="msg">The error message</param>
+        /// <param name="action">The action to invoke</param>
+        public static T ToErrorReportException<T>(int code, Func<T> func) {
+            return WrapErr.WrapTryToErrorReportException(code, () => { return "Unexpected Error Occured"; }, func, () => { ;});
+        }
+
+
+        /// <summary>
         /// Wrap a Func to catch and convert exceptions not previously caught and 
         /// converted to ErrReportExceptions.
         /// </summary>

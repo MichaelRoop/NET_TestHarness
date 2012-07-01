@@ -12,7 +12,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.Messages {
     /// event by using enums
     /// </summary>
     /// <author>Michael Roop</author>
-    public class MyBaseResponse : BaseResponse {
+    public class MyBaseResponse : SpBaseResponse {
 
         /// <summary>
         /// Base response type for strong type check on enums

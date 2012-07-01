@@ -34,7 +34,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
             return (int)self;
         }
 
-        public static MyReturnCode ToMsgType(this int value) {
+        public static MyReturnCode ToReturnCode(this int value) {
             MyReturnCode id = MyReturnCode.Undefined;
             WrapErr.ToErrReport(9999, () => { return String.Format(""); }, () => {
                 id = (MyReturnCode)Enum.Parse(typeof(MyReturnCode), value.ToString());

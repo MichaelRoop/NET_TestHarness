@@ -54,7 +54,6 @@ namespace TestCases.SpStateMachineTests {
                 // This would normally be the main superstate which includes all other states cascading within it's and it's children's constructors
 
                 ISpState sParent = new MyState(MyStateID.NotStarted, dataClass);
-
                 ISpState s = new MyState(sParent, MyStateID.WaitingForUserInput, dataClass);
                 ISpState s2 = new MyState(sParent, MyStateID.Active, dataClass);
 
@@ -64,7 +63,8 @@ namespace TestCases.SpStateMachineTests {
                 Console.WriteLine("State s2 name:{0}", s2.FullName);
 
 
-                s.RegisterOnEventTransition(12345, new SpStateTransition(SpStateTransitionType.NextState, s2, null));
+                //s.RegisterOnEventTransition(12345, new SpStateTransition(SpStateTransitionType.NextState, s2, null));
+                s.RegisterOnEventTransition(MyEventType.Stop.Int(), new SpStateTransition(SpStateTransitionType.NextState, s2, null));
 
 
                 ISpStateMachine sm = new MyStateMachine(dataClass, s);
@@ -89,7 +89,9 @@ namespace TestCases.SpStateMachineTests {
 
                 //sm.Tick(new BaseMsg(99, 456));
 
-                listner.PostMessage(new BaseMsg(777, 12345));
+                //listner.PostMessage(new SpBaseMsg(MyMessageType 777, 12345));
+
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
 
                 Thread.Sleep(3000);
                 engine.Stop();

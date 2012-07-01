@@ -12,7 +12,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.Messages {
     /// Sample implementation of BaseMsg with strong typing of type and
     /// event by using enums
     /// </summary>
-    public class MyBaseMsg : BaseMsg {
+    public class MyBaseMsg : SpBaseMsg {
 
         /// <summary>
         /// Constructor
