@@ -120,7 +120,8 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         protected override ISpMessage ExecOnTick(ISpMessage msg) {
             Thread.Sleep(200);
             Log.Info("MyState", "ExecOnTick", String.Format("Raised {0} StrVal:{1} IntVal:{2}", msg.EventId, This.StrVal, This.IntVal));
-            return this.GetDefaultReturnMsg(msg);
+            //return this.GetDefaultReturnMsg(msg);
+            return msg;
         }
 
 

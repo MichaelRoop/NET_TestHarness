@@ -23,10 +23,15 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
             idle.RegisterOnEventTransition(MyEventType.Start, new SpStateTransition(SpStateTransitionType.NextState, active, null));
             idle.RegisterOnEventTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.ExitState, null, null));
 
+            // results
+            idle.RegisterOnResultTransition(MyEventType.Start, new SpStateTransition(SpStateTransitionType.NextState, active, null));
+
 
             // Register active state transitions
             active.RegisterOnEventTransition(MyEventType.Stop, new SpStateTransition(SpStateTransitionType.NextState, idle, null));
             active.RegisterOnEventTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.ExitState, null, null));
+
+            active.RegisterOnResultTransition(MyEventType.Stop, new SpStateTransition(SpStateTransitionType.NextState, idle, null));
 
 
             this.SetEntryState(idle);

@@ -54,9 +54,9 @@ namespace TestCases.SpStateMachineTests {
                 MyDataClass dataClass = new MyDataClass();
                 // This would normally be the main superstate which includes all other states cascading within it's and it's children's constructors
 
-                ISpState sParent = new MyState(MyStateID.NotStarted, dataClass);
-                ISpState s = new MyState(sParent, MyStateID.WaitingForUserInput, dataClass);
-                ISpState s2 = new MyState(sParent, MyStateID.Active, dataClass);
+                MyState sParent = new MyState(MyStateID.NotStarted, dataClass);
+                MyState s = new MyState(sParent, MyStateID.WaitingForUserInput, dataClass);
+                MyState s2 = new MyState(sParent, MyStateID.Active, dataClass);
 
 
                 Console.WriteLine("SuperState sParent name:{0}", sParent.FullName);
@@ -64,8 +64,7 @@ namespace TestCases.SpStateMachineTests {
                 Console.WriteLine("State s2 name:{0}", s2.FullName);
 
 
-                //s.RegisterOnEventTransition(12345, new SpStateTransition(SpStateTransitionType.NextState, s2, null));
-                s.RegisterOnEventTransition(MyEventType.Stop.Int(), new SpStateTransition(SpStateTransitionType.NextState, s2, null));
+                s.RegisterOnEventTransition(MyEventType.Stop, new SpStateTransition(SpStateTransitionType.NextState, s2, null));
 
 
                 ISpStateMachine sm = new MyStateMachine(dataClass, s);
@@ -120,18 +119,15 @@ namespace TestCases.SpStateMachineTests {
         public void TestEventTransitionsInSuperState() {
 
             TestHelpers.CatchUnexpected(() => {
-                MyDataClass dataClass = new MyDataClass();
+
+                // Setting flip count will cause back and fourth between active and idle
+                MyDataClass dataClass = new MyDataClass() { FlipStateCount = 2 };
                 MySuperState notStartedSs = new NotStartedSs(dataClass);
                 ISpEventListner listner;
                 SpStateMachineEngine engine = this.GetEngine(out listner, dataClass, notStartedSs);
 
                 engine.Start();
-
-                Thread.Sleep(2000);
-                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
-                Thread.Sleep(2000);
-                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
-                Thread.Sleep(2000);
+                Thread.Sleep(6000);
 
                 engine.Stop();
                 engine.Dispose();
