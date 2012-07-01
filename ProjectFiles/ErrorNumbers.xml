@@ -30,9 +30,28 @@
   <!-- reserve to 50049 -->
 
 
+  <!-- SpStateMachine.SpStateMachineEngine -->
+  <Error code="50050" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50051" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50052" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50053" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50054" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50055" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50056" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50057" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50058" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50059" class="SpStateMachineEngine" method="" message="" />
 
-  <Error code="50050" class="" method="" message="" />
-
+  <Error code="50060" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50061" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50062" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50063" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50064" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50065" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50066" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50067" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50068" class="SpStateMachineEngine" method="" message="" />
+  <Error code="50069" class="SpStateMachineEngine" method="" message="" />
 
 
   <Error code="" class="" method="" message="" />

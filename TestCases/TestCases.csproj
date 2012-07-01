@@ -36,6 +36,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files\NUnit 2.6\bin\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
@@ -59,8 +62,8 @@
     <Compile Include="LogUtilsTests\MsgLevelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scratch.cs" />
-    <Compile Include="SpStateMachineTests\IPeriodicTimer.cs" />
     <Compile Include="SpStateMachineTests\SimpleEventListnerTests.cs" />
+    <Compile Include="SpStateMachineTests\SpStateMachineTests.cs" />
     <Compile Include="SpStateMachineTests\StateMachineScratchPad.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\Messages\MyBaseResponse.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\Messages\MySimpleOkResponse.cs" />
@@ -85,6 +88,7 @@
     <Compile Include="SpStateMachineTests\WinSimplePeriodicTimerTests.cs" />
     <Compile Include="TestHelpers.cs" />
     <Compile Include="TestHelperTests.cs" />
+    <Compile Include="TestToolSet\HelperLogReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ChkUtils\ChkUtils.csproj">
