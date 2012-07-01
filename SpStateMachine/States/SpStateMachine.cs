@@ -23,6 +23,8 @@ namespace SpStateMachine.States {
         /// <summary>The object that the State Machine represents</summary>
         T wrappedObject = default(T);
 
+        private bool isStarted = false;
+
         #endregion
 
         #region Constructors
@@ -64,7 +66,17 @@ namespace SpStateMachine.States {
         public ISpMessage Tick(ISpMessage msg) {
             WrapErr.ChkParam(msg, "msg", 9999);
             // TODO - figure out if this will work
-            return this.state.OnTick(msg).ReturnMessage;
+//            return this.state.OnTick(msg).ReturnMessage;
+
+            // First tick to drive it from entry to regular
+            if (!this.isStarted) {
+                this.isStarted = true;
+                return this.state.OnEntry(msg).ReturnMessage;
+            }
+            else {
+                return this.state.OnTick(msg).ReturnMessage;
+            }
+
         }
 
         #endregion

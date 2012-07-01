@@ -43,7 +43,9 @@ namespace SpStateMachine.States {
 
         /// <summary>Fully resolved state name</summary>
         private string fullName = "";
-        
+
+        private readonly string className = "SpState";
+
         #endregion
 
         #region Properties
@@ -154,6 +156,8 @@ namespace SpStateMachine.States {
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
         public virtual ISpStateTransition OnEntry(ISpMessage msg) {
+            Log.Info(this.className, "ExecOnEntry", this.FullName);
+
             WrapErr.ChkFalse(this.IsEntryExcecuted, 9999, "OnEntry Cannot be Executed More Than Once Until OnExit is Called");
             this.SetEntered(true);
             return this.GetTransition(msg, this.ExecOnEntry);
@@ -166,6 +170,7 @@ namespace SpStateMachine.States {
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
         public virtual ISpStateTransition OnTick(ISpMessage msg) {
+            Log.Info(this.className, "ExecOnTick", this.FullName);
             return this.GetTransition(msg, this.ExecOnTick);
         }
 
@@ -174,6 +179,7 @@ namespace SpStateMachine.States {
         /// Always invoked on object exit
         /// </summary>
         public void OnExit() {
+            Log.Info(this.className, "ExecOnExit", this.FullName);
             this.SetEntered(false);
             this.ExecOnExit();
         }

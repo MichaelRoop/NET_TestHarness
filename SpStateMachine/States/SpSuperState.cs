@@ -5,6 +5,7 @@ using System.Text;
 using SpStateMachine.Interfaces;
 using ChkUtils;
 using SpStateMachine.Core;
+using LogUtils;
 
 namespace SpStateMachine.States {
 
@@ -21,6 +22,8 @@ namespace SpStateMachine.States {
 
         /// <summary>List of this state's substates</summary>
         List<ISpState> substates = new List<ISpState>();
+
+        private readonly string className = "SpSuperState";
 
         #endregion
 
@@ -73,6 +76,8 @@ namespace SpStateMachine.States {
         #region ISpState overrides
 
         public override ISpStateTransition OnEntry(ISpMessage msg) {
+            Log.Info(this.className, "OnEntry", this.FullName);
+
             // Find if there are exit conditions on event if so exit immediately
             // return transition
             this.SetEntered(true);
@@ -84,6 +89,8 @@ namespace SpStateMachine.States {
 
 
         public override ISpStateTransition OnTick(ISpMessage msg) {
+            Log.Info(this.className, "OnTick", this.FullName);
+
             WrapErr.ChkVar(this.currentState, 9999, "Current state is not set");
 
             // Find if there are OnEvent transitions registered at the superstate level first
@@ -195,6 +202,8 @@ namespace SpStateMachine.States {
         /// <param name="msg">The incoming message</param>
         /// <returns>The appropriate return message</returns>
         protected sealed override void ExecOnExit() {
+            Log.Info(this.className, "ExecOnExit", this.FullName);
+
             if (!this.IsEntryExcecuted) {
                 this.SetEntered(false);
                 if (this.currentState != null) {

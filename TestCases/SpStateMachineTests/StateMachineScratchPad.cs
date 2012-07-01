@@ -16,6 +16,7 @@ using SpStateMachine.Behaviours;
 using ChkUtils;
 using TestCases.SpStateMachineTests.TestImplementations;
 using TestCases.SpStateMachineTests.TestImplementations.Messages;
+using TestCases.SpStateMachineTests.TestImplementations.SuperStates;
 
 namespace TestCases.SpStateMachineTests {
 
@@ -114,6 +115,46 @@ namespace TestCases.SpStateMachineTests {
             });
         }
 
+
+        [Test, Explicit]
+        public void TestEventTransitionsInSuperState() {
+
+            TestHelpers.CatchUnexpected(() => {
+                MyDataClass dataClass = new MyDataClass();
+                MySuperState notStartedSs = new NotStartedSs(dataClass);
+                ISpEventListner listner;
+                SpStateMachineEngine engine = this.GetEngine(out listner, dataClass, notStartedSs);
+
+                engine.Start();
+
+                Thread.Sleep(2000);
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
+                Thread.Sleep(2000);
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
+                Thread.Sleep(2000);
+
+                engine.Stop();
+                engine.Dispose();
+                Console.WriteLine("Engine Disposed");
+            });
+        }
+
+
+
+        private SpStateMachineEngine GetEngine(out ISpEventListner listner, MyDataClass dataClass, ISpState firstState) {
+
+            ISpStateMachine sm = new MyStateMachine(dataClass, firstState);
+            ISpEventStore store = new SimpleDequeEventStore(new MyTickMsg());
+            ISpBehaviorOnEvent behavior = new SpPeriodicWakeupOnly();
+            ISpPeriodicTimer timer = new WinSimpleTimer(new TimeSpan(0, 0, 0, 0, 500));
+            //ISpEventListner listner = new SimpleEventListner();
+            listner = new SimpleEventListner();
+
+            listner.ResponseReceived += new Action<ISpMessage>((msg) => { });
+
+            // Simulates DI
+            return new SpStateMachineEngine(listner, store, behavior, sm, timer);
+        }
 
 
     }
