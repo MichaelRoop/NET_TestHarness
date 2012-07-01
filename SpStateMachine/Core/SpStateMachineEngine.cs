@@ -107,9 +107,12 @@ namespace SpStateMachine.Core {
         private void DriverThread() {
             while (!this.terminateThread) {
                 WrapErr.ToErrReport(9999, () => {
-                    this.ThreadAction(() => { this.eventBehavior.WaitOnEvent(); });
-                    this.ThreadAction(() => { this.msgListner.PostResponse(this.stateMachine.Tick(this.msgStore.Get())); 
-                    });
+                    if (!this.terminateThread) {
+                        this.eventBehavior.WaitOnEvent(); 
+                    }
+                    if (!this.terminateThread) {
+                        this.msgListner.PostResponse(this.stateMachine.Tick(this.msgStore.Get()));
+                    }
                 });
             }
         }
@@ -117,17 +120,6 @@ namespace SpStateMachine.Core {
         #endregion
 
         #region Private Methods
-
-        /// <summary>
-        /// Wrap an action in a check to see first if thread is terminated
-        /// </summary>
-        /// <param name="action">The action to invoke</param>
-        private void ThreadAction(Action action) {
-            if (!this.terminateThread) {
-                WrapErr.SafeAction(action);
-            }
-        }
-
 
         /// <summary>
         /// Action that is fired on timer wakeup

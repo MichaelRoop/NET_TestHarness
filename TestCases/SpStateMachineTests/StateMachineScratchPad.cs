@@ -33,8 +33,10 @@ namespace TestCases.SpStateMachineTests {
         [TestFixtureSetUp]
         public void Setup() {
             Log.SetVerbosity(MsgLevel.Info);
-
             Log.SetMsgNumberThreshold(1);
+
+            WrapErr.InitialiseOnExceptionLogDelegate(Log.LogExceptionDelegate);
+
             this.consoleWriter.StartLogging();
         }
 
@@ -134,6 +136,33 @@ namespace TestCases.SpStateMachineTests {
                 Console.WriteLine("Engine Disposed");
             });
         }
+
+
+        [Test, Explicit]
+        public void TestDeferedTransitionsInSuperState() {
+
+            TestHelpers.CatchUnexpected(() => {
+
+                // Setting flip count will cause back and fourth between active and idle
+                MyDataClass dataClass = new MyDataClass();
+                MySuperState notStartedSs = new NotStartedSs(dataClass);
+                ISpEventListner listner;
+                SpStateMachineEngine engine = this.GetEngine(out listner, dataClass, notStartedSs);
+
+                engine.Start();
+                Thread.Sleep(1300);
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
+                Thread.Sleep(1300);
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Abort));
+                Thread.Sleep(1500);
+
+                engine.Stop();
+                engine.Dispose();
+                Console.WriteLine("Engine Disposed");
+            });
+        }
+
+
 
 
 

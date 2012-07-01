@@ -6,6 +6,7 @@ using SpStateMachine.States;
 using SpStateMachine.Interfaces;
 using TestCases.SpStateMachineTests.TestImplementations.Messages;
 using ChkUtils;
+using LogUtils;
 
 namespace TestCases.SpStateMachineTests.TestImplementations {
 
@@ -80,6 +81,50 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         }
 
         #endregion
+
+
+        protected override ISpMessage OnRuntimeTransitionRequest(ISpMessage msg) {
+
+            switch (msg.EventId.ToEventType()) {
+                case MyEventType.Abort:
+                    Log.Info("MySuperState", "OnRuntimeTransitionRequest", " *** Got abort and returning Stop");
+
+                    // get the GUID
+                    ISpMessage myMsg = new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop);
+                    myMsg.Uid = msg.Uid;
+                    return myMsg;
+                default:
+
+                    break;
+            }
+
+
+            //// Do not know which state this is except it is the current state
+            if (msg.EventId == MyEventType.Abort.Int()) {
+                //this.GetCurrentState().    
+
+                // get the GUID
+                ISpMessage myMsg = new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start);
+
+                // Try recursion - no will not work
+                //this.OnTick(myMsg);
+
+                //this.GetCurrentState().
+
+                //return this.GetOnResultTransition(myMsg);
+
+
+
+            }
+
+            
+
+
+
+
+
+            return base.OnRuntimeTransitionRequest(msg);
+        }
 
 
         protected override string ConvertStateIdToString(int id) {

@@ -233,6 +233,11 @@ namespace SpStateMachine.States {
         #endregion
 
 
+        protected ISpState GetCurrentState() {
+            return this.currentState;
+        }
+
+
         private ISpStateTransition GetSuperStateOnEventTransition(ISpMessage msg) {
             ISpStateTransition tr = this.GetOnEventTransition(msg);
             if (tr != null) {

@@ -71,7 +71,7 @@ namespace ChkUtils {
                 action.Invoke();
             }
             catch (Exception e) {
-                Debug.WriteLine("{0} on call to WrapErr.SafeAction:{1} - {2}", e.GetType().Name, e.Message, e.StackTrace);
+                Debug.WriteLine(String.Format(" ### {0} on call to WrapErr.SafeAction:{1} - {2}", e.GetType().Name, e.Message, e.StackTrace));
                 // At this point we do not want to report on any error back to the application
             }
         }

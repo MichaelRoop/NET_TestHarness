@@ -19,13 +19,13 @@ namespace ChkUtils {
         /// <returns>The file name</returns>
         public static string FileName(StackFrame frame) {
             if (frame == null) {
-                Debug.WriteLine("WrapErr.GetFileName : Null frame");
+                //Debug.WriteLine("StackFrameTools.GetFileName : Null frame");
                 return "NoFileName";
             }
 
             string name = frame.GetFileName();
             if (name == null) {
-                Debug.WriteLine("WrapErr.GetFileName : Null name in frame");
+                //Debug.WriteLine("StackFrameTools.GetFileName : Null name in frame");
                 return "NoFileName";
             }
 

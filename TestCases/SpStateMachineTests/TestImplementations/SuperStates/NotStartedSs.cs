@@ -29,9 +29,21 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
 
             // Register active state transitions
             active.RegisterOnEventTransition(MyEventType.Stop, new SpStateTransition(SpStateTransitionType.NextState, idle, null));
-            active.RegisterOnEventTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.ExitState, null, null));
+            //active.RegisterOnEventTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.ExitState, null, null));
+            active.RegisterOnEventTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.Defered, null, null));
 
             active.RegisterOnResultTransition(MyEventType.Stop, new SpStateTransition(SpStateTransitionType.NextState, idle, null));
+
+
+            // Register my defered
+            // If I get an abort handed to me by a state I will push the internal transition to idle
+
+
+            // TODO - use this to provoque a check error
+            //this.RegisterOnResultTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.NextState, idle, null));
+
+
+            this.RegisterOnResultTransition(MyEventType.Stop, new SpStateTransition(SpStateTransitionType.NextState, idle, null));
 
 
             this.SetEntryState(idle);
