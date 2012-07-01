@@ -13,23 +13,21 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
         public NotStartedSs(MyDataClass dataClass)
             : base(MyStateID.NotStarted, dataClass) {
 
-            ISpState idle = new IdleSt(this, dataClass);
-            ISpState active = new ActiveSt(this, dataClass);
+            MyState idle = new IdleSt(this, dataClass);
+            MyState active = new ActiveSt(this, dataClass);
 
             this.AddSubState(idle);
             this.AddSubState(active);
 
             // Register Idle state transitions
-            idle.RegisterOnEventTransition(MyEventType.Start.Int(), new SpStateTransition(SpStateTransitionType.NextState, active, null));
-            idle.RegisterOnEventTransition(MyEventType.Abort.Int(), new SpStateTransition(SpStateTransitionType.ExitState, null, null));
+            idle.RegisterOnEventTransition(MyEventType.Start, new SpStateTransition(SpStateTransitionType.NextState, active, null));
+            idle.RegisterOnEventTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.ExitState, null, null));
 
 
             // Register active state transitions
-            active.RegisterOnEventTransition(MyEventType.Stop.Int(), new SpStateTransition(SpStateTransitionType.NextState, idle, null));
-            active.RegisterOnEventTransition(MyEventType.Abort.Int(), new SpStateTransition(SpStateTransitionType.ExitState, null, null));
+            active.RegisterOnEventTransition(MyEventType.Stop, new SpStateTransition(SpStateTransitionType.NextState, idle, null));
+            active.RegisterOnEventTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.ExitState, null, null));
 
-
-            //this.RegisterOnEventTransition(MyEventType.
 
             this.SetEntryState(idle);
 

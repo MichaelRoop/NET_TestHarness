@@ -8,6 +8,7 @@ using LogUtils;
 using System.Threading;
 using SpStateMachine.Messages;
 using TestCases.SpStateMachineTests.TestImplementations.Messages;
+using ChkUtils;
 
 namespace TestCases.SpStateMachineTests.TestImplementations {
 
@@ -25,6 +26,60 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         public MyState(ISpState parent, MyStateID id, MyDataClass dataClass)
             : base(parent, id.Int(), dataClass) {
         }
+
+
+        #region Safe Guard access to register events
+
+        bool registerOnEventUsedDirectly = true;
+        bool registerOnResultUsedDirectly = true;
+
+
+        public void RegisterOnEventTransition(MyEventType eventId, ISpStateTransition transition) {
+            WrapErr.ToErrorReportException(9999,
+                delegate {
+                    this.registerOnEventUsedDirectly = false;
+                    this.RegisterOnEventTransition(eventId.Int(), transition);
+                },
+                delegate {
+                    this.registerOnEventUsedDirectly = true;
+                });
+        }
+
+        public void RegisterOnResultTransition(MyEventType eventId, ISpStateTransition transition) {
+            WrapErr.ToErrorReportException(9999,
+                delegate {
+                    this.registerOnResultUsedDirectly = false;
+                    this.RegisterOnResultTransition(eventId.Int(), transition);
+                },
+                delegate {
+                    this.registerOnResultUsedDirectly = true;
+                });
+        }
+
+
+        /// <summary>
+        /// Register a state transition from incoming event. Version protected against direct use
+        /// </summary>
+        /// <param name="eventId">The id of the incoming event</param>
+        /// <param name="transition">The transition object</param>
+        public override void RegisterOnEventTransition(int eventId, ISpStateTransition transition) {
+            WrapErr.ChkFalse(this.registerOnEventUsedDirectly, 9999, "Use the RegisterOnEventTransition version with event id enum");
+            base.RegisterOnEventTransition(eventId, transition);
+        }
+
+
+        /// <summary>
+        /// Register a state transition from the result of state processing. Version protected against direct use
+        /// </summary>
+        /// <param name="eventId">The id of the event as the result of state processing</param>
+        /// <param name="transition">The transition object</param>
+        public override void RegisterOnResultTransition(int eventId, ISpStateTransition transition) {
+            WrapErr.ChkFalse(this.registerOnResultUsedDirectly, 9999, "Use the RegisterOnEventTransition version with event id enum");
+            base.RegisterOnResultTransition(eventId, transition);
+        }
+
+        #endregion
+
 
         protected override string ConvertStateIdToString(int id) {
             return id.ToStateId().ToString();

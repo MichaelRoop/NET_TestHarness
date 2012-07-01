@@ -190,7 +190,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="eventId">The id of the incoming event</param>
         /// <param name="transition">The transition object</param>
-        public void RegisterOnEventTransition(int eventId, ISpStateTransition transition) {
+        public virtual void RegisterOnEventTransition(int eventId, ISpStateTransition transition) {
             this.ValidateNotFound(eventId, transition);
             this.onEventTransitions.Add(eventId, transition);
         }
@@ -201,7 +201,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="eventId">The id of the event as the result of state processing</param>
         /// <param name="transition">The transition object</param>
-        public void RegisterOnResultTransition(int eventId, ISpStateTransition transition) {
+        public virtual void RegisterOnResultTransition(int eventId, ISpStateTransition transition) {
             this.ValidateNotFound(eventId, transition);
             this.onResultTransitions.Add(eventId, transition);
         }

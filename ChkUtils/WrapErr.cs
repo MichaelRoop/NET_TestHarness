@@ -136,6 +136,18 @@ namespace ChkUtils {
             WrapErr.WrapTryToErrorReportException(code, errMsgFunc, action, () => { ;});
         }
 
+        /// <summary>
+        /// Wrap an action to catch and convert exceptions not previously caught and 
+        /// converted to ErrReportExceptions.
+        /// </summary>
+        /// <param name="code">The error code</param>
+        /// <param name="msg">The error message</param>
+        /// <param name="action">The action to invoke</param>
+        /// <param name="finallyAction">The finally action to invoke</param>
+        public static void ToErrorReportException(int code, Action action, Action finallyAction) {
+            WrapErr.WrapTryToErrorReportException(code, () => { return "Unexpected Error Occured"; }, action, finallyAction);
+        }
+
 
         /// <summary>
         /// Wrap an action to catch and convert exceptions not previously caught and 
@@ -144,6 +156,7 @@ namespace ChkUtils {
         /// <param name="code">The error code</param>
         /// <param name="msg">The error message</param>
         /// <param name="action">The action to invoke</param>
+        /// <param name="finallyAction">The finally action to invoke</param>
         public static void ToErrorReportException(int code, string msg, Action action, Action finallyAction) {
             WrapErr.WrapTryToErrorReportException(code, () => { return msg; }, action, finallyAction);
         }
