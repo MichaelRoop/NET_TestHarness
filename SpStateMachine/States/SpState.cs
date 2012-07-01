@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SpStateMachine.Interfaces;
-using SpStateMachine.Messages;
-using SpStateMachine.Core;
 using ChkUtils;
 using LogUtils;
+using SpStateMachine.Core;
+using SpStateMachine.Interfaces;
 
 namespace SpStateMachine.States {
 
@@ -160,7 +159,7 @@ namespace SpStateMachine.States {
 
             WrapErr.ChkFalse(this.IsEntryExcecuted, 9999, "OnEntry Cannot be Executed More Than Once Until OnExit is Called");
             this.SetEntered(true);
-            return this.GetTransition(msg, this.ExecOnEntry);
+            return this.GetTransitionInOrder(this.ExecOnEntry, msg);
         }
 
 
@@ -170,8 +169,8 @@ namespace SpStateMachine.States {
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
         public virtual ISpStateTransition OnTick(ISpMessage msg) {
-            Log.Info(this.className, "ExecOnTick", this.FullName);
-            return this.GetTransition(msg, this.ExecOnTick);
+            //Log.Info(this.className, "ExecOnTick", this.FullName);
+            return this.GetTransitionInOrder(this.ExecOnTick, msg);
         }
 
 
@@ -331,11 +330,11 @@ namespace SpStateMachine.States {
 
 
         protected ISpStateTransition GetOnEventTransition(ISpMessage msg) {
-            return this.GetTransition(this.onEventTransitions, msg);
+            return this.GetTransitionFromStore(this.onEventTransitions, msg);
         }
 
         protected ISpStateTransition GetOnResultTransition(ISpMessage msg) {
-            return this.GetTransition(this.onResultTransitions, msg);
+            return this.GetTransitionFromStore(this.onResultTransitions, msg);
         }
 
 
@@ -347,16 +346,16 @@ namespace SpStateMachine.States {
         /// Verifies transitions in order of onEvent, onResult and if not found will return the 
         /// default transition
         /// </summary>
-        /// <param name="msg">The incoming message to validate against the onEvent list</param>
-        /// <param name="func">
+        /// <param name="stateFunc">
         /// The function that is invoked that will return return message from the state processing
         /// and use it to check against the onResult queue.
         /// </param>
+        /// <param name="msg">The incoming message to validate against the onEvent list</param>
         /// <returns>The OnEvent, OnResult or default transition</returns>
-        private ISpStateTransition GetTransition(ISpMessage msg, Func<ISpMessage, ISpMessage> func) {
+        private ISpStateTransition GetTransitionInOrder(Func<ISpMessage, ISpMessage> stateFunc, ISpMessage msg) {
 
-            // We used the event id in the incoming message against the OnEvent list
-            ISpStateTransition tr = this.GetOnEventTransition(msg); // this.GetTransition(this.onEventTransitions, msg);
+            // Query the OnEvent queue for a transition BEFORE calling state function
+            ISpStateTransition tr = this.GetOnEventTransition(msg);
             if (tr != null) {
                 // Call to derived class to replace the incoming message with its paired return message
                 // The user can override the OnGetResponse on a state by state basis to stuff data in
@@ -365,9 +364,9 @@ namespace SpStateMachine.States {
                 return tr;
             }
 
-            // we use the event id after processing so the return message is already selected
-            //if ((tr = this.GetTransition(this.onResultTransitions, func.Invoke(msg))) != null) {
-            if ((tr = this.GetOnResultTransition(func.Invoke(msg))) != null) {
+            // TODO - clarify this - we use the event id after processing so the return message is already selected
+            // Think that the derived should just send the same Msg or another msg back so that we can get the response msg from the same call as above
+            if ((tr = this.GetOnResultTransition(stateFunc.Invoke(msg))) != null) {
                 return tr;
             }
             return this.GetDefaultTransition(msg);
@@ -380,7 +379,7 @@ namespace SpStateMachine.States {
         /// <param name="store">The store to search</param>
         /// <param name="msg">The message to insert in the transition object</param>
         /// <returns>The transition object from the store or null if not found</returns>
-        private ISpStateTransition GetTransition(Dictionary<int, ISpStateTransition> store, ISpMessage msg) {
+        private ISpStateTransition GetTransitionFromStore(Dictionary<int, ISpStateTransition> store, ISpMessage msg) {
             return WrapErr.ToErrorReportException(9999, () => {
                 if (store.Keys.Contains(msg.EventId)) {
                     Log.Debug("SpState", "GetTransition", String.Format("Found transition for event:{0}", this.ConvertEventIdToString(msg.EventId)));
