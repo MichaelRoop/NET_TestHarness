@@ -25,22 +25,8 @@ namespace TestCases.SpStateMachineTests.TestImplementations.States {
 
         protected override ISpMessage ExecOnTick(ISpMessage msg) {
             Log.Info(this.className, "ExecOnTick", "");
-            //if (this.triggerCount++ < 2) {
-            //    return base.ExecOnEntry(msg);
-            //}
-            //Log.Info(this.className, "ExecOnTick", "Exceeded trigger count, changing msg to Start");
-            //triggerCount = 0;
-
-            //// rework msg to allow creation of a msg with another msg to transfer correlation GUID
-            ////MyBaseResponse ret = new MyBaseResponse(MyMsgType.SimpleResponse, (MyBaseMsg)msg, MyReturnCode.Success, "");
-            ////ret.EventId = MyEventType.Stop.Int();
-
-            //MyBaseMsg newMsg = new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start);
-            //newMsg.Uid = msg.Uid;
-            //return base.ExecOnTick(newMsg);
-
             if (This.DoIFlipStates) {
-                // rework msg to allow creation of a msg with another msg to transfer correlation GUID
+                // TODO - rework msg to allow creation of a msg with another msg to transfer correlation GUID
                 Log.Info(this.className, "ExecOnTick", "Exceeded trigger count, ** changing msg to Start");
                 MyBaseMsg newMsg = new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start);
                 newMsg.Uid = msg.Uid;

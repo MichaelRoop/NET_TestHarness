@@ -1,4 +1,5 @@
 ﻿using SpStateMachine.Core;
+using System;
 
 namespace SpStateMachine.Interfaces {
     
@@ -6,7 +7,7 @@ namespace SpStateMachine.Interfaces {
     /// Contains the necessary information to execute a state transition
     /// </summary>
     /// <author>Michael Roop</author>
-    public interface ISpStateTransition {
+    public interface ISpStateTransition : ICloneable {
 
         /// <summary>
         /// The type of transition to execute

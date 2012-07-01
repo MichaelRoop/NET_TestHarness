@@ -59,7 +59,26 @@ namespace SpStateMachine.Core {
         }
 
         #endregion
-        
+
+        #region ICloneable Members
+
+        /// <summary>
+        /// Make a copy of this object. Note that the copy is only of the pointers
+        /// for the ISpState and ISpMessage. Those get set to a new object and I
+        /// am only concerned about not changing what the fields in the containers
+        /// point to
+        /// </summary>
+        /// <returns></returns>
+        public object Clone() {
+            SpStateTransition st = this.MemberwiseClone() as SpStateTransition;
+            st.TransitionType = this.TransitionType;
+            st.NextState = this.nextState;
+            st.ReturnMessage = this.returnMsg;
+            return st;
+        }
+
+        #endregion
+
         #region Constructors 
 
         /// <summary>
@@ -82,6 +101,6 @@ namespace SpStateMachine.Core {
         }
 
         #endregion
-        
+
     }
 }

@@ -384,7 +384,10 @@ namespace SpStateMachine.States {
             return WrapErr.ToErrorReportException(9999, () => {
                 if (store.Keys.Contains(msg.EventId)) {
                     Log.Debug("SpState", "GetTransition", String.Format("Found transition for event:{0}", this.ConvertEventIdToString(msg.EventId)));
-                    ISpStateTransition tr = store[msg.EventId];
+
+                    // Make a copy of the Transition object since its pointers get reset later
+                    ISpStateTransition tr = (ISpStateTransition)store[msg.EventId].Clone();
+
                     Log.Debug("SpState", "GetTransition",
                         String.Format(
                             "Type:{0} From:{1} To:{2} MsgType:{3} MsgEventId:{4}",
@@ -393,9 +396,6 @@ namespace SpStateMachine.States {
                             tr.NextState == null ? "Null" : tr.NextState.FullName,
                             this.ConvertMsgTypedToString(msg.TypeId),
                             this.ConvertEventIdToString(msg.EventId)));
-
-                            //tr.ReturnMessage == null ? "Null" : this.ConvertIdToString(tr.ReturnMessage.TypeId),
-                            //tr.ReturnMessage == null ? "Null" : this.ConvertEventIdToString(tr.ReturnMessage.EventId)));
                     tr.ReturnMessage = msg;
                     return tr;
                 }
