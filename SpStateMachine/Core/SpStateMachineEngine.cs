@@ -33,6 +33,8 @@ namespace SpStateMachine.Core {
 
         private Thread driverThread = null;
 
+        private readonly string className = typeof(SpStateMachineEngine).Name;
+
         #endregion
 
         #region Constructors
@@ -53,26 +55,28 @@ namespace SpStateMachine.Core {
         /// <param name="stateMachine">The state machine that interprets the events</param>
         /// <param name="timer">The periodic timer</param>
         public SpStateMachineEngine(ISpEventListner msgListner, ISpEventStore msgStore, ISpBehaviorOnEvent eventBehavior, ISpStateMachine stateMachine, ISpPeriodicTimer timer) {
-            WrapErr.ChkParam(msgListner, "msgListner", 99999);
-            WrapErr.ChkParam(msgStore, "eventStore", 99999);
-            WrapErr.ChkParam(eventBehavior, "eventBehavior", 99999);
-            WrapErr.ChkParam(stateMachine, "stateMachine", 99999);
-            WrapErr.ChkParam(timer, "timer", 99999);
+            WrapErr.ChkParam(msgListner, "msgListner", 50050);
+            WrapErr.ChkParam(msgStore, "msgStore", 50051);
+            WrapErr.ChkParam(eventBehavior, "eventBehavior", 50052);
+            WrapErr.ChkParam(stateMachine, "stateMachine", 50053);
+            WrapErr.ChkParam(timer, "timer", 50054);
 
-            this.wakeUpAction = new Action(timer_OnWakeup);
-            this.msgReceivedAction = new Action<ISpMessage>(this.eventListner_MsgReceived);
+            WrapErr.ToErrorReportException(50055, () => {
+                this.wakeUpAction = new Action(timer_OnWakeup);
+                this.msgReceivedAction = new Action<ISpMessage>(this.eventListner_MsgReceived);
 
-            this.msgListner = msgListner;
-            this.msgStore = msgStore;
-            this.eventBehavior = eventBehavior;
-            this.stateMachine = stateMachine;
-            this.timer = timer;
+                this.msgListner = msgListner;
+                this.msgStore = msgStore;
+                this.eventBehavior = eventBehavior;
+                this.stateMachine = stateMachine;
+                this.timer = timer;
 
-            this.driverThread = new Thread(new ThreadStart(this.DriverThread));
-            this.driverThread.Start();
+                this.driverThread = new Thread(new ThreadStart(this.DriverThread));
+                this.driverThread.Start();
 
-            this.msgListner.MsgReceived += this.msgReceivedAction;
-            this.timer.OnWakeup += this.wakeUpAction;
+                this.msgListner.MsgReceived += this.msgReceivedAction;
+                this.timer.OnWakeup += this.wakeUpAction;
+            });
         }
 
 
@@ -87,13 +91,20 @@ namespace SpStateMachine.Core {
 
         #region Public Methods
 
+        /// <summary>
+        /// Start up the Engine
+        /// </summary>
         public void Start() {
-            WrapErr.ChkDisposed(this.disposed, 9999);
+            WrapErr.ChkDisposed(this.disposed, 50056);
             this.timer.Start();
         }
 
+
+        /// <summary>
+        /// Stop the Engine
+        /// </summary>
         public void Stop() {
-            WrapErr.ChkDisposed(this.disposed, 9999);
+            WrapErr.ChkDisposed(this.disposed, 50057);
             this.timer.Stop();
         }
 
@@ -105,8 +116,10 @@ namespace SpStateMachine.Core {
         /// Thread to drive the state machine
         /// </summary>
         private void DriverThread() {
+            Log.DebugEntry(this.className, "DriverThread");
+
             while (!this.terminateThread) {
-                WrapErr.ToErrReport(9999, () => {
+                WrapErr.ToErrReport(50058, () => {
                     if (!this.terminateThread) {
                         this.eventBehavior.WaitOnEvent(); 
                     }
@@ -115,6 +128,7 @@ namespace SpStateMachine.Core {
                     }
                 });
             }
+            Log.DebugExit(this.className, "DriverThread");
         }
         
         #endregion
@@ -143,17 +157,24 @@ namespace SpStateMachine.Core {
         /// Stop the timer and tick thread
         /// </summary>
         private void ShutDownThread() {
-            WrapErr.SafeAction(() => this.timer.Stop());
-            this.terminateThread = true;
-            WrapErr.SafeAction(() => 
-                this.eventBehavior.EventReceived(BehaviorResponseEventType.TerminateRequest));
+            Log.DebugEntry(this.className, "ShutDownThread");
 
-            if (this.driverThread != null) {
-                if (!this.driverThread.Join(5000)) {
-                    WrapErr.SafeAction(() => this.driverThread.Abort());
+            WrapErr.ToErrReport(50059, () => {
+                WrapErr.SafeAction(() => this.timer.Stop());
+                this.terminateThread = true;
+                WrapErr.SafeAction(() =>
+                    this.eventBehavior.EventReceived(BehaviorResponseEventType.TerminateRequest));
+
+                if (this.driverThread != null) {
+                    if (this.driverThread.IsAlive) {
+                        if (!this.driverThread.Join(1000)) {
+                            WrapErr.SafeAction(() => this.driverThread.Abort());
+                        }
+                    }
+                    this.driverThread = null;
                 }
-                this.driverThread = null;
-            }
+            });
+            Log.DebugExit(this.className, "ShutDownThread");
         }
 
         #endregion
@@ -177,6 +198,8 @@ namespace SpStateMachine.Core {
         /// If true it was called by the Dispose method rather than finalizer
         /// </param>
         private void Dispose(bool disposeManagedResources) {
+            Log.Info(this.className, "Dispose", String.Format("Disposed:{0} diposeManagedResources:{1}", this.disposed, disposeManagedResources));
+
             if (!disposed) {
                 this.ShutDownThread();
 
@@ -193,6 +216,7 @@ namespace SpStateMachine.Core {
         /// Dispose managed resources (those with Dispose methods)
         /// </summary>
         private void DisposeManagedResources() {
+            Log.DebugEntry(this.className, "DisposeManagedResources");
             this.DisposeObject(this.timer, "timer");
             this.DisposeObject(this.eventBehavior, "eventBehavior");
             this.DisposeObject(this.stateMachine, "stateMachine");
@@ -213,8 +237,7 @@ namespace SpStateMachine.Core {
         /// <param name="disposableObject"></param>
         /// <param name="name"></param>
         private void DisposeObject(IDisposable disposableObject, string name) {
-            Log.Debug("SpStateMachineEngine", "DisposeObject", String.Format("Object name:{0}", name));
-            WrapErr.ToErrReport(9999, String.Format("Error Disposing Object:{0}", name), () => {
+            WrapErr.ToErrReport(50060, String.Format("Error Disposing Object:{0}", name), () => {
                 if (disposableObject != null) {
                     disposableObject.Dispose();
                 }

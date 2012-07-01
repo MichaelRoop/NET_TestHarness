@@ -84,6 +84,7 @@ namespace TestCases.TestToolSet {
         /// Clear existing errors
         /// </summary>
         public void Clear() {
+            Console.WriteLine("<Clearing Log List>");
             this.errors.Clear();
         }
 
@@ -94,6 +95,7 @@ namespace TestCases.TestToolSet {
         /// </summary>
         /// <param name="code">The error code</param>
         public ErrReport Validate(int code) {
+            Console.WriteLine("<Validating>");
             ErrReport err = this.errors.Find((item) => item.Code == code);
             Assert.IsNotNull(err, String.Format("There was no error logged for code:{0}", code));
             return err;
