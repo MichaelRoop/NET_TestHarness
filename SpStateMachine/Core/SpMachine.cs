@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SpStateMachine.Interfaces;
 using ChkUtils;
+using SpStateMachine.Interfaces;
 
-namespace SpStateMachine.States {
+namespace SpStateMachine.Core {
     
     /// <summary>
     /// Base class for an ISpStateMachine that owns the wrapped object and disposes
     /// it on Dispose
     /// </summary>
-    /// <typeparam name="T">Wraped object type with IDisposable Interface required</typeparam>
+    /// <typeparam name="T">
+    /// Wraped object type constrained to a class with IDisposable Interface required
+    /// </typeparam>
     /// <author>Michael Roop</author>
-    public class SpStateMachine<T> : ISpStateMachine where T : IDisposable {
+    public class SpMachine<T> : ISpStateMachine where T : class, IDisposable  {
 
         #region Data
 
@@ -21,7 +20,7 @@ namespace SpStateMachine.States {
         ISpState state = null;
 
         /// <summary>The object that the State Machine represents</summary>
-        T wrappedObject = default(T);
+        T wrappedObject = null;
 
         private bool isStarted = false;
 
@@ -32,7 +31,7 @@ namespace SpStateMachine.States {
         /// <summary>
         /// Default constructor in private scope to prevent usage
         /// </summary>
-        private SpStateMachine() {
+        private SpMachine() {
         }
 
 
@@ -46,7 +45,9 @@ namespace SpStateMachine.States {
         /// can use a single state implementation if you only want the wrapped object to be 
         /// driven by periodic timer and have access to the messaging architecture
         /// </remarks>
-        public SpStateMachine(T wrappedObject, ISpState state) {
+        public SpMachine(T wrappedObject, ISpState state) {
+            WrapErr.ChkParam(wrappedObject, "wrappedObject", 50170);
+            WrapErr.ChkParam(state, "state", 50171);
             this.wrappedObject = wrappedObject;
             this.state = state;
         }
@@ -55,7 +56,7 @@ namespace SpStateMachine.States {
         /// <summary>
         /// Finalizer
         /// </summary>
-        ~SpStateMachine() {
+        ~SpMachine() {
             this.Dispose(false);
         }
         
@@ -64,19 +65,23 @@ namespace SpStateMachine.States {
         #region SpStateMachine
 
         public ISpMessage Tick(ISpMessage msg) {
-            WrapErr.ChkParam(msg, "msg", 9999);
-            // TODO - figure out if this will work
-//            return this.state.OnTick(msg).ReturnMessage;
+            WrapErr.ChkDisposed(this.disposed, 50176);
+            WrapErr.ChkParam(msg, "msg", 50172);
 
             // First tick to drive it from entry to regular
+            ISpStateTransition tr = null;
+            bool tmpIsStarted = this.isStarted;
+
             if (!this.isStarted) {
                 this.isStarted = true;
-                return this.state.OnEntry(msg).ReturnMessage;
+                tr = this.state.OnEntry(msg);
             }
             else {
-                return this.state.OnTick(msg).ReturnMessage;
+                tr = this.state.OnTick(msg);
             }
-
+            WrapErr.ChkVar(tr, 50177, String.Format(
+                "The State '{0}' {1} Returned a Null Transition", this.state.FullName, tmpIsStarted ? "OnTick" : "OnEntry" ));
+            return tr.ReturnMessage;
         }
 
         #endregion
@@ -104,19 +109,21 @@ namespace SpStateMachine.States {
         private void Dispose(bool disposeManagedResources) {
             if (!disposed) {
                 if (disposeManagedResources) {
-                    WrapErr.SafeAction(() => this.DisposeManagedResources());
+                    WrapErr.ToErrorReportException(50173, () => this.DisposeManagedResources());
                 }
-                WrapErr.SafeAction(() => this.DisposeNativeResources());
+                WrapErr.ToErrorReportException(50174, () => this.DisposeNativeResources());
             }
             this.disposed = true;
         }
+
 
         /// <summary>
         /// Dispose managed resources (those with Dispose methods)
         /// </summary>
         protected virtual void DisposeManagedResources() {
-            this.wrappedObject.Dispose();
+            WrapErr.ToErrorReportException(50175, () => this.wrappedObject.Dispose());
         }
+
 
         /// <summary>
         /// Dispose unmanaged native resources (InPtr, file handles)
@@ -124,8 +131,6 @@ namespace SpStateMachine.States {
         protected virtual void DisposeNativeResources() {
             // Nothing to cleanup
         }
-
-
 
         #endregion
     }

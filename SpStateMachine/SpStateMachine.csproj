@@ -65,7 +65,7 @@
     <Compile Include="PeriodicTimers\WinSimpleTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="States\SpState.cs" />
-    <Compile Include="States\SpStateMachine.cs" />
+    <Compile Include="Core\SpMachine.cs" />
     <Compile Include="States\SpSuperState.cs" />
   </ItemGroup>
   <ItemGroup />

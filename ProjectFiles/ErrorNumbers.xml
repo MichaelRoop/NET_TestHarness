@@ -70,9 +70,23 @@
   <!-- reserve to 50169 -->
 
 
-  
-  
-  <Error code="" class="" method="" message="" />
+
+  <!-- SpStateMachine.SpStateMachine -->
+  <Error code="50170" class="SpStateMachine" method="SpStateMachine" message="Null wrappedObject Argument" />
+  <Error code="50171" class="SpStateMachine" method="SpStateMachine" message="Null state Argument" />
+  <Error code="50172" class="SpStateMachine" method="Tick" message="Null msg Argument" />
+  <Error code="50173" class="SpStateMachine" method="Dispose" message="Error Disposing Managed Resources" />
+  <Error code="50174" class="SpStateMachine" method="Dispose" message="Error Disposing Native Resources" />
+  <Error code="50175" class="SpStateMachine" method="DisposeManagedResources" message="Error Disposing Wrapped Object" />
+  <Error code="50176" class="SpStateMachine" method="Tick" message="Object Disposed" />
+  <Error code="50177" class="SpStateMachine" method="Tick" message="State returned a Null Transition" />
+  <Error code="50178" class="SpStateMachine" method="" message="" />
+  <Error code="50179" class="SpStateMachine" method="" message="" />
+  <!-- reserve to 50199 -->
+
+
+
+
   <Error code="" class="" method="" message="" />
   <Error code="" class="" method="" message="" />
   <Error code="" class="" method="" message="" />

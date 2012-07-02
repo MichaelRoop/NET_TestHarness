@@ -3,16 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using TestCases.TestToolSet;
 using Rhino.Mocks;
 using SpStateMachine.Interfaces;
 using SpStateMachine.Core;
-using LogUtils;
-using ChkUtils;
-using ChkUtils.ErrObjects;
-using TestCases.TestToolSet;
-using System.Threading;
+using SpStateMachine.Messages;
 
 namespace TestCases.SpStateMachineTests {
+
+    #region Internal Test Classes
+
+    public class smDerivedManagedFail : SpMachine<IDisposable> {
+        public smDerivedManagedFail(IDisposable wo, ISpState state)
+            : base(wo, state) {
+        }
+        protected override void  DisposeManagedResources() {
+            throw new Exception("Managed Dispose Exception");
+        }
+    }
+
+    public class smDerivedNativeFail : SpMachine<IDisposable> {
+        public smDerivedNativeFail(IDisposable wo, ISpState state)
+            : base(wo, state) {
+        }
+        protected override void DisposeNativeResources() {
+            throw new Exception("Native Dispose Exception");
+        }
+    }
+
+    #endregion
 
     [TestFixture]
     public class SpStateMachineTests {
@@ -35,247 +54,134 @@ namespace TestCases.SpStateMachineTests {
             this.logReader.StopLogging();
             this.logReader.Clear();
         }
-        
-        #endregion
-
-        #region Start
-
-        [Test]
-        public void _50056_StartDisposed() {
-            ISpEventListner listner = MockRepository.GenerateMock<ISpEventListner>();
-            listner.Expect((o) => o.Dispose()).Throw(new Exception("Listner exception"));
-
-            ISpEventStore st = MockRepository.GenerateMock<ISpEventStore>();
-            ISpBehaviorOnEvent be = MockRepository.GenerateMock<ISpBehaviorOnEvent>();
-            ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
-            ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
-
-            TestHelpers.CatchExpected(50056, "SpStateMachineEngine", "Start", "Attempting to use Disposed Object", () => {
-                SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, sm, tm);
-                Console.WriteLine("Test: Disposing");
-                engine.Dispose();
-                Thread.Sleep(500); // Nothing stopping the thead internaly with mocks
-                engine.Start();
-
-            });
-        }
-
-        #endregion
-
-        #region Stop
-
-        [Test]
-        public void _50057_StopDisposed() {
-            ISpEventListner listner = MockRepository.GenerateMock<ISpEventListner>();
-            listner.Expect((o) => o.Dispose()).Throw(new Exception("Listner exception"));
-
-            ISpEventStore st = MockRepository.GenerateMock<ISpEventStore>();
-            ISpBehaviorOnEvent be = MockRepository.GenerateMock<ISpBehaviorOnEvent>();
-            ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
-            ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
-
-            TestHelpers.CatchExpected(50057, "SpStateMachineEngine", "Stop", "Attempting to use Disposed Object", () => {
-                SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, sm, tm);
-                Console.WriteLine("Test: Disposing");
-                engine.Dispose();
-                Thread.Sleep(500); // Nothing stopping the thead internaly with mocks
-                engine.Stop();
-
-            });
-        }
 
         #endregion
 
         #region Dispose
 
         [Test]
-        public void _0_Dispose_MultiDisposeSafe() {
-            ISpEventListner listner = MockRepository.GenerateMock<ISpEventListner>();
-            listner.Expect((o) => o.Dispose()).Throw(new Exception("Listner exception"));
-
-            ISpEventStore st = MockRepository.GenerateMock<ISpEventStore>();
-            ISpBehaviorOnEvent be = MockRepository.GenerateMock<ISpBehaviorOnEvent>();
-            ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
-            ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
-
+        public void _0_Dispose_Multi() {
+            ISpState st = MockRepository.GenerateMock<ISpState>();
+            IDisposable wo = MockRepository.GenerateMock<IDisposable>();
             TestHelpers.CatchUnexpected(() => {
-                SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, sm, tm);
-                Console.WriteLine("Test: Disposing");
-                engine.Dispose();
-                engine.Dispose();
-                engine.Dispose();
-                engine.Dispose();
-                engine.Dispose();
-                Thread.Sleep(500); // Nothing stopping the thead internaly with mocks
-                Console.WriteLine("Test: Finished Disposing");
+                ISpStateMachine sm = new SpMachine<IDisposable>(wo, st);
+                sm.Dispose();
+                sm.Dispose();
+                sm.Dispose();
             });
-
-            this.logReader.Validate(50060, "SpStateMachineEngine", "DisposeObject", "Error Disposing Object:msgListner");
         }
 
-        #endregion
-
-        #region DisposeObject
-
         [Test]
-        public void _50060_DisposeObject_ErrorDisposingInternalObjects() {
-            ISpEventListner listner = MockRepository.GenerateMock<ISpEventListner>();
-            listner.Expect((o) => o.Dispose()).Throw(new Exception("Listner exception"));
-
-            ISpEventStore st = MockRepository.GenerateMock<ISpEventStore>();
-            ISpBehaviorOnEvent be = MockRepository.GenerateMock<ISpBehaviorOnEvent>();
-            ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
-            ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
-
-            TestHelpers.CatchUnexpected(() => {
-                SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, sm, tm);
-                Console.WriteLine("Test: Disposing");
-                engine.Dispose();
-                Thread.Sleep(500); // Nothing stopping the thead internaly with mocks
-                Console.WriteLine("Test: Finished Disposing");
+        public void _50173_Dispose_ChildManagedDisposeFail() {
+            ISpState st = MockRepository.GenerateMock<ISpState>();
+            IDisposable wo = MockRepository.GenerateMock<IDisposable>();
+            TestHelpers.CatchExpected(50173, "SpMachine`1", "Dispose", "Unexpected Error Occured", () => {
+                ISpStateMachine sm = new smDerivedManagedFail(wo, st);
+                sm.Dispose();
             });
-
-            this.logReader.Validate(50060, "SpStateMachineEngine", "DisposeObject", "Error Disposing Object:msgListner");
         }
 
-
         [Test]
-        public void _0_DisposeObject_Success() {
-            ISpEventListner listner = MockRepository.GenerateMock<ISpEventListner>();
-            ISpEventStore st = MockRepository.GenerateMock<ISpEventStore>();
-            ISpBehaviorOnEvent be = MockRepository.GenerateMock<ISpBehaviorOnEvent>();
-            ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
-            ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
-
-            TestHelpers.CatchUnexpected(() => {
-                SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, sm, tm);
-                engine.Dispose();
+        public void _50174_Dispose_ChildManagedDisposeFail() {
+            ISpState st = MockRepository.GenerateMock<ISpState>();
+            IDisposable wo = MockRepository.GenerateMock<IDisposable>();
+            TestHelpers.CatchExpected(50174, "SpMachine`1", "Dispose", "Unexpected Error Occured", () => {
+                ISpStateMachine sm = new smDerivedNativeFail(wo, st);
+                sm.Dispose();
             });
         }
         
+        [Test]
+        public void _50175_Dispose_ManagedResources_Error() {
+            ISpState st = MockRepository.GenerateMock<ISpState>();
+            IDisposable wo = MockRepository.GenerateMock<IDisposable>();
+            wo.Expect((o) => o.Dispose()).Throw(new Exception("Wrapped Object Threw Exception on Dispose"));
+
+            TestHelpers.CatchExpected(50175, "SpMachine`1", "DisposeManagedResources", "Unexpected Error Occured", () => {
+                ISpStateMachine sm = new SpMachine<IDisposable>(wo, st);
+                sm.Dispose();
+            });
+        }
+
         #endregion
 
         #region Constructor
 
         [Test]
-        public void _50050_SpStateMachineEngine_nullListner() {
-            ISpEventListner listner = MockRepository.GenerateMock<ISpEventListner>();
-            ISpEventStore st = MockRepository.GenerateMock<ISpEventStore>();
-            ISpBehaviorOnEvent be = MockRepository.GenerateMock<ISpBehaviorOnEvent>();
-            ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
-            ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
-
-            TestHelpers.CatchExpected(50050, "SpStateMachineEngine", ".ctor", "Null msgListner Argument", () => {
-                SpStateMachineEngine engine = new SpStateMachineEngine(null, st, be, sm, tm);
-                engine.Dispose();
-            });
-
-            //this.logReader.Validate(50060, "SpStateMachineEngine", "DisposeObject", "Error Disposing Object:msgListner");
-        }
-
-        [Test]
-        public void _50051_SpStateMachineEngine_nullStore() {
-            ISpEventListner listner = MockRepository.GenerateMock<ISpEventListner>();
-            ISpEventStore st = MockRepository.GenerateMock<ISpEventStore>();
-            ISpBehaviorOnEvent be = MockRepository.GenerateMock<ISpBehaviorOnEvent>();
-            ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
-            ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
-
-            TestHelpers.CatchExpected(50051, "SpStateMachineEngine", ".ctor", "Null msgStore Argument", () => {
-                SpStateMachineEngine engine = new SpStateMachineEngine(listner, null, be, sm, tm);
-                engine.Dispose();
+        public void _50170_Ctor_WrappedObject() {
+            ISpState st = MockRepository.GenerateMock<ISpState>();
+            TestHelpers.CatchExpected(50170, "SpMachine`1", ".ctor", "Null wrappedObject Argument", () => {
+                ISpStateMachine sm = new SpMachine<IDisposable>(null, st);
+                sm.Dispose();
             });
         }
 
         [Test]
-        public void _50052_SpStateMachineEngine_nullBehavior() {
-            ISpEventListner listner = MockRepository.GenerateMock<ISpEventListner>();
-            ISpEventStore st = MockRepository.GenerateMock<ISpEventStore>();
-            ISpBehaviorOnEvent be = MockRepository.GenerateMock<ISpBehaviorOnEvent>();
-            ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
-            ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
-
-            TestHelpers.CatchExpected(50052, "SpStateMachineEngine", ".ctor", "Null eventBehavior Argument", () => {
-                SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, null, sm, tm);
-                engine.Dispose();
-            });
-        }
-
-        [Test]
-        public void _50053_SpStateMachineEngine_nullStateMachine() {
-            ISpEventListner listner = MockRepository.GenerateMock<ISpEventListner>();
-            ISpEventStore st = MockRepository.GenerateMock<ISpEventStore>();
-            ISpBehaviorOnEvent be = MockRepository.GenerateMock<ISpBehaviorOnEvent>();
-            ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
-            ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
-
-            TestHelpers.CatchExpected(50053, "SpStateMachineEngine", ".ctor", "Null stateMachine Argument", () => {
-                SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, null, tm);
-                engine.Dispose();
-            });
-        }
-
-        [Test]
-        public void _50054_SpStateMachineEngine_nullTimer() {
-            ISpEventListner listner = MockRepository.GenerateMock<ISpEventListner>();
-            ISpEventStore st = MockRepository.GenerateMock<ISpEventStore>();
-            ISpBehaviorOnEvent be = MockRepository.GenerateMock<ISpBehaviorOnEvent>();
-            ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
-            ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
-
-            TestHelpers.CatchExpected(50054, "SpStateMachineEngine", ".ctor", "Null timer Argument", () => {
-                SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, sm, null);
-                engine.Dispose();
+        public void _50171_Ctor_NullState() {
+            IDisposable wo = MockRepository.GenerateMock<IDisposable>();
+            TestHelpers.CatchExpected(50171, "SpMachine`1", ".ctor", "Null state Argument", () => {
+                ISpStateMachine sm = new SpMachine<IDisposable>(wo, null);
+                sm.Dispose();
             });
         }
 
         #endregion
 
-
-        #region DriverThreade
+        #region Tick
 
         [Test]
-        public void _50058_DriverThreadUnexpectedError() {
-            ISpEventListner listner = MockRepository.GenerateMock<ISpEventListner>();
-            listner.Expect((o) => o.Dispose()).Throw(new Exception("Listner exception"));
-
-            ISpEventStore st = MockRepository.GenerateMock<ISpEventStore>();
-            ISpBehaviorOnEvent be = MockRepository.GenerateMock<ISpBehaviorOnEvent>();
-            be.Expect((o) => o.WaitOnEvent()).Throw(new Exception("Behavior WaitOn Exception"));
-
-            ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
-            ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
-
+        public void _0_Tick_Ok() {
+            ISpState st = MockRepository.GenerateMock<ISpState>();
+            st.Expect((o) => o.FullName).Return("Main.FirstState.Init");
+            IDisposable wo = MockRepository.GenerateMock<IDisposable>();
+            st.Expect((o) => o.OnEntry(null)).IgnoreArguments().Return(new SpStateTransition(SpStateTransitionType.SameState, null, new SpBaseMsg(3, 3)));
             TestHelpers.CatchUnexpected(() => {
-                SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, sm, tm);
-                Console.WriteLine("Test: Disposing");
-                engine.Dispose();
-                Thread.Sleep(500); // Nothing stopping the thead internaly with mocks
+                ISpStateMachine sm = new SpMachine<IDisposable>(wo, st);
+                sm.Tick(new SpBaseMsg(1, 1));
             });
-
-            this.logReader.Validate(50058, "SpStateMachineEngine", "DriverThread", "Unexpected Error");
-
-
         }
+
+
+
+        [Test]
+        public void _50177_Tick_StateNullTransition() {
+            ISpState st = MockRepository.GenerateMock<ISpState>();
+            st.Expect((o) => o.FullName).Return("Main.FirstState.Init");
+            IDisposable wo = MockRepository.GenerateMock<IDisposable>();
+            st.Expect((o) => o.OnEntry(null)).IgnoreArguments().Return(null);
+            TestHelpers.CatchExpected(50177, "SpMachine`1", "Tick", "The State 'Main.FirstState.Init' OnEntry Returned a Null Transition", () => {
+                ISpStateMachine sm = new SpMachine<IDisposable>(wo, st);
+                sm.Tick(new SpBaseMsg(1, 1));
+            });
+        }
+
+
+        [Test]
+        public void _50172_Tick_NullMsg() {
+            ISpState st = MockRepository.GenerateMock<ISpState>();
+            IDisposable wo = MockRepository.GenerateMock<IDisposable>();
+            TestHelpers.CatchExpected(50172, "SpMachine`1", "Tick", "Null msg Argument", () => {
+                ISpStateMachine sm = new SpMachine<IDisposable>(wo, st);
+                sm.Tick(null);
+            });
+        }
+
+
+        [Test]
+        public void _50176_Tick_Disposed() {
+            ISpState st = MockRepository.GenerateMock<ISpState>();
+            IDisposable wo = MockRepository.GenerateMock<IDisposable>();
+            TestHelpers.CatchExpected(50176, "SpMachine`1", "Tick", "Attempting to use Disposed Object", () => {
+                ISpStateMachine sm = new SpMachine<IDisposable>(wo, st);
+                sm.Dispose();
+                sm.Tick(new SpBaseMsg(1, 1));
+            });
+        }
+
 
         #endregion
 
-
-
-
-
-        //[Test]
-        //public void _50055_SpStateMachineEngine_nullListner() {
-        //    ISpEventListner listner = MockRepository.GenerateMock<ISpEventListner>();
-        //    ISpEventStore st = MockRepository.GenerateMock<ISpEventStore>();
-        //    ISpBehaviorOnEvent be = MockRepository.GenerateMock<ISpBehaviorOnEvent>();
-        //    ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
-        //    ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
-
-        //    TestHelpers.CatchExpected(50054, "SpStateMachineEngine", ".ctor", "Null msgListner Argument", () => {
-        //        SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, sm, tm);
-        //        engine.Dispose();
-        //    });
-        //}
     }
+
+
 }
