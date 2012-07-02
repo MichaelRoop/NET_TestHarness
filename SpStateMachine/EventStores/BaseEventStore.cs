@@ -60,11 +60,12 @@ namespace SpStateMachine.EventStores {
         /// <summary>
         /// Add and event object to the store
         /// </summary>
-        /// <param name="eventObject"></param>
-        public void Add(ISpMessage eventObject) {
+        /// <param name="msg">The message event</param>
+        public void Add(ISpMessage msg) {
             WrapErr.ChkDisposed(this.disposed, 50111);
+            WrapErr.ChkParam(msg, "msg", 50112);
             lock (this.queueLock) {
-                this.AddEvent(eventObject);
+                this.AddEvent(msg);
             }
         }
 
@@ -74,7 +75,7 @@ namespace SpStateMachine.EventStores {
         /// </summary>
         /// <returns>The T object</returns>
         public ISpMessage Get() {
-            WrapErr.ChkDisposed(this.disposed, 50112);
+            WrapErr.ChkDisposed(this.disposed, 50113);
             // Make stack variable and only lock the queue for the duration of the copy to
             // free it up for other threads to add events
             ISpMessage eventCopy = null;

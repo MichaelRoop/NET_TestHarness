@@ -73,7 +73,6 @@ namespace SpStateMachine.EventStores {
         /// </summary>
         /// <param name="msg">The msg to add</param>
         protected override void AddEvent(ISpMessage msg) {
-            WrapErr.ChkParam(msg, "eventObject", 50150);
             switch (msg.Priority) {
                 case SpEventPriority.Low:
                     this.lowPriorityQueue.Enqueue(msg);
@@ -88,7 +87,7 @@ namespace SpStateMachine.EventStores {
                     this.UrgentPriorityQueue.Enqueue(msg);
                     break;
                 default:
-                    WrapErr.ChkTrue(false, 50151, String.Format("The Priority Type '{0}'", msg.Priority));
+                    WrapErr.ChkTrue(false, 50150, String.Format("The Priority Type '{0}' is not Handled", msg.Priority));
                     break;
             }
         }

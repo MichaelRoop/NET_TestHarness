@@ -51,7 +51,6 @@ namespace SpStateMachine.EventStores {
         /// </summary>
         /// <param name="msg">The message to add</param>
         protected override void AddEvent(ISpMessage msg) {
-            WrapErr.ChkParam(msg, "eventObject", 50130);
             this.queue.Enqueue(msg);
         }
 

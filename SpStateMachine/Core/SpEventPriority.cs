@@ -22,5 +22,8 @@ namespace SpStateMachine.Core {
         /// <summary>Highest priority level</summary>
         Urgent,
 
+        /// <summary>For Testing Only</summary>
+        Undefined,
+
     }
 }

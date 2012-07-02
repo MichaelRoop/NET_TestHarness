@@ -52,19 +52,21 @@
   <!-- SpStateMachine.BaseEventStore -->
   <Error code="50110" class="BaseEventStore" method="BaseEventStore" message="Null defaultTick Argument" />
   <Error code="50111" class="BaseEventStore" method="Add" message="Object Disposed" />
-  <Error code="50112" class="BaseEventStore" method="Get" message="Object Disposed" />
-  <Error code="50113" class="BaseEventStore" method="" message="" />
+  <Error code="50112" class="BaseEventStore" method="Add" message="Null msg Argument" />
+  <Error code="50113" class="BaseEventStore" method="Get" message="Object Disposed" />
   <Error code="50114" class="BaseEventStore" method="" message="" />
+  <Error code="50115" class="BaseEventStore" method="" message="" />
   <!-- reserve to 50129 -->
 
-  <Error code="50130" class="SimpleDequeEventStore" method="AddEvent" message="Null msg Argument" />
+  <!-- SpStateMachine.SimpleDequeEventStore -->
+  <Error code="50130" class="SimpleDequeEventStore" method="" message="" />
   <Error code="50131" class="SimpleDequeEventStore" method="" message="" />
   <Error code="50132" class="SimpleDequeEventStore" method="" message="" />
   <!-- reserve to 50149 -->
 
-  <Error code="50150" class="PriorityEventStore" method="AddEvent" message="Null msg Argument" />
-  <Error code="50151" class="PriorityEventStore" method="AddEvent" message="Priority Type not Handled" />
-  <Error code="50152" class="PriorityEventStore" method="" message="" />
+  <!-- SpStateMachine.PriorityEventStore -->
+  <Error code="50150" class="PriorityEventStore" method="AddEvent" message="Priority Type not Handled" />
+  <Error code="50151" class="PriorityEventStore" method="" message="" />
   <!-- reserve to 50169 -->
 
 
