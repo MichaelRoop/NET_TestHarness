@@ -41,6 +41,7 @@ namespace SpStateMachine.EventListners {
         /// </summary>
         /// <param name="msg">The message to post</param>
         public void PostMessage(ISpMessage msg) {
+            WrapErr.ChkDisposed(this.disposed, 50032);
             this.RaiseEvent(this.MsgReceived, msg, "Message");
         }
 
@@ -51,6 +52,7 @@ namespace SpStateMachine.EventListners {
         /// </summary>
         /// <param name="msg">The reponse to post</param>
         public void PostResponse(ISpMessage msg) {
+            WrapErr.ChkDisposed(this.disposed, 50033);
             this.RaiseEvent(this.ResponseReceived, msg, "Response");
         }
 
@@ -58,8 +60,15 @@ namespace SpStateMachine.EventListners {
 
         #region IDisposable Members
 
+        private bool disposed = false;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose() {
-            // There are no resources to dispose of in this implementation
+            // There are no resources to dispose of in this implementation but keep 
+            // same behavior that no usage after Dispose just for conformity
+            this.disposed = true;
         }
 
         #endregion
@@ -75,28 +84,26 @@ namespace SpStateMachine.EventListners {
         private void RaiseEvent(Action<ISpMessage> action, ISpMessage msg, string type) {
             Log.Info("SimpleEventListner", "RaiseEvent", String.Format("Raising Event:{0} type:{1} Event Id:{2}", type, msg.TypeId, msg.EventId));
 
-            ErrReport err = new ErrReport();
-            WrapErr.ToErrReport(out err, 50030,
-                () => { return String.Format("Unexpected Error Raising Event {0}", type); },
-                () => {
-                    if (action != null) {
-                        ThreadPool.QueueUserWorkItem((threadContext) => {
+            if (action != null) {
+                ThreadPool.QueueUserWorkItem((threadContext) => {
+                    WrapErr.ToErrReport(50030,
+                        () => { return String.Format("Unexpected Error Raising Event '{0}'", type); },
+                        () => {
                             // Check again just before execution
                             if (action != null) {
                                 action.Invoke(msg);
                             }
                             else {
-                                Log.Warning(50031, String.Format("No subscribers to {0} message", type));
+                                Log.Warning(50031, String.Format("No subscribers to '{0}' message", type));
                             }
                         });
-                    }
-                    else {
-                        Log.Warning(50031, String.Format("No subscribers to {0} message", type));
-                    }
                 });
+            }
+            else {
+                Log.Warning(50031, String.Format("No subscribers to '{0}' message", type));
+            }
         }
-
-
+        
         #endregion
 
     }

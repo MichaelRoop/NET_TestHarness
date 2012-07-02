@@ -4,39 +4,67 @@ using NUnit.Framework;
 using SpStateMachine.EventListners;
 using SpStateMachine.Interfaces;
 using SpStateMachine.Messages;
+using TestCases.TestToolSet;
 
 namespace TestCases.SpStateMachineTests {
 
     [TestFixture]
     public class SimpleEventListnerTests {
+        
+        #region Data
 
-        #region Test Setup
-
+        HelperLogReader logReader = new HelperLogReader();
         private ISpEventListner listner = null;
 
+        #endregion
+
+        #region Setup
+
         [SetUp]
-        public void Setup() {
+        public void TestSetup() {
+            this.logReader.StartLogging();
             this.listner = new SimpleEventListner();
         }
 
         [TearDown]
-        public void Teardown() {
+        public void TestTeardown() {
+            this.logReader.StopLogging();
+            this.logReader.Clear();
+            this.listner.Dispose();
             this.listner = null;
+        }
+
+        #endregion
+
+        #region PostMessage
+            
+        [Test]
+        public void _50032_PostMessage_Disposed() {
+            TestHelpers.CatchExpected(50032, "SimpleEventListner", "PostMessage", "Attempting to use Disposed Object", () => {
+                this.listner.Dispose();
+                this.listner.PostMessage(new SpBaseMsg(25, 100));
+            });
+        }
+
+        #endregion
+
+        #region PostResponse
+
+        [Test]
+        public void _50033_PostResponse_Disposed() {
+            TestHelpers.CatchExpected(50033, "SimpleEventListner", "PostResponse", "Attempting to use Disposed Object", () => {
+                this.listner.Dispose();
+                this.listner.PostResponse(new SpBaseMsg(25, 100));
+            });
         }
 
         #endregion
 
         #region MessageReceived
 
-        [Test]
-        public void MessageReceived_NoSubscribers() {
-            Assert.DoesNotThrow(() => {
-                this.listner.PostMessage(new SpBaseMsg(1, 1));
-            });
-        }
 
         [Test]
-        public void MessageReceived_validMsg() {
+        public void _0_MessageReceived_validMsg() {
             bool received = false;
             ISpMessage msgCopy = null;
 
@@ -61,7 +89,7 @@ namespace TestCases.SpStateMachineTests {
         #region ResponseReceived
 
         [Test]
-        public void ResponseReceived_validMsg() {
+        public void _0_ResponseReceived_validMsg() {
             bool received = false;
             ISpMessage msgCopy = null;
 
@@ -83,11 +111,55 @@ namespace TestCases.SpStateMachineTests {
 
 
         [Test]
-        public void ResponseReceived_NoSubscribers() {
-            Assert.DoesNotThrow(() => {
+        public void _50031_RaiseEvent_ResponseNoSubscribers() {
+            TestHelpers.CatchUnexpected(() => {
                 this.listner.PostResponse(new SpBaseResponse(2, new SpBaseMsg(1, 1)));
             });
+            Thread.Sleep(250);
+            this.logReader.Validate(50031, "SimpleEventListner", "RaiseEvent", "No subscribers to 'Response' message");
         }
+
+
+        [Test]
+        public void _50031_MessageReceived_NoSubscribers() {
+            TestHelpers.CatchUnexpected(() => {
+                this.listner.PostMessage(new SpBaseMsg(1, 1));
+            });
+            Thread.Sleep(250);
+            this.logReader.Validate(50031, "SimpleEventListner", "RaiseEvent", "No subscribers to 'Message' message");
+        }
+
+
+        [Test]
+        public void _50030_RaiseEvent_CatchUserResponseDelegateException() {
+
+            TestHelpers.CatchUnexpected(() => {
+                this.listner.ResponseReceived += new Action<ISpMessage>((msg) => {
+                    Console.WriteLine("** Response Received triggered **");
+                    throw new Exception("User Exception in delegate");
+                });
+                this.listner.PostResponse(new SpBaseResponse(2, new SpBaseMsg(1, 1)));
+            });
+            // Allow the thread pool to catch up
+            Thread.Sleep(250);
+            this.logReader.Validate(50030, "QueueUserWorkItemCallback", "WaitCallback_Context", "Unexpected Error Raising Event 'Response'");
+        }
+
+        [Test]
+        public void _50030_RaiseEvent_CatchUserMessageDelegateException() {
+
+            TestHelpers.CatchUnexpected(() => {
+                this.listner.MsgReceived += new Action<ISpMessage>((msg) => {
+                    Console.WriteLine("** Message Received triggered **");
+                    throw new Exception("User Exception in delegate");
+                });
+                this.listner.PostMessage(new SpBaseResponse(2, new SpBaseMsg(1, 1)));
+            });
+            // Allow the thread pool to catch up
+            Thread.Sleep(250);
+            this.logReader.Validate(50030, "QueueUserWorkItemCallback", "WaitCallback_Context", "Unexpected Error Raising Event 'Message'");
+        }
+
 
         #endregion
 
