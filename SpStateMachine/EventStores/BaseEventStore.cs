@@ -41,6 +41,7 @@ namespace SpStateMachine.EventStores {
         /// The default tick event if to provide if there are no queued event objects
         /// </param>
         public BaseEventStore(ISpMessage defaultTick) {
+            WrapErr.ChkParam(defaultTick, "defaultTick", 50110);
             this.defaultTick = defaultTick;
         }
 
@@ -61,6 +62,7 @@ namespace SpStateMachine.EventStores {
         /// </summary>
         /// <param name="eventObject"></param>
         public void Add(ISpMessage eventObject) {
+            WrapErr.ChkDisposed(this.disposed, 50111);
             lock (this.queueLock) {
                 this.AddEvent(eventObject);
             }
@@ -72,6 +74,7 @@ namespace SpStateMachine.EventStores {
         /// </summary>
         /// <returns>The T object</returns>
         public ISpMessage Get() {
+            WrapErr.ChkDisposed(this.disposed, 50112);
             // Make stack variable and only lock the queue for the duration of the copy to
             // free it up for other threads to add events
             ISpMessage eventCopy = null;
@@ -144,7 +147,6 @@ namespace SpStateMachine.EventStores {
         protected abstract void AddEvent(ISpMessage eventObject);
 
         #endregion
-
 
 
     }

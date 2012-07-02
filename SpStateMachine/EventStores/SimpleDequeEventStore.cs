@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SpStateMachine.Interfaces;
+using ChkUtils;
 
 namespace SpStateMachine.EventStores {
 
@@ -48,9 +49,10 @@ namespace SpStateMachine.EventStores {
         /// <summary>
         /// Add an event to the queue
         /// </summary>
-        /// <param name="eventObject">The event object to add</param>
-        protected override void AddEvent(ISpMessage eventObject) {
-            this.queue.Enqueue(eventObject);
+        /// <param name="msg">The message to add</param>
+        protected override void AddEvent(ISpMessage msg) {
+            WrapErr.ChkParam(msg, "eventObject", 50130);
+            this.queue.Enqueue(msg);
         }
 
         #endregion

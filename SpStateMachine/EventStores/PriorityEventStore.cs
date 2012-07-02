@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SpStateMachine.Interfaces;
 using SpStateMachine.Core;
+using ChkUtils;
 
 namespace SpStateMachine.EventStores {
     
@@ -70,23 +71,24 @@ namespace SpStateMachine.EventStores {
         /// <summary>
         /// Add an event to the proper priority queue
         /// </summary>
-        /// <param name="eventObject">The event object to add</param>
-        protected override void AddEvent(ISpMessage eventObject) {
-            switch (eventObject.Priority) {
+        /// <param name="msg">The msg to add</param>
+        protected override void AddEvent(ISpMessage msg) {
+            WrapErr.ChkParam(msg, "eventObject", 50150);
+            switch (msg.Priority) {
                 case SpEventPriority.Low:
-                    this.lowPriorityQueue.Enqueue(eventObject);
+                    this.lowPriorityQueue.Enqueue(msg);
                     break;
                 case SpEventPriority.Normal:
-                    this.NormalPriorityQueue.Enqueue(eventObject);
+                    this.NormalPriorityQueue.Enqueue(msg);
                     break;
                 case SpEventPriority.High:
-                    this.HighPriorityQueue.Enqueue(eventObject);
+                    this.HighPriorityQueue.Enqueue(msg);
                     break;
                 case SpEventPriority.Urgent:
-                    this.UrgentPriorityQueue.Enqueue(eventObject);
+                    this.UrgentPriorityQueue.Enqueue(msg);
                     break;
                 default:
-                    // TODO - log
+                    WrapErr.ChkTrue(false, 50151, String.Format("The Priority Type '{0}'", msg.Priority));
                     break;
             }
         }
