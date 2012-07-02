@@ -12,8 +12,6 @@
   <Error code="50006" class="WinSimpleTimer" method="" message="" />
   <Error code="50007" class="" method="" message="" />
   <Error code="50008" class="" method="" message="" />
-  <Error code="50009" class="" method="" message="" />
-  <Error code="50010" class="" method="" message="" />
   <!-- reserve to 50029 -->
 
   <!-- SpStateMachine.SimpleEventListner -->
@@ -21,14 +19,7 @@
   <Error code="50031" class="SimpleEventListner" method="RaiseEvent" message="No subscribers to message" />
   <Error code="50032" class="SimpleEventListner" method="" message="" />
   <Error code="50033" class="SimpleEventListner" method="" message="" />
-  <Error code="50034" class="SimpleEventListner" method="" message="" />
-  <Error code="50035" class="SimpleEventListner" method="" message="" />
-  <Error code="50036" class="SimpleEventListner" method="" message="" />
-  <Error code="50037" class="SimpleEventListner" method="" message="" />
-  <Error code="50038" class="SimpleEventListner" method="" message="" />
-  <Error code="50039" class="SimpleEventListner" method="" message="" />
   <!-- reserve to 50049 -->
-
 
   <!-- SpStateMachine.SpStateMachineEngine -->
   <Error code="50050" class="SpStateMachineEngine" method="SpStateMachineEngine" message="Null msgListner Argument" />
@@ -44,29 +35,26 @@
   <Error code="50060" class="SpStateMachineEngine" method="DisposeObject" message="Error on Dipose of one of its objects" />
   <Error code="50061" class="SpStateMachineEngine" method="" message="" />
   <Error code="50062" class="SpStateMachineEngine" method="" message="" />
-  <Error code="50063" class="SpStateMachineEngine" method="" message="" />
-  <Error code="50064" class="SpStateMachineEngine" method="" message="" />
-  <Error code="50065" class="SpStateMachineEngine" method="" message="" />
-  <Error code="50066" class="SpStateMachineEngine" method="" message="" />
-  <Error code="50067" class="SpStateMachineEngine" method="" message="" />
-  <Error code="50068" class="SpStateMachineEngine" method="" message="" />
-  <Error code="50069" class="SpStateMachineEngine" method="" message="" />
+  <!-- reserve to 50079 -->
 
-  <Error code="50070" class="SpStateMachineEngine" method="" message="" />
-  <Error code="50071" class="SpStateMachineEngine" method="" message="" />
-  <Error code="50072" class="SpStateMachineEngine" method="" message="" />
-  <Error code="50073" class="SpStateMachineEngine" method="" message="" />
-  <Error code="50074" class="SpStateMachineEngine" method="" message="" />
-  <Error code="50075" class="SpStateMachineEngine" method="" message="" />
-  <Error code="50076" class="SpStateMachineEngine" method="" message="" />
-  <Error code="50077" class="SpStateMachineEngine" method="" message="" />
-  <Error code="50078" class="SpStateMachineEngine" method="" message="" />
-  <Error code="50079" class="SpStateMachineEngine" method="" message="" />
+  <!-- SpStateMachine.SpPeriodicWakeupOnly -->
+  <Error code="50080" class="SpPeriodicWakeupOnly" method="EventReceived" message="Object Disposed" />
+  <Error code="50081" class="SpPeriodicWakeupOnly" method="EventReceived" message="Behavior response type not supported" />
+  <Error code="50082" class="SpPeriodicWakeupOnly" method="WaitOnEvent" message="Object Disposed" />
+  <Error code="50083" class="SpPeriodicWakeupOnly" method="DisposeManagedResources" message="Error Disposing wakeEvent" />
+  <Error code="50084" class="SpPeriodicWakeupOnly" method="OnPeriodicTimer" message="Still Busy When the Periodic Timer Woke Up" />
+  <Error code="50085" class="SpPeriodicWakeupOnly" method="" message="" />
+  <Error code="50086" class="SpPeriodicWakeupOnly" method="" message="" />
+  <Error code="50087" class="SpPeriodicWakeupOnly" method="" message="" />
+  <Error code="50088" class="SpPeriodicWakeupOnly" method="" message="" />
+  <Error code="50089" class="SpPeriodicWakeupOnly" method="" message="" />
+  <!-- reserve to 50099 -->
 
 
 
 
-  <Error code="" class="" method="" message="" />
+
+
   <Error code="" class="" method="" message="" />
   <Error code="" class="" method="" message="" />
   <Error code="" class="" method="" message="" />

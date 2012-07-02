@@ -20,5 +20,8 @@ namespace SpStateMachine.Core {
         /// <summary>A request to Terminate wait was received</summary>
         TerminateRequest,
 
+        /// <summary>For testing only</summary>
+        Undefined,
+
     }
 }

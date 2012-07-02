@@ -29,6 +29,24 @@ namespace SpStateMachine.Behaviours {
 
         #endregion
 
+        #region Constructors
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public SpPeriodicWakeupOnly() {
+        }
+
+
+        /// <summary>
+        /// Finalizer
+        /// </summary>
+        ~SpPeriodicWakeupOnly() {
+            this.Dispose(false);
+        }
+
+        #endregion
+
         #region ISpBehaviorOnEvent Members
 
         /// <summary>
@@ -36,7 +54,7 @@ namespace SpStateMachine.Behaviours {
         /// </summary>
         /// <param name="eventType">The type of event received</param>
         public void EventReceived(BehaviorResponseEventType eventType) {
-            WrapErr.ChkDisposed(this.disposed, 9999);
+            WrapErr.ChkDisposed(this.disposed, 50080);
             switch (eventType) {
                 case BehaviorResponseEventType.MsgArrived:
                     // We ignore messages received and depend only on the periodic timer 
@@ -48,7 +66,7 @@ namespace SpStateMachine.Behaviours {
                     this.wakeEvent.Set();
                     break;
                 default:
-                    Log.Error(9999, String.Format("The Behavior Response Event Type '{0}' is not Supported", eventType));
+                    Log.Error(50081, String.Format("The Behavior Response Event Type '{0}' is not Supported", eventType));
                     break;
             }
         }
@@ -58,7 +76,7 @@ namespace SpStateMachine.Behaviours {
         /// Wait indefinitely until behavior is satisfied
         /// </summary>
         public void WaitOnEvent() {
-            WrapErr.ChkDisposed(this.disposed, 9999);
+            WrapErr.ChkDisposed(this.disposed, 50082);
             lock (this.busyLock) {
                 this.isBusy = false;
             }
@@ -74,17 +92,6 @@ namespace SpStateMachine.Behaviours {
 
         #endregion
 
-        #region Constructors
-
-        public SpPeriodicWakeupOnly() {
-        }
-
-        ~SpPeriodicWakeupOnly() {
-            this.Dispose(false);
-        }
-
-        #endregion
-        
         #region IDisposable
 
         private bool disposed = false;
@@ -126,7 +133,7 @@ namespace SpStateMachine.Behaviours {
         /// Dispose managed resources (those with Dispose methods)
         /// </summary>
         private void DisposeManagedResources() {
-            WrapErr.ToErrReport(9999, "Error Disposing wakeEvent", () => {
+            WrapErr.ToErrReport(50083, "Error Disposing wakeEvent", () => {
                 if (this.wakeEvent != null) {
                     wakeEvent.Dispose();
                     wakeEvent = null;
@@ -162,7 +169,7 @@ namespace SpStateMachine.Behaviours {
         /// </summary>
         private void OnPeriodicTimer() {
             if (this.IsBusy()) {
-                Log.Error(9999, "Still Busy When the Periodic Timer Woke Up");
+                Log.Error(50084, "Still Busy When the Periodic Timer Woke Up");
             }
             else {
                 this.wakeEvent.Set();
