@@ -63,6 +63,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scratch.cs" />
     <Compile Include="SpStateMachineTests\EventStoreTests.cs" />
+    <Compile Include="SpStateMachineTests\MessagesTests.cs" />
     <Compile Include="SpStateMachineTests\SimpleEventListnerTests.cs" />
     <Compile Include="SpStateMachineTests\SpPeriodicWakeupOnlyTests.cs" />
     <Compile Include="SpStateMachineTests\SpStateMachineTests.cs" />

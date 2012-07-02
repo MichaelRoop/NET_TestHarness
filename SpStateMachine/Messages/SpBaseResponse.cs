@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SpStateMachine.Interfaces;
 
 namespace SpStateMachine.Messages {
 
@@ -20,7 +21,7 @@ namespace SpStateMachine.Messages {
         /// <param name="msg">The message that this is responding to</param>
         /// <param name="returnCode">The operation return code</param>
         /// <param name="returnStatus">Additional information on the operation status</param>
-        public SpBaseResponse(int typeId, SpBaseMsg msg, int returnCode, string returnStatus)
+        public SpBaseResponse(int typeId, ISpMessage msg, int returnCode, string returnStatus)
             : base(typeId, msg.EventId) {
                 // Transfer the message guid to the response for correlation
                 this.Uid = msg.Uid;
@@ -37,7 +38,7 @@ namespace SpStateMachine.Messages {
         /// The type identifier in case you need to cast to a derived type to retrieve a payload
         /// </param>
         /// <param name="msg">The message that this is responding to</param>
-        public SpBaseResponse(int typeId, SpBaseMsg msg)
+        public SpBaseResponse(int typeId, ISpMessage msg)
             : this(typeId, msg, 0, "") {
         }
 
