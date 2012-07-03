@@ -88,9 +88,9 @@
   <Error code="50202" class="SpState" method="RegisterOnEventTransition" message="Transition Id already Registered" />
   <Error code="50203" class="SpState" method="RegisterOnResultTransition" message="Transition Id already Registered" />
   <Error code="50204" class="SpState" method="GetTransitionFromStore" message="Unexpected Error" />
-  <Error code="50205" class="SpState" method="InitStateIds" message="Null id Chain" />
-  <Error code="50206" class="SpState" method="" message="" />
-  <Error code="50207" class="SpState" method="" message="" />
+  <Error code="50205" class="SpState" method="OnTick" message="OnTick Cannot be Executed Before OnEntry" />
+  <Error code="50206" class="SpState" method="InitStateIds" message="Null id Chain" />
+  <Error code="50207" class="SpState" method="InitStateIds" message="Unexpected Error" />
   <Error code="50208" class="SpState" method="" message="" />
   <Error code="50209" class="SpState" method="" message="" />
 

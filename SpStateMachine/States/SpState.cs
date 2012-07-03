@@ -156,7 +156,6 @@ namespace SpStateMachine.States {
         /// <returns>A state transition object</returns>
         public virtual ISpStateTransition OnEntry(ISpEventMessage msg) {
             Log.Info(this.className, "ExecOnEntry", this.FullName);
-
             WrapErr.ChkFalse(this.IsEntryExcecuted, 50201, "OnEntry Cannot be Executed More Than Once Until OnExit is Called");
             this.SetEntered(true);
             return WrapErr.ToErrorReportException(9999, () => {
@@ -172,6 +171,7 @@ namespace SpStateMachine.States {
         /// <returns>A state transition object</returns>
         public virtual ISpStateTransition OnTick(ISpEventMessage msg) {
             //Log.Info(this.className, "ExecOnTick", this.FullName);
+            WrapErr.ChkTrue(this.IsEntryExcecuted, 50205, "OnTick Cannot be Executed Before OnEntry");
             return WrapErr.ToErrorReportException(9999, () => {
                 return this.GetTransitionInOrder(this.ExecOnTick, msg);
             });
@@ -183,6 +183,7 @@ namespace SpStateMachine.States {
         /// </summary>
         public void OnExit() {
             Log.Info(this.className, "ExecOnExit", this.FullName);
+            // TODO - check that OnEntry has happened ??
             this.SetEntered(false);
             WrapErr.ToErrorReportException(9999, () => {
                 this.ExecOnExit();
@@ -478,9 +479,9 @@ namespace SpStateMachine.States {
         /// <param name="id"></param>
         private void InitStateIds(ISpState parent, int id) {
             // Add any ancestor state ids to the chain
-            WrapErr.ToErrorReportException(9999, () => {
+            WrapErr.ToErrorReportException(50207, () => {
                 if (parent != null) {
-                    WrapErr.ChkVar(parent.IdChain, 50205, "The parent has a null id chain");
+                    WrapErr.ChkVar(parent.IdChain, 50206, "The Parent has a Null Id Chain");
                     this.idChain.Clear();
                     parent.IdChain.ForEach((item) => this.idChain.Add(item));
                 }
