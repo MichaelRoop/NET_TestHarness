@@ -22,14 +22,14 @@ namespace SpStateMachine.EventListners {
         /// outside and be subscribed to by the engine to be pushed to the 
         /// state machine
         /// </summary>
-        public event Action<ISpMessage>  MsgReceived;
+        public event Action<ISpEventMessage>  MsgReceived;
 
         /// <summary>
         /// Event raised when a response is received. This would originate from the
         /// state machine and be subscribed to by the originator of original message 
         /// to the state machine
         /// </summary>
-        public event Action<ISpMessage>  ResponseReceived;
+        public event Action<ISpEventMessage>  ResponseReceived;
 
         #endregion
 
@@ -40,7 +40,7 @@ namespace SpStateMachine.EventListners {
         /// MsgReceived event
         /// </summary>
         /// <param name="msg">The message to post</param>
-        public void PostMessage(ISpMessage msg) {
+        public void PostMessage(ISpEventMessage msg) {
             WrapErr.ChkDisposed(this.disposed, 50032);
             this.RaiseEvent(this.MsgReceived, msg, "Message");
         }
@@ -51,7 +51,7 @@ namespace SpStateMachine.EventListners {
         /// ResponseReceived event
         /// </summary>
         /// <param name="msg">The reponse to post</param>
-        public void PostResponse(ISpMessage msg) {
+        public void PostResponse(ISpEventMessage msg) {
             WrapErr.ChkDisposed(this.disposed, 50033);
             this.RaiseEvent(this.ResponseReceived, msg, "Response");
         }
@@ -81,7 +81,7 @@ namespace SpStateMachine.EventListners {
         /// <param name="action">The action to raise</param>
         /// <param name="msg">The message or response to push</param>
         /// <param name="type">Either message or response identifier string</param>
-        private void RaiseEvent(Action<ISpMessage> action, ISpMessage msg, string type) {
+        private void RaiseEvent(Action<ISpEventMessage> action, ISpEventMessage msg, string type) {
             Log.Info("SimpleEventListner", "RaiseEvent", String.Format("Raising Event:{0} type:{1} Event Id:{2}", type, msg.TypeId, msg.EventId));
 
             if (action != null) {

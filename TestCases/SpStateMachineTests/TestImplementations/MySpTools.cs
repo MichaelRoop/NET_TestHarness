@@ -16,7 +16,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public static ISpMessage GetDefaultReturnMsg(ISpMessage msg) {
+        public static ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
             WrapErr.ChkParam(msg, "msg", 9999);
 
             // TODO - the ChkTrue does not return a message with the exception

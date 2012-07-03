@@ -10,7 +10,7 @@ namespace SpStateMachine.Interfaces {
     /// Interface for a message event type for the SpStateMachine architecture
     /// </summary>
     /// <author>Michael Roop</author>
-    public interface ISpMessage {
+    public interface ISpEventMessage {
 
         /// <summary>
         /// The message unique identifier used to correlate a response

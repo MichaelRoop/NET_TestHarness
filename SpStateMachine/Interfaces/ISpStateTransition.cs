@@ -22,7 +22,7 @@ namespace SpStateMachine.Interfaces {
         /// <summary>
         /// The response message to return to caller
         /// </summary>
-        ISpMessage ReturnMessage { get; set; }
+        ISpEventMessage ReturnMessage { get; set; }
         
     }
 }

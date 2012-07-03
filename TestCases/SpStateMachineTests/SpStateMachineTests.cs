@@ -134,10 +134,10 @@ namespace TestCases.SpStateMachineTests {
             ISpState st = MockRepository.GenerateMock<ISpState>();
             st.Expect((o) => o.FullName).Return("Main.FirstState.Init");
             IDisposable wo = MockRepository.GenerateMock<IDisposable>();
-            st.Expect((o) => o.OnEntry(null)).IgnoreArguments().Return(new SpStateTransition(SpStateTransitionType.SameState, null, new SpBaseMsg(3, 3)));
+            st.Expect((o) => o.OnEntry(null)).IgnoreArguments().Return(new SpStateTransition(SpStateTransitionType.SameState, null, new SpBaseEventMsg(3, 3)));
             TestHelpers.CatchUnexpected(() => {
                 ISpStateMachine sm = new SpMachine<IDisposable>(wo, st);
-                sm.Tick(new SpBaseMsg(1, 1));
+                sm.Tick(new SpBaseEventMsg(1, 1));
             });
         }
 
@@ -151,7 +151,7 @@ namespace TestCases.SpStateMachineTests {
             st.Expect((o) => o.OnEntry(null)).IgnoreArguments().Return(null);
             TestHelpers.CatchExpected(50177, "SpMachine`1", "Tick", "The State 'Main.FirstState.Init' OnEntry Returned a Null Transition", () => {
                 ISpStateMachine sm = new SpMachine<IDisposable>(wo, st);
-                sm.Tick(new SpBaseMsg(1, 1));
+                sm.Tick(new SpBaseEventMsg(1, 1));
             });
         }
 
@@ -174,7 +174,7 @@ namespace TestCases.SpStateMachineTests {
             TestHelpers.CatchExpected(50176, "SpMachine`1", "Tick", "Attempting to use Disposed Object", () => {
                 ISpStateMachine sm = new SpMachine<IDisposable>(wo, st);
                 sm.Dispose();
-                sm.Tick(new SpBaseMsg(1, 1));
+                sm.Tick(new SpBaseEventMsg(1, 1));
             });
         }
 

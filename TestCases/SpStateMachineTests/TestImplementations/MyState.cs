@@ -110,14 +110,14 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
 
 
-        protected override ISpMessage ExecOnEntry(ISpMessage msg) {
+        protected override ISpEventMessage ExecOnEntry(ISpEventMessage msg) {
             Log.Info("MyState", "ExecOnEntry", String.Format("Raised {0}", msg.EventId));
             This.StrVal = "The message set on Entry";
             This.IntVal = 9876;
             return this.GetDefaultReturnMsg(msg);
         }
 
-        protected override ISpMessage ExecOnTick(ISpMessage msg) {
+        protected override ISpEventMessage ExecOnTick(ISpEventMessage msg) {
             Thread.Sleep(200);
             Log.Info("MyState", "ExecOnTick", String.Format("Raised {0} StrVal:{1} IntVal:{2}", msg.EventId, This.StrVal, This.IntVal));
             //return this.GetDefaultReturnMsg(msg);
@@ -134,13 +134,13 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         /// Provides the default return msg
         /// </summary>
         /// <param name="msg">The incomming message</param>
-        protected override ISpMessage GetDefaultReturnMsg(ISpMessage msg) {
+        protected override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
             return MySpTools.GetDefaultReturnMsg(msg);
         }
 
 
 
-        protected override ISpMessage GetReponseMsg(ISpMessage msg) {
+        protected override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
             Log.Info("MyState", "GetResponseMsg", String.Format("For msg:{0}", msg.TypeId.ToStateId()));
 
             MyBaseResponse response = new MyBaseResponse(MyMsgType.SimpleResponse, (MyBaseMsg)msg, MyReturnCode.FailedPresure, "lalalal");

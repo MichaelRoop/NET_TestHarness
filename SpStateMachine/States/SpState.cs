@@ -154,7 +154,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
-        public virtual ISpStateTransition OnEntry(ISpMessage msg) {
+        public virtual ISpStateTransition OnEntry(ISpEventMessage msg) {
             Log.Info(this.className, "ExecOnEntry", this.FullName);
 
             WrapErr.ChkFalse(this.IsEntryExcecuted, 50201, "OnEntry Cannot be Executed More Than Once Until OnExit is Called");
@@ -168,7 +168,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
-        public virtual ISpStateTransition OnTick(ISpMessage msg) {
+        public virtual ISpStateTransition OnTick(ISpEventMessage msg) {
             //Log.Info(this.className, "ExecOnTick", this.FullName);
             return this.GetTransitionInOrder(this.ExecOnTick, msg);
         }
@@ -219,7 +219,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg">The incoming message</param>
         /// <returns>A transition object</returns>
-        protected virtual ISpMessage ExecOnEntry(ISpMessage msg) {
+        protected virtual ISpEventMessage ExecOnEntry(ISpEventMessage msg) {
             return GetDefaultReturnMsg(msg);
         }
 
@@ -230,7 +230,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg">The incoming message</param>
         /// <returns>A transition object</returns>
-        protected virtual ISpMessage ExecOnTick(ISpMessage msg) {
+        protected virtual ISpEventMessage ExecOnTick(ISpEventMessage msg) {
             return GetDefaultReturnMsg(msg);
         }
 
@@ -248,7 +248,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg">The incoming message</param>
         /// <returns>The default transition with no transition set</returns>
-        protected virtual ISpStateTransition GetDefaultTransition(ISpMessage msg) {
+        protected virtual ISpStateTransition GetDefaultTransition(ISpEventMessage msg) {
             return new SpStateTransition(SpStateTransitionType.SameState, null, this.GetDefaultReturnMsg(msg));
         }
 
@@ -258,7 +258,7 @@ namespace SpStateMachine.States {
         /// data into the return msg class if necessary. By default it is a pass through
         /// </summary>
         /// <param name="msg">The return message from the derived class</param>
-        protected virtual ISpMessage OnGetResponseMsg(ISpMessage msg) {
+        protected virtual ISpEventMessage OnGetResponseMsg(ISpEventMessage msg) {
             return msg;
         }
 
@@ -305,7 +305,7 @@ namespace SpStateMachine.States {
         /// Provides the default return msg
         /// </summary>
         /// <param name="msg">The incomming message</param>
-        protected abstract ISpMessage GetDefaultReturnMsg(ISpMessage msg);
+        protected abstract ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg);
 
 
         /// <summary>
@@ -313,7 +313,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        protected abstract ISpMessage GetReponseMsg(ISpMessage msg);
+        protected abstract ISpEventMessage GetReponseMsg(ISpEventMessage msg);
 
         #endregion
 
@@ -328,11 +328,11 @@ namespace SpStateMachine.States {
         }
 
 
-        protected ISpStateTransition GetTransitionFromOnEventRegistrations(ISpMessage msg) {
+        protected ISpStateTransition GetTransitionFromOnEventRegistrations(ISpEventMessage msg) {
             return this.GetTransitionFromStore(this.onEventTransitions, msg);
         }
 
-        protected ISpStateTransition GetTransitionFromOnResultRegistrations(ISpMessage msg) {
+        protected ISpStateTransition GetTransitionFromOnResultRegistrations(ISpEventMessage msg) {
             return this.GetTransitionFromStore(this.onResultTransitions, msg);
         }
 
@@ -351,7 +351,7 @@ namespace SpStateMachine.States {
         /// </param>
         /// <param name="msg">The incoming message to validate against the onEvent list</param>
         /// <returns>The OnEvent, OnResult or default transition</returns>
-        private ISpStateTransition GetTransitionInOrder(Func<ISpMessage, ISpMessage> stateFunc, ISpMessage msg) {
+        private ISpStateTransition GetTransitionInOrder(Func<ISpEventMessage, ISpEventMessage> stateFunc, ISpEventMessage msg) {
 
             // Query the OnEvent queue for a transition BEFORE calling state function
             ISpStateTransition tr = this.GetTransitionFromOnEventRegistrations(msg);
@@ -378,7 +378,7 @@ namespace SpStateMachine.States {
         /// <param name="store">The store to search</param>
         /// <param name="msg">The message to insert in the transition object</param>
         /// <returns>The transition object from the store or null if not found</returns>
-        private ISpStateTransition GetTransitionFromStore(Dictionary<int, ISpStateTransition> store, ISpMessage msg) {
+        private ISpStateTransition GetTransitionFromStore(Dictionary<int, ISpStateTransition> store, ISpEventMessage msg) {
             return WrapErr.ToErrorReportException(50204, () => {
                 if (store.Keys.Contains(msg.EventId)) {
                     Log.Debug("SpState", "GetTransition", String.Format("Found transition for event:{0}", this.ConvertEventIdToString(msg.EventId)));
@@ -399,7 +399,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="tr"></param>
         /// <param name="msg"></param>
-        private void LogTransition(ISpStateTransition tr, ISpMessage msg) {
+        private void LogTransition(ISpStateTransition tr, ISpEventMessage msg) {
             Log.Debug("SpState", "LogTransition",
                 String.Format(
                     "Transition Type:{0} From:{1} To:{2} On Msg:{3} Event:{4}",

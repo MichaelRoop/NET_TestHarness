@@ -83,14 +83,14 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         #endregion
 
 
-        protected override ISpMessage OnRuntimeTransitionRequest(ISpMessage msg) {
+        protected override ISpEventMessage OnRuntimeTransitionRequest(ISpEventMessage msg) {
 
             switch (msg.EventId.ToEventType()) {
                 case MyEventType.Abort:
                     Log.Info("MySuperState", "OnRuntimeTransitionRequest", " *** Got abort and returning Stop");
 
                     // get the GUID
-                    ISpMessage myMsg = new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop);
+                    ISpEventMessage myMsg = new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop);
                     myMsg.Uid = msg.Uid;
                     return myMsg;
                 default:
@@ -104,7 +104,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
                 //this.GetCurrentState().    
 
                 // get the GUID
-                ISpMessage myMsg = new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start);
+                ISpEventMessage myMsg = new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start);
 
                 // Try recursion - no will not work
                 //this.OnTick(myMsg);
@@ -162,11 +162,11 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        protected override ISpMessage GetDefaultReturnMsg(ISpMessage msg) {
+        protected override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
             return MySpTools.GetDefaultReturnMsg(msg);
         }
 
-        protected override ISpMessage GetReponseMsg(ISpMessage msg) {
+        protected override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
             // TODO - build a factory to get the right response message
 
             throw new NotImplementedException();

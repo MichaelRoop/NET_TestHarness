@@ -7,7 +7,7 @@ namespace SpStateMachine.Interfaces {
 
     public interface ISpStateMachine : IDisposable {
 
-        ISpMessage Tick(ISpMessage eventObject);
+        ISpEventMessage Tick(ISpEventMessage eventObject);
 
     }
 }

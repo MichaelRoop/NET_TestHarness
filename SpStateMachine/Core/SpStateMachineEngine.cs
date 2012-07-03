@@ -27,7 +27,7 @@ namespace SpStateMachine.Core {
 
         Action wakeUpAction = null;
 
-        Action<ISpMessage> msgReceivedAction = null;
+        Action<ISpEventMessage> msgReceivedAction = null;
 
         private bool terminateThread = false;
 
@@ -63,7 +63,7 @@ namespace SpStateMachine.Core {
 
             WrapErr.ToErrorReportException(50055, () => {
                 this.wakeUpAction = new Action(timer_OnWakeup);
-                this.msgReceivedAction = new Action<ISpMessage>(this.eventListner_MsgReceived);
+                this.msgReceivedAction = new Action<ISpEventMessage>(this.eventListner_MsgReceived);
 
                 this.msgListner = msgListner;
                 this.msgStore = msgStore;
@@ -147,7 +147,7 @@ namespace SpStateMachine.Core {
         /// Event from the event listner gets stuffed in the store
         /// </summary>
         /// <param name="eventObject"></param>
-        void eventListner_MsgReceived(ISpMessage eventObject) {
+        void eventListner_MsgReceived(ISpEventMessage eventObject) {
             this.msgStore.Add(eventObject);
             this.eventBehavior.EventReceived(BehaviorResponseEventType.MsgArrived);
         }

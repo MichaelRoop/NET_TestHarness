@@ -6,7 +6,9 @@ using SpStateMachine.Interfaces;
 namespace SpStateMachine.Messages {
 
     /// <summary>
-    /// Serializable base class for the SpStateMachine messages and responses
+    /// Serializable base class for the SpStateMachine messages and responses. This
+    /// is WCF friendly and can be extended for WCF provided any extra data elements
+    /// are also defined as [DataMember] and registered as part of the contract.
     /// </summary>
     /// <remarks>
     /// Users can use the BaseMsg and BaseResponse directly and use enums with
@@ -14,7 +16,7 @@ namespace SpStateMachine.Messages {
     /// </remarks>
     /// <author>Michael Roop</author>
     [DataContract]
-    public class SpBaseMsg : ISpMessage {
+    public class SpBaseEventMsg : ISpEventMessage {
 
         #region Data
 
@@ -124,7 +126,7 @@ namespace SpStateMachine.Messages {
         /// <summary>
         /// Default constructor in private scope to prevent usage
         /// </summary>
-        private SpBaseMsg() {
+        private SpBaseEventMsg() {
         }
 
         /// <summary>
@@ -133,7 +135,7 @@ namespace SpStateMachine.Messages {
         /// <param name="typeId">The type id to cast to derived for payload retrieval</param>
         /// <param name="eventId">The event identifier</param>
         /// <param name="priority">The priority of the message</param>
-        public SpBaseMsg(int typeId, int eventId, SpEventPriority priority) {
+        public SpBaseEventMsg(int typeId, int eventId, SpEventPriority priority) {
             this.typeId = typeId;
             this.eventId = eventId;
             this.priority = priority;
@@ -145,7 +147,7 @@ namespace SpStateMachine.Messages {
         /// </summary>
         /// <param name="typeId">The type id to cast to derived for payload retrieval</param>
         /// <param name="eventId">The event identifier</param>
-        public SpBaseMsg(int typeId, int eventId)
+        public SpBaseEventMsg(int typeId, int eventId)
             : this(typeId, eventId, SpEventPriority.Normal) {
         }
 

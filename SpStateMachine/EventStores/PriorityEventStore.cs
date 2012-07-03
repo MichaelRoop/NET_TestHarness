@@ -18,16 +18,16 @@ namespace SpStateMachine.EventStores {
         #region Data
 
         /// <summary>Low Priority Event queue</summary>
-        private Queue<ISpMessage> lowPriorityQueue = new Queue<ISpMessage>();
+        private Queue<ISpEventMessage> lowPriorityQueue = new Queue<ISpEventMessage>();
 
         /// <summary>Normal Priority Event queue</summary>
-        private Queue<ISpMessage> NormalPriorityQueue = new Queue<ISpMessage>();
+        private Queue<ISpEventMessage> NormalPriorityQueue = new Queue<ISpEventMessage>();
 
         /// <summary>Hight Priority Event queue</summary>
-        private Queue<ISpMessage> HighPriorityQueue = new Queue<ISpMessage>();
+        private Queue<ISpEventMessage> HighPriorityQueue = new Queue<ISpEventMessage>();
 
         /// <summary>Urgent Priority Event queue</summary>
-        private Queue<ISpMessage> UrgentPriorityQueue = new Queue<ISpMessage>();
+        private Queue<ISpEventMessage> UrgentPriorityQueue = new Queue<ISpEventMessage>();
         
         #endregion
         
@@ -39,7 +39,7 @@ namespace SpStateMachine.EventStores {
         /// <param name="defaultTick">
         /// The default tick event if to provide if there are no queued event objects
         /// </param>
-        public PriorityEventStore(ISpMessage defaultTick)
+        public PriorityEventStore(ISpEventMessage defaultTick)
             : base(defaultTick) {
         }
         
@@ -51,7 +51,7 @@ namespace SpStateMachine.EventStores {
         /// Get an event from the highest level queue descending
         /// </summary>
         /// <returns>The next event or null if none found</returns>
-        protected override ISpMessage GetEvent() {
+        protected override ISpEventMessage GetEvent() {
             if (this.UrgentPriorityQueue.Count > 0) {
                 return this.UrgentPriorityQueue.Dequeue();
             }
@@ -72,7 +72,7 @@ namespace SpStateMachine.EventStores {
         /// Add an event to the proper priority queue
         /// </summary>
         /// <param name="msg">The msg to add</param>
-        protected override void AddEvent(ISpMessage msg) {
+        protected override void AddEvent(ISpEventMessage msg) {
             switch (msg.Priority) {
                 case SpEventPriority.Low:
                     this.lowPriorityQueue.Enqueue(msg);

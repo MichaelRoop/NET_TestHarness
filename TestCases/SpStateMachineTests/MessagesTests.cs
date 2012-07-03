@@ -36,8 +36,8 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _0_SpBaseResponseCopyOverGuid() {
             TestHelpers.CatchUnexpected(() => {
-                ISpMessage msg = new SpBaseMsg(25, 100);
-                ISpMessage response = new SpBaseResponse(33, msg);
+                ISpEventMessage msg = new SpBaseEventMsg(25, 100);
+                ISpEventMessage response = new SpBaseEventResponse(33, msg);
                 Assert.AreEqual(msg.Uid, response.Uid, "Guid mismatch between message and response");
 
             });

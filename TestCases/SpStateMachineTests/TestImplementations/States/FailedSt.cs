@@ -15,12 +15,12 @@ namespace TestCases.SpStateMachineTests.TestImplementations.States {
             : base(parent, MyStateID.Idle, dataClass) {
         }
 
-        protected override ISpMessage ExecOnEntry(ISpMessage msg) {
+        protected override ISpEventMessage ExecOnEntry(ISpEventMessage msg) {
             Log.Info(this.className, "ExecOnEntry", "");
             return base.ExecOnEntry(msg);
         }
 
-        protected override ISpMessage ExecOnTick(ISpMessage msg) {
+        protected override ISpEventMessage ExecOnTick(ISpEventMessage msg) {
             Log.Info(this.className, "ExecOnTick", "");
             return base.ExecOnEntry(msg);
         }

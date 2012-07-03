@@ -7,10 +7,14 @@ using SpStateMachine.Interfaces;
 namespace SpStateMachine.Messages {
 
     /// <summary>
-    /// Base class of a message response using values from the same message
+    /// Base class of a message response using values from an ISpEventMessage. 
+    /// The most important it the GUID which can then be used to correlate responses
+    /// to their parent message. This is WCF friendly and can be extended for WCF 
+    /// provided any extra data elements are also defined as [DataMember] and 
+    /// registered as part of the contract.
     /// </summary>
     /// <author>Michael Roop</author>
-    public class SpBaseResponse : SpBaseMsg {
+    public class SpBaseEventResponse : SpBaseEventMsg {
 
         /// <summary>
         /// Constructor
@@ -21,7 +25,7 @@ namespace SpStateMachine.Messages {
         /// <param name="msg">The message that this is responding to</param>
         /// <param name="returnCode">The operation return code</param>
         /// <param name="returnStatus">Additional information on the operation status</param>
-        public SpBaseResponse(int typeId, ISpMessage msg, int returnCode, string returnStatus)
+        public SpBaseEventResponse(int typeId, ISpEventMessage msg, int returnCode, string returnStatus)
             : base(typeId, msg.EventId) {
                 // Transfer the message guid to the response for correlation
                 this.Uid = msg.Uid;
@@ -38,7 +42,7 @@ namespace SpStateMachine.Messages {
         /// The type identifier in case you need to cast to a derived type to retrieve a payload
         /// </param>
         /// <param name="msg">The message that this is responding to</param>
-        public SpBaseResponse(int typeId, ISpMessage msg)
+        public SpBaseEventResponse(int typeId, ISpEventMessage msg)
             : this(typeId, msg, 0, "") {
         }
 

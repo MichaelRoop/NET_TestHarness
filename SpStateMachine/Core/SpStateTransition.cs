@@ -14,7 +14,7 @@ namespace SpStateMachine.Core {
 
         ISpState nextState = null;
 
-        ISpMessage returnMsg = null;
+        ISpEventMessage returnMsg = null;
 
         #endregion
 
@@ -49,7 +49,7 @@ namespace SpStateMachine.Core {
         /// <summary>
         /// The response message to return to caller
         /// </summary>
-        public ISpMessage ReturnMessage {
+        public ISpEventMessage ReturnMessage {
             get {
                 return this.returnMsg;
             }
@@ -94,7 +94,7 @@ namespace SpStateMachine.Core {
         /// <param name="type">The transition type</param>
         /// <param name="nextState">The next state for next state transitions</param>
         /// <param name="returnMsg">The repsponse to return to the caller</param>
-        public SpStateTransition(SpStateTransitionType type, ISpState nextState, ISpMessage returnMsg) {
+        public SpStateTransition(SpStateTransitionType type, ISpState nextState, ISpEventMessage returnMsg) {
             this.type = type;
             this.nextState = nextState;
             this.returnMsg = returnMsg;

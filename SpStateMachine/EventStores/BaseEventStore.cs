@@ -21,7 +21,7 @@ namespace SpStateMachine.EventStores {
         private object queueLock = new object();
 
         /// <summary>Used to hold the tick event when there are no queued event objects</summary>
-        private ISpMessage defaultTick = null;
+        private ISpEventMessage defaultTick = null;
 
         #endregion
 
@@ -40,7 +40,7 @@ namespace SpStateMachine.EventStores {
         /// <param name="defaultTick">
         /// The default tick event if to provide if there are no queued event objects
         /// </param>
-        public BaseEventStore(ISpMessage defaultTick) {
+        public BaseEventStore(ISpEventMessage defaultTick) {
             WrapErr.ChkParam(defaultTick, "defaultTick", 50110);
             this.defaultTick = defaultTick;
         }
@@ -61,7 +61,7 @@ namespace SpStateMachine.EventStores {
         /// Add and event object to the store
         /// </summary>
         /// <param name="msg">The message event</param>
-        public void Add(ISpMessage msg) {
+        public void Add(ISpEventMessage msg) {
             WrapErr.ChkDisposed(this.disposed, 50111);
             WrapErr.ChkParam(msg, "msg", 50112);
             lock (this.queueLock) {
@@ -74,11 +74,11 @@ namespace SpStateMachine.EventStores {
         /// Pop the next event object from the store
         /// </summary>
         /// <returns>The T object</returns>
-        public ISpMessage Get() {
+        public ISpEventMessage Get() {
             WrapErr.ChkDisposed(this.disposed, 50113);
             // Make stack variable and only lock the queue for the duration of the copy to
             // free it up for other threads to add events
-            ISpMessage eventCopy = null;
+            ISpEventMessage eventCopy = null;
             lock (this.queueLock) {
                 eventCopy = this.GetEvent();
             }
@@ -138,14 +138,14 @@ namespace SpStateMachine.EventStores {
         /// Get an event from the store child implementation
         /// </summary>
         /// <returns>The next event or null if none found</returns>
-        protected abstract ISpMessage GetEvent();
+        protected abstract ISpEventMessage GetEvent();
 
 
         /// <summary>
         /// Add an event to the child implementation
         /// </summary>
         /// <param name="eventObject">The event object to add</param>
-        protected abstract void AddEvent(ISpMessage eventObject);
+        protected abstract void AddEvent(ISpEventMessage eventObject);
 
         #endregion
 

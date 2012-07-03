@@ -49,7 +49,7 @@ namespace SpStateMachine.Interfaces {
         /// </summary>
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
-        ISpStateTransition OnEntry(ISpMessage msg);
+        ISpStateTransition OnEntry(ISpEventMessage msg);
 
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace SpStateMachine.Interfaces {
         /// </summary>
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
-        ISpStateTransition OnTick(ISpMessage msg);
+        ISpStateTransition OnTick(ISpEventMessage msg);
 
 
         /// <summary>

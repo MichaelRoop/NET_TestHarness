@@ -64,7 +64,7 @@ namespace SpStateMachine.Core {
 
         #region SpStateMachine
 
-        public ISpMessage Tick(ISpMessage msg) {
+        public ISpEventMessage Tick(ISpEventMessage msg) {
             WrapErr.ChkDisposed(this.disposed, 50176);
             WrapErr.ChkParam(msg, "msg", 50172);
 

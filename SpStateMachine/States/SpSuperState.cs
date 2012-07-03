@@ -103,7 +103,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg">The incoming message with event</param>
         /// <returns>The return transition object with result information</returns>
-        public override ISpStateTransition OnEntry(ISpMessage msg) {
+        public override ISpStateTransition OnEntry(ISpEventMessage msg) {
             Log.Info(this.className, "OnEntry", this.FullName);
             WrapErr.ChkVar(this.entryState, 9999, "The 'SentEntryState() Must be Called in the Constructor");
 
@@ -126,7 +126,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg">The incoming message with event</param>
         /// <returns>The return transition object with result information</returns>
-        public override ISpStateTransition OnTick(ISpMessage msg) {
+        public override ISpStateTransition OnTick(ISpEventMessage msg) {
             Log.Info(this.className, "OnTick", this.FullName);
             WrapErr.ChkVar(this.entryState, 9999, "The 'SentEntryState() Must be Called in the Constructor");
             WrapErr.ChkVar(this.currentState, 9999, "Current state is not set");
@@ -157,7 +157,7 @@ namespace SpStateMachine.States {
         /// <param name="stateFunc">The current substate method to execute</param>
         /// <param name="msg">The incoming event message received</param>
         /// <returns>A Transtion object with the results of the state processing</returns>
-        ISpStateTransition GetTransition(Func<ISpMessage, ISpStateTransition> stateFunc, ISpMessage msg) {
+        ISpStateTransition GetTransition(Func<ISpEventMessage, ISpStateTransition> stateFunc, ISpEventMessage msg) {
             return this.ReadTransitionType(stateFunc.Invoke(msg), msg, false);
         }
 
@@ -173,7 +173,7 @@ namespace SpStateMachine.States {
         ///  prevents infinite recursion.
         /// </param>
         /// <returns>A Transtion object with the results of the state processing</returns>
-        ISpStateTransition ReadTransitionType(ISpStateTransition tr, ISpMessage msg, bool superStateLevelEvent) {
+        ISpStateTransition ReadTransitionType(ISpStateTransition tr, ISpEventMessage msg, bool superStateLevelEvent) {
             WrapErr.ChkVar(tr, 9999, "The transition is null");
             switch (tr.TransitionType) {
                 case SpStateTransitionType.SameState:
@@ -197,7 +197,7 @@ namespace SpStateMachine.States {
         /// <param name="tr"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        private ISpStateTransition HandleNextStateTransitionType(ISpStateTransition tr, ISpMessage msg) {
+        private ISpStateTransition HandleNextStateTransitionType(ISpStateTransition tr, ISpEventMessage msg) {
             WrapErr.ChkTrue(tr.TransitionType == SpStateTransitionType.NextState, 9999, 
                 () => { return String.Format("{0} is not NextState", tr.TransitionType);});
 
@@ -228,7 +228,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        private ISpStateTransition HandleExitStateTransitionType(ISpMessage msg) {
+        private ISpStateTransition HandleExitStateTransitionType(ISpEventMessage msg) {
 
             // TODO - this is really only another kind of defered. The difference is that the superstate does not
             // TODO     called at runtime to handle the event. Rather the event is passed to the super state's
@@ -262,7 +262,7 @@ namespace SpStateMachine.States {
         /// true if the Transition if from the super state, false if from the substate
         /// </param>
         /// <returns>The Transition</returns>
-        private ISpStateTransition HandleDeferedStateTransitionType(ISpStateTransition tr, ISpMessage msg, bool fromSuperState) {
+        private ISpStateTransition HandleDeferedStateTransitionType(ISpStateTransition tr, ISpEventMessage msg, bool fromSuperState) {
 
             // TODO - Determine if we allow this super state to return Defered to its owner as a result of its sub state Defered
             //WrapErr.ChkFalse(superStateLevelEvent, 9999, "Cannot map from Defered transition to another Defered Transition");
@@ -272,7 +272,7 @@ namespace SpStateMachine.States {
             }
 
             // Call super state override method that derived superstate will use to handle decision point and create a new message with event
-            ISpMessage deferedMsg = this.OnRuntimeTransitionRequest(msg);
+            ISpEventMessage deferedMsg = this.OnRuntimeTransitionRequest(msg);
 
             // Process the transition type from the super state level
             return this.ReadTransitionType(
@@ -285,7 +285,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        private ISpStateTransition GetSuperStateOnResultTransition(ISpMessage msg) {
+        private ISpStateTransition GetSuperStateOnResultTransition(ISpEventMessage msg) {
 
             // Check super state registered result transitions against Sub State event id
             ISpStateTransition tr = this.GetTransitionFromOnResultRegistrations(msg);
@@ -300,7 +300,7 @@ namespace SpStateMachine.States {
         }
 
 
-        private ISpStateTransition GetSuperStateOnEventTransition(ISpMessage msg) {
+        private ISpStateTransition GetSuperStateOnEventTransition(ISpEventMessage msg) {
             ISpStateTransition tr = this.GetTransitionFromOnEventRegistrations(msg);
             if (tr != null) {
                 // Get the appropriate related response message to add to transition
@@ -345,7 +345,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        protected virtual ISpMessage OnRuntimeTransitionRequest(ISpMessage msg) {
+        protected virtual ISpEventMessage OnRuntimeTransitionRequest(ISpEventMessage msg) {
             WrapErr.ChkTrue(false, 9999,
                 String.Format("Was not overrided"));
             return msg;

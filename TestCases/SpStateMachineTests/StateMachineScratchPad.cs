@@ -75,7 +75,7 @@ namespace TestCases.SpStateMachineTests {
                 ISpPeriodicTimer timer = new WinSimpleTimer(new TimeSpan(0, 0, 0, 0, 1000));
                 ISpEventListner listner = new SimpleEventListner();
 
-                listner.ResponseReceived += new Action<ISpMessage>((msg) => { });
+                listner.ResponseReceived += new Action<ISpEventMessage>((msg) => { });
 
 
 
@@ -228,7 +228,7 @@ namespace TestCases.SpStateMachineTests {
             //ISpEventListner listner = new SimpleEventListner();
             listner = new SimpleEventListner();
 
-            listner.ResponseReceived += new Action<ISpMessage>((msg) => { });
+            listner.ResponseReceived += new Action<ISpEventMessage>((msg) => { });
 
             // Simulates DI
             return new SpStateMachineEngine(listner, store, behavior, sm, timer);
