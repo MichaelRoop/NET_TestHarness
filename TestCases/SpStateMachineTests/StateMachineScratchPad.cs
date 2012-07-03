@@ -149,16 +149,45 @@ namespace TestCases.SpStateMachineTests {
                 ISpEventListner listner;
                 SpStateMachineEngine engine = this.GetEngine(out listner, dataClass, notStartedSs);
 
-                engine.Start();
-                Thread.Sleep(1300);
-                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
-                Thread.Sleep(1300);
-                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Abort));
-                Thread.Sleep(1500);
+                // TODO - current name at runtime
+                // TODO - set the current state on construction
 
+                //Console.WriteLine("** Current State ** '{0}' - Full Name '{1}'", notStartedSs.Name, notStartedSs.FullName);
+                engine.Start();
+
+                //Console.WriteLine("** Current State ** '{0}' - Full Name '{1}'", notStartedSs.Name, notStartedSs.FullName);
+                Thread.Sleep(600);
+                Assert.AreEqual("NotStarted.Idle", notStartedSs.FullName);
+                //Console.WriteLine("** Current State ** '{0}' - Full Name '{1}'", notStartedSs.Name, notStartedSs.FullName);
+                //Thread.Sleep(700);
+
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
+                Thread.Sleep(700);
+                Assert.AreEqual("NotStarted.Active", notStartedSs.FullName);
+                //Console.WriteLine("** Current State ** '{0}' - Full Name '{1}'", notStartedSs.Name, notStartedSs.FullName);
+
+
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Abort));
+                Thread.Sleep(700);
+                Assert.AreEqual("NotStarted.Idle", notStartedSs.FullName);
+                //Console.WriteLine("** Current State ** '{0}' - Full Name '{1}'", notStartedSs.Name, notStartedSs.FullName);
+
+                Thread.Sleep(200);
                 engine.Stop();
                 engine.Dispose();
                 Console.WriteLine("Engine Disposed");
+
+
+
+                //Thread.Sleep(1300);
+                //listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
+                //Thread.Sleep(1300);
+                //listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Abort));
+                //Thread.Sleep(1500);
+
+                //engine.Stop();
+                //engine.Dispose();
+                //Console.WriteLine("Engine Disposed");
             });
         }
 

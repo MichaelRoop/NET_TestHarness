@@ -69,8 +69,6 @@
   <Error code="50151" class="PriorityEventStore" method="" message="" />
   <!-- reserve to 50169 -->
 
-
-
   <!-- SpStateMachine.SpStateMachine -->
   <Error code="50170" class="SpStateMachine" method="SpStateMachine" message="Null wrappedObject Argument" />
   <Error code="50171" class="SpStateMachine" method="SpStateMachine" message="Null state Argument" />
@@ -84,10 +82,33 @@
   <Error code="50179" class="SpStateMachine" method="" message="" />
   <!-- reserve to 50199 -->
 
+  <!-- SpStateMachine.SpState -->
+  <Error code="50200" class="SpState" method="SpState" message="Null Wrapped Object Argument" />
+  <Error code="50201" class="SpState" method="OnEntry" message="OnEntry Cannot be Executed More Than Once" />
+  <Error code="50202" class="SpState" method="RegisterOnEventTransition" message="Transition Id already Registered" />
+  <Error code="50203" class="SpState" method="RegisterOnResultTransition" message="Transition Id already Registered" />
+  <Error code="50204" class="SpState" method="GetTransitionFromStore" message="Unexpected Error" />
+  <Error code="50205" class="SpState" method="InitStateIds" message="Null id Chain" />
+  <Error code="50206" class="SpState" method="" message="" />
+  <Error code="50207" class="SpState" method="" message="" />
+  <Error code="50208" class="SpState" method="" message="" />
+  <Error code="50209" class="SpState" method="" message="" />
+
+  <Error code="50210" class="SpState" method="" message="" />
+  <Error code="50211" class="SpState" method="" message="" />
+  <Error code="50212" class="SpState" method="" message="" />
+  <Error code="50213" class="SpState" method="" message="" />
+  <Error code="50214" class="SpState" method="" message="" />
+  <Error code="50215" class="SpState" method="" message="" />
+  <Error code="50216" class="SpState" method="" message="" />
+  <Error code="50217" class="SpState" method="" message="" />
+  <Error code="50218" class="SpState" method="" message="" />
+  <Error code="50219" class="SpState" method="" message="" />
 
 
 
   <Error code="" class="" method="" message="" />
+  
   <Error code="" class="" method="" message="" />
   <Error code="" class="" method="" message="" />
   <Error code="" class="" method="" message="" />

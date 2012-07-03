@@ -106,7 +106,7 @@ namespace SpStateMachine.States {
         /// From Get the fully resolved state name in format
         /// grandparent.parent.state
         /// </summary>
-        public string FullName {
+        public virtual string FullName {
             get {
                 return this.fullName;
             }
@@ -140,7 +140,7 @@ namespace SpStateMachine.States {
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
         public SpState(ISpState parent, int id, T wrappedObject) {
-            WrapErr.ChkParam(wrappedObject, "wrappedObject", 9999);
+            WrapErr.ChkParam(wrappedObject, "wrappedObject", 50200);
             this.InitStateIds(parent, id);
             this.wrappedObject = wrappedObject;
         }
@@ -157,7 +157,7 @@ namespace SpStateMachine.States {
         public virtual ISpStateTransition OnEntry(ISpMessage msg) {
             Log.Info(this.className, "ExecOnEntry", this.FullName);
 
-            WrapErr.ChkFalse(this.IsEntryExcecuted, 9999, "OnEntry Cannot be Executed More Than Once Until OnExit is Called");
+            WrapErr.ChkFalse(this.IsEntryExcecuted, 50201, "OnEntry Cannot be Executed More Than Once Until OnExit is Called");
             this.SetEntered(true);
             return this.GetTransitionInOrder(this.ExecOnEntry, msg);
         }
@@ -190,7 +190,7 @@ namespace SpStateMachine.States {
         /// <param name="eventId">The id of the incoming event</param>
         /// <param name="transition">The transition object</param>
         public virtual void RegisterOnEventTransition(int eventId, ISpStateTransition transition) {
-            WrapErr.ChkFalse(this.onEventTransitions.Keys.Contains(eventId), 9999, () => {
+            WrapErr.ChkFalse(this.onEventTransitions.Keys.Contains(eventId), 50202, () => {
                 return String.Format("OnEvent Already Contains Transition for Id:{0}", eventId);
             });
             this.onEventTransitions.Add(eventId, transition);
@@ -203,7 +203,7 @@ namespace SpStateMachine.States {
         /// <param name="eventId">The id of the event as the result of state processing</param>
         /// <param name="transition">The transition object</param>
         public virtual void RegisterOnResultTransition(int eventId, ISpStateTransition transition) {
-            WrapErr.ChkFalse(this.onResultTransitions.Keys.Contains(eventId), 9999, () => {
+            WrapErr.ChkFalse(this.onResultTransitions.Keys.Contains(eventId), 50203, () => {
                 return String.Format("OnResult Already Contains Transition for Id:{0}", eventId);
             });
             this.onResultTransitions.Add(eventId, transition);
@@ -297,10 +297,9 @@ namespace SpStateMachine.States {
             return id.ToString();
         }
         
-
         #endregion
 
-        #region abstract Properties and Methods
+        #region Abstract Properties and Methods
         
         /// <summary>
         /// Provides the default return msg
@@ -329,11 +328,11 @@ namespace SpStateMachine.States {
         }
 
 
-        protected ISpStateTransition GetOnEventTransition(ISpMessage msg) {
+        protected ISpStateTransition GetTransitionFromOnEventRegistrations(ISpMessage msg) {
             return this.GetTransitionFromStore(this.onEventTransitions, msg);
         }
 
-        protected ISpStateTransition GetOnResultTransition(ISpMessage msg) {
+        protected ISpStateTransition GetTransitionFromOnResultRegistrations(ISpMessage msg) {
             return this.GetTransitionFromStore(this.onResultTransitions, msg);
         }
 
@@ -355,7 +354,7 @@ namespace SpStateMachine.States {
         private ISpStateTransition GetTransitionInOrder(Func<ISpMessage, ISpMessage> stateFunc, ISpMessage msg) {
 
             // Query the OnEvent queue for a transition BEFORE calling state function
-            ISpStateTransition tr = this.GetOnEventTransition(msg);
+            ISpStateTransition tr = this.GetTransitionFromOnEventRegistrations(msg);
             if (tr != null) {
                 // Call to derived class to replace the incoming message with its paired return message
                 // The user can override the OnGetResponse on a state by state basis to stuff data in
@@ -366,7 +365,7 @@ namespace SpStateMachine.States {
 
             // TODO - clarify this - we use the event id after processing so the return message is already selected
             // Think that the derived should just send the same Msg or another msg back so that we can get the response msg from the same call as above
-            if ((tr = this.GetOnResultTransition(stateFunc.Invoke(msg))) != null) {
+            if ((tr = this.GetTransitionFromOnResultRegistrations(stateFunc.Invoke(msg))) != null) {
                 return tr;
             }
             return this.GetDefaultTransition(msg);
@@ -380,26 +379,35 @@ namespace SpStateMachine.States {
         /// <param name="msg">The message to insert in the transition object</param>
         /// <returns>The transition object from the store or null if not found</returns>
         private ISpStateTransition GetTransitionFromStore(Dictionary<int, ISpStateTransition> store, ISpMessage msg) {
-            return WrapErr.ToErrorReportException(9999, () => {
+            return WrapErr.ToErrorReportException(50204, () => {
                 if (store.Keys.Contains(msg.EventId)) {
                     Log.Debug("SpState", "GetTransition", String.Format("Found transition for event:{0}", this.ConvertEventIdToString(msg.EventId)));
 
-                    // Make a copy of the Transition object since its pointers get reset later
+                    // Clone Transition object from store since its pointers get reset later
                     ISpStateTransition tr = (ISpStateTransition)store[msg.EventId].Clone();
-
-                    Log.Debug("SpState", "GetTransition",
-                        String.Format(
-                            "Type:{0} From:{1} To:{2} MsgType:{3} MsgEventId:{4}",
-                            tr.TransitionType,
-                            this.FullName,
-                            tr.NextState == null ? "Null" : tr.NextState.FullName,
-                            this.ConvertMsgTypedToString(msg.TypeId),
-                            this.ConvertEventIdToString(msg.EventId)));
+                    this.LogTransition(tr, msg);
                     tr.ReturnMessage = msg;
                     return tr;
                 }
                 return null;
             });
+        }
+
+
+        /// <summary>
+        /// Factor out the reporting of state transitions for clarity
+        /// </summary>
+        /// <param name="tr"></param>
+        /// <param name="msg"></param>
+        private void LogTransition(ISpStateTransition tr, ISpMessage msg) {
+            Log.Debug("SpState", "LogTransition",
+                String.Format(
+                    "Transition Type:{0} From:{1} To:{2} On Msg:{3} Event:{4}",
+                    tr.TransitionType,
+                    this.FullName,
+                    tr.NextState == null ? "Unknown" : tr.NextState.FullName,
+                    this.ConvertMsgTypedToString(msg.TypeId),
+                    this.ConvertEventIdToString(msg.EventId)));
         }
 
 
@@ -411,7 +419,7 @@ namespace SpStateMachine.States {
         private void InitStateIds(ISpState parent, int id) {
             // Add any ancestor state ids to the chain
             if (parent != null) {
-                WrapErr.ChkVar(parent.IdChain, 9999, "The parent has a null id chain");
+                WrapErr.ChkVar(parent.IdChain, 50205, "The parent has a null id chain");
                 this.idChain.Clear();
                 parent.IdChain.ForEach((item) => this.idChain.Add(item));
             }

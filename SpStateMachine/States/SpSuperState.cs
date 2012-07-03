@@ -27,6 +27,26 @@ namespace SpStateMachine.States {
 
         #endregion
 
+        #region ISpState Properties
+
+        /// <summary>
+        /// From Get the fully resolved state name in format
+        /// grandparent.parent.state. The super state gets the information from its
+        /// current state rather than that current state will contain the proper
+        /// currently resolved state of the state machine
+        /// </summary>
+        public override string FullName {
+            get {
+                // TODO - need to thread protect access to current thread var
+                if (this.currentState != null) {
+                    return this.currentState.FullName;
+                }
+                return base.FullName;
+            }
+        }
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -64,11 +84,14 @@ namespace SpStateMachine.States {
 
         /// <summary>
         /// One of the substates must be listed as the start state of
-        /// this superstate
+        /// this superstate. It also becomes the current state for the first tick
         /// </summary>
         /// <param name="state"></param>
         public void SetEntryState(ISpState state) {
             this.entryState = state;
+
+            // Set the current state at the same time
+            this.currentState = this.entryState;
         }
 
         #endregion
@@ -77,13 +100,14 @@ namespace SpStateMachine.States {
 
         public override ISpStateTransition OnEntry(ISpMessage msg) {
             Log.Info(this.className, "OnEntry", this.FullName);
+            WrapErr.ChkVar(this.entryState, 9999, "The 'SentEntryState() Must be Called in the Constructor");
 
-            // Find if there are exit conditions on event if so exit immediately
+            // TODO - Find if there are exit conditions OnEntry at the SuperState level and excecute them first - might have to exit immediately
             // return transition
             this.SetEntered(true);
             this.currentState = this.entryState;
 
-            // Could also intercept this
+            // Could also intercept this also
             return this.currentState.OnEntry(msg);
         }
 
@@ -91,6 +115,7 @@ namespace SpStateMachine.States {
         public override ISpStateTransition OnTick(ISpMessage msg) {
             Log.Info(this.className, "OnTick", this.FullName);
 
+            WrapErr.ChkVar(this.entryState, 9999, "The 'SentEntryState() Must be Called in the Constructor");
             WrapErr.ChkVar(this.currentState, 9999, "Current state is not set");
 
             // Find if there are OnEvent transitions registered at the superstate level first
@@ -109,10 +134,48 @@ namespace SpStateMachine.States {
         }
 
         ISpStateTransition GetTransition(Func<ISpMessage, ISpStateTransition> stateFunc, ISpMessage msg) {
+            return this.ReadTransitionType(stateFunc.Invoke(msg), msg, false);
 
-            // Invoke the state method
-            ISpStateTransition tr = stateFunc.Invoke(msg);
-            WrapErr.ChkVar(tr, 9999, "The returned transition is null");
+
+            //// Invoke the state method
+            //ISpStateTransition tr = stateFunc.Invoke(msg);
+            //WrapErr.ChkVar(tr, 9999, "The returned transition is null");
+            //switch (tr.TransitionType) {
+            //    case SpStateTransitionType.SameState:
+            //        return tr;
+            //    case SpStateTransitionType.NextState:
+            //        return this.HandleNextState(tr, msg);
+            //    case SpStateTransitionType.ExitState:
+            //        return this.HandleExitState(msg);
+            //    case SpStateTransitionType.Defered:
+            //        // Call override method that child will use to handle decision point and create a new message with event
+            //        ISpMessage deferedMsg = this.OnRuntimeTransitionRequest(msg);
+
+            //        // Get the registered transition for the new event that the child pushed
+            //        ISpStateTransition deferedTr = this.GetTransitionFromOnResultRegistrations(deferedMsg);
+            //        WrapErr.ChkVar(deferedTr, 9999, "The defered msg id did not find a valid transition");
+
+            //        switch (deferedTr.TransitionType) {
+            //            case SpStateTransitionType.SameState:
+            //                return deferedTr;
+            //            case SpStateTransitionType.NextState:
+            //                // TODO - this will be a bit different as the transition that comes back should have the new message ??
+            //                return this.HandleNextState(deferedTr, deferedMsg);
+            //            case SpStateTransitionType.ExitState:
+            //                return this.HandleExitState(deferedMsg);
+            //            default:
+            //                WrapErr.ChkTrue(false, 9999, String.Format("Transition Type {0} not valid from Defered", deferedTr.TransitionType));
+            //                return deferedTr;
+            //        }
+            //    default:
+            //        WrapErr.ChkTrue(false, 9999, String.Format("Transition Type {0} not Handled", tr.TransitionType));
+            //        return tr;
+            //}
+        }
+
+
+        ISpStateTransition ReadTransitionType(ISpStateTransition tr, ISpMessage msg, bool superStateLevelEvent) {
+            WrapErr.ChkVar(tr, 9999, "The transition is null");
             switch (tr.TransitionType) {
                 case SpStateTransitionType.SameState:
                     return tr;
@@ -121,30 +184,24 @@ namespace SpStateMachine.States {
                 case SpStateTransitionType.ExitState:
                     return this.HandleExitState(msg);
                 case SpStateTransitionType.Defered:
+                    // Prevent endless recursion - TODO - I think that we can allow it to recurse here but just return immediately 
+                    // with the Transition object instead of throwing an exception
+                    WrapErr.ChkFalse(superStateLevelEvent, 9999, "Cannot map from Defered transition to another Defered Transition");
+                    
                     // Call override method that child will use to handle decision point and create a new message with event
                     ISpMessage deferedMsg = this.OnRuntimeTransitionRequest(msg);
 
                     // Get the registered transition for the new event that the child pushed
-                    ISpStateTransition deferedTr = this.GetOnResultTransition(deferedMsg);
+                    ISpStateTransition deferedTr = this.GetTransitionFromOnResultRegistrations(deferedMsg);
                     WrapErr.ChkVar(deferedTr, 9999, "The defered msg id did not find a valid transition");
 
-                    switch (deferedTr.TransitionType) {
-                        case SpStateTransitionType.SameState:
-                            return deferedTr;
-                        case SpStateTransitionType.NextState:
-                            // TODO - this will be a bit different as the transition that comes back should have the new message ??
-                            return this.HandleNextState(deferedTr, deferedMsg);
-                        case SpStateTransitionType.ExitState:
-                            return this.HandleExitState(deferedMsg);
-                        default:
-                            WrapErr.ChkTrue(false, 9999, String.Format("Transition Type {0} not valid from Defered", deferedTr.TransitionType));
-                            return deferedTr;
-                    }
+                    return this.ReadTransitionType(deferedTr, deferedMsg, true);
                 default:
                     WrapErr.ChkTrue(false, 9999, String.Format("Transition Type {0} not Handled", tr.TransitionType));
                     return tr;
             }
         }
+
 
 
         private ISpStateTransition HandleNextState(ISpStateTransition tr, ISpMessage msg) {
@@ -170,7 +227,7 @@ namespace SpStateMachine.States {
 
         private ISpStateTransition HandleExitState(ISpMessage msg) {
             // Check super state registered result transitions against Sub State event id
-            ISpStateTransition tr = this.GetOnResultTransition(msg);
+            ISpStateTransition tr = this.GetTransitionFromOnResultRegistrations(msg);
             WrapErr.ChkVar(tr, 9999, () => {
                 return String.Format(
                     "State {0} Specified Exit but SuperState {1} has no handlers for that event id:{2}", 
@@ -237,9 +294,10 @@ namespace SpStateMachine.States {
             return this.currentState;
         }
 
+        // TODO - NOW REDUNDANT.  MOVE CODE TO WHERE USED ?
 
         private ISpStateTransition GetSuperStateOnEventTransition(ISpMessage msg) {
-            ISpStateTransition tr = this.GetOnEventTransition(msg);
+            ISpStateTransition tr = this.GetTransitionFromOnEventRegistrations(msg);
             if (tr != null) {
                 // Get the appropriate related response message to add to transition
                 tr.ReturnMessage = this.OnGetResponseMsg(msg);
