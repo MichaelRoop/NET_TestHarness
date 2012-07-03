@@ -129,7 +129,7 @@ namespace TestCases.SpStateMachineTests {
                 SpStateMachineEngine engine = this.GetEngine(out listner, dataClass, notStartedSs);
 
                 engine.Start();
-                Thread.Sleep(6000);
+                Thread.Sleep(2000);
 
                 engine.Stop();
                 engine.Dispose();
@@ -138,7 +138,7 @@ namespace TestCases.SpStateMachineTests {
         }
 
 
-        [Test, Explicit]
+        [Test]
         public void TestDeferedTransitionsInSuperState() {
 
             TestHelpers.CatchUnexpected(() => {
@@ -149,50 +149,27 @@ namespace TestCases.SpStateMachineTests {
                 ISpEventListner listner;
                 SpStateMachineEngine engine = this.GetEngine(out listner, dataClass, notStartedSs);
 
-                // TODO - current name at runtime
-                // TODO - set the current state on construction
-
-                //Console.WriteLine("** Current State ** '{0}' - Full Name '{1}'", notStartedSs.Name, notStartedSs.FullName);
                 engine.Start();
-
-                //Console.WriteLine("** Current State ** '{0}' - Full Name '{1}'", notStartedSs.Name, notStartedSs.FullName);
                 Thread.Sleep(600);
                 Assert.AreEqual("NotStarted.Idle", notStartedSs.FullName);
-                //Console.WriteLine("** Current State ** '{0}' - Full Name '{1}'", notStartedSs.Name, notStartedSs.FullName);
-                //Thread.Sleep(700);
 
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
                 Thread.Sleep(700);
                 Assert.AreEqual("NotStarted.Active", notStartedSs.FullName);
-                //Console.WriteLine("** Current State ** '{0}' - Full Name '{1}'", notStartedSs.Name, notStartedSs.FullName);
-
 
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Abort));
                 Thread.Sleep(700);
                 Assert.AreEqual("NotStarted.Idle", notStartedSs.FullName);
-                //Console.WriteLine("** Current State ** '{0}' - Full Name '{1}'", notStartedSs.Name, notStartedSs.FullName);
 
                 Thread.Sleep(200);
                 engine.Stop();
                 engine.Dispose();
                 Console.WriteLine("Engine Disposed");
-
-
-
-                //Thread.Sleep(1300);
-                //listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
-                //Thread.Sleep(1300);
-                //listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Abort));
-                //Thread.Sleep(1500);
-
-                //engine.Stop();
-                //engine.Dispose();
-                //Console.WriteLine("Engine Disposed");
             });
         }
 
 
-        [Test, Explicit]
+        [Test]
         public void TestExitStateTransitionsInSuperState() {
 
             TestHelpers.CatchUnexpected(() => {
@@ -209,19 +186,28 @@ namespace TestCases.SpStateMachineTests {
 
                 // Just move the inner states around
                 Thread.Sleep(600);
+                Assert.AreEqual("Main.NotStarted.Idle", mainSs.FullName);
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
                 Thread.Sleep(600);
+                Assert.AreEqual("Main.NotStarted.Active", mainSs.FullName);
+
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
                 Thread.Sleep(600);
+                Assert.AreEqual("Main.NotStarted.Idle", mainSs.FullName);
+                
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
                 Thread.Sleep(600);
+                Assert.AreEqual("Main.NotStarted.Active", mainSs.FullName);
+
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
                 Thread.Sleep(800);
+                Assert.AreEqual("Main.NotStarted.Idle", mainSs.FullName);
 
                 // Should be back to Main.NotStarted.Idle by now - it has a ExitState transition registered to that state
                 Console.WriteLine("Sending the Abort event to provoke a ExitState transition");
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Abort));
                 Thread.Sleep(800);
+                Assert.AreEqual("Main.Recovery.Idle", mainSs.FullName);
 
 
                 engine.Stop();
