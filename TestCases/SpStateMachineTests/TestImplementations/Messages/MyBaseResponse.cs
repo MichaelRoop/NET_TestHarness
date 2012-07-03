@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SpStateMachine.Core;
 using SpStateMachine.Messages;
+using SpStateMachine.Interfaces;
 
 namespace TestCases.SpStateMachineTests.TestImplementations.Messages {
 
@@ -23,7 +24,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.Messages {
         /// </param>
         /// <param name="code">The return code</param>
         /// <param name="status">The return string</param>
-        public MyBaseResponse(MyMsgType msgType, MyBaseMsg msg, MyReturnCode code, string status)
+        public MyBaseResponse(MyMsgType msgType, ISpEventMessage msg, MyReturnCode code, string status)
             : base(msgType.Int(), msg, code.Int(), status) {
         }
 

@@ -159,7 +159,9 @@ namespace SpStateMachine.States {
 
             WrapErr.ChkFalse(this.IsEntryExcecuted, 50201, "OnEntry Cannot be Executed More Than Once Until OnExit is Called");
             this.SetEntered(true);
-            return this.GetTransitionInOrder(this.ExecOnEntry, msg);
+            return WrapErr.ToErrorReportException(9999, () => {
+                return this.GetTransitionInOrder(this.ExecOnEntry, msg);
+            });
         }
 
 
@@ -170,7 +172,9 @@ namespace SpStateMachine.States {
         /// <returns>A state transition object</returns>
         public virtual ISpStateTransition OnTick(ISpEventMessage msg) {
             //Log.Info(this.className, "ExecOnTick", this.FullName);
-            return this.GetTransitionInOrder(this.ExecOnTick, msg);
+            return WrapErr.ToErrorReportException(9999, () => {
+                return this.GetTransitionInOrder(this.ExecOnTick, msg);
+            });
         }
 
 
@@ -180,7 +184,9 @@ namespace SpStateMachine.States {
         public void OnExit() {
             Log.Info(this.className, "ExecOnExit", this.FullName);
             this.SetEntered(false);
-            this.ExecOnExit();
+            WrapErr.ToErrorReportException(9999, () => {
+                this.ExecOnExit();
+            });
         }
 
 
@@ -215,23 +221,23 @@ namespace SpStateMachine.States {
 
         /// <summary>
         /// Virtual method invoked on entry. If not overriden it will return 
-        /// the default return object
+        /// the default return event message
         /// </summary>
-        /// <param name="msg">The incoming message</param>
+        /// <param name="eventMsg">The incoming message</param>
         /// <returns>A transition object</returns>
-        protected virtual ISpEventMessage ExecOnEntry(ISpEventMessage msg) {
-            return GetDefaultReturnMsg(msg);
+        protected virtual ISpEventMessage ExecOnEntry(ISpEventMessage eventMsg) {
+            return GetDefaultReturnMsg(eventMsg);
         }
 
 
         /// <summary>
         /// Virtual method invoked on every tick after. If not overriden it 
-        /// will return the default return object
+        /// will return the default return event message
         /// </summary>
-        /// <param name="msg">The incoming message</param>
+        /// <param name="eventMsg">The incoming message</param>
         /// <returns>A transition object</returns>
-        protected virtual ISpEventMessage ExecOnTick(ISpEventMessage msg) {
-            return GetDefaultReturnMsg(msg);
+        protected virtual ISpEventMessage ExecOnTick(ISpEventMessage eventMsg) {
+            return GetDefaultReturnMsg(eventMsg);
         }
 
 
@@ -246,20 +252,10 @@ namespace SpStateMachine.States {
         /// Returns a default transition object set to no transition, no next 
         /// state and the default return message
         /// </summary>
-        /// <param name="msg">The incoming message</param>
+        /// <param name="eventMsg">The incoming message</param>
         /// <returns>The default transition with no transition set</returns>
-        protected virtual ISpStateTransition GetDefaultTransition(ISpEventMessage msg) {
-            return new SpStateTransition(SpStateTransitionType.SameState, null, this.GetDefaultReturnMsg(msg));
-        }
-
-
-        /// <summary>
-        /// The user can override this method on a state by state basis to stuff
-        /// data into the return msg class if necessary. By default it is a pass through
-        /// </summary>
-        /// <param name="msg">The return message from the derived class</param>
-        protected virtual ISpEventMessage OnGetResponseMsg(ISpEventMessage msg) {
-            return msg;
+        protected virtual ISpStateTransition GetDefaultTransition(ISpEventMessage eventMsg) {
+            return new SpStateTransition(SpStateTransitionType.SameState, null, this.GetDefaultReturnMsg(eventMsg));
         }
 
 
@@ -328,15 +324,97 @@ namespace SpStateMachine.States {
         }
 
 
-        protected ISpStateTransition GetTransitionFromOnEventRegistrations(ISpEventMessage msg) {
-            return this.GetTransitionFromStore(this.onEventTransitions, msg);
+        /// <summary>
+        /// Wrapper to retrieve OnEvent Transition Object
+        /// </summary>
+        /// <param name="eventMsg">The incomming event message</param>
+        /// <returns>The transition if present, otherwise null</returns>
+        protected ISpStateTransition GetTransitionFromOnEventRegistrations(ISpEventMessage eventMsg) {
+            return this.GetTransitionFromStore(this.onEventTransitions, eventMsg);
         }
 
-        protected ISpStateTransition GetTransitionFromOnResultRegistrations(ISpEventMessage msg) {
-            return this.GetTransitionFromStore(this.onResultTransitions, msg);
+
+        /// <summary>
+        /// Wrapper to retrieve OnResult Transition Object
+        /// </summary>
+        /// <param name="eventMsg">The incomming event message</param>
+        /// <returns>The transition if present, otherwise null</returns>
+        protected ISpStateTransition GetTransitionFromOnResultRegistrations(ISpEventMessage eventMsg) {
+            return this.GetTransitionFromStore(this.onResultTransitions, eventMsg);
+        }
+        
+
+        /// <summary>
+        /// Wraps the call to GetResponseMsg with some error handling
+        /// </summary>
+        /// <param name="eventMsg">The return message from the derived class</param>
+        protected ISpEventMessage OnGetResponseMsg(ISpEventMessage eventMsg) {
+            WrapErr.ChkParam(eventMsg, "eventMsg", 9999);
+            ISpEventMessage ret = this.GetReponseMsg(eventMsg);
+            WrapErr.ChkVar(ret, 9999, "The call to overriden 'GetReponseMsg' returned a null event message");
+            return ret;
         }
 
 
+        #region Int to String Converter wrappers
+
+        /// <summary>
+        /// Wraps the virtual ConvertMsgTypedToString call in error checking
+        /// </summary>
+        /// <param name="eventMsg">The event message holding the type id</param>
+        /// <returns>A string representing the Message Type Id</returns>
+        protected string MsgTypeString(ISpEventMessage eventMsg) {
+            WrapErr.ChkParam(eventMsg, "msg", 9999);
+            return WrapErr.ToErrorReportException(9999, "Overriden ConvertMsgTypedToString failed", () => {
+                return this.ConvertMsgTypedToString(eventMsg.TypeId);
+            });
+        }
+
+
+        /// <summary>
+        /// Wraps the virtual ConvertEventIdToString call in error checking
+        /// </summary>
+        /// <param name="eventMsg">The event message holding the event id</param>
+        /// <returns>A string representing the Event Id</returns>
+        protected string EventIdString(ISpEventMessage eventMsg) {
+            WrapErr.ChkParam(eventMsg, "msg", 9999);
+            return WrapErr.ToErrorReportException(9999, "Overriden ConvertEventIdToString failed", () => {
+                return this.ConvertEventIdToString(eventMsg.EventId);
+            });
+        }
+
+        
+        /// <summary>
+        /// Wraps the virtual ConvertStateIdToString call in error checking
+        /// </summary>
+        /// <param name="id">The int state id</param>
+        /// <returns>A string representing the State Id</returns>
+        protected string StateIdString(int id) {
+            return WrapErr.ToErrorReportException(9999, "Overriden ConvertStateIdToString failed", () => {
+                return this.ConvertStateIdToString(id);
+            });
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Factor out the reporting of state transitions for clarity
+        /// </summary>
+        /// <param name="tr">The transition object</param>
+        /// <param name="eventMsg">The event message which pushed this transition</param>
+        protected void LogTransition(ISpStateTransition tr, ISpEventMessage eventMsg) {
+            WrapErr.ToErrorReportException(9999, () => {
+                Log.Debug("SpState", "LogTransition",
+                    String.Format(
+                        "Transition Type:{0} From:{1} To:{2} On Msg:{3} Event:{4}",
+                        tr.TransitionType,
+                        this.FullName,
+                        tr.NextState == null ? "Unknown" : tr.NextState.FullName,
+                        this.MsgTypeString(eventMsg),
+                        this.EventIdString(eventMsg)));
+            });
+        }
+        
         #endregion
 
         #region Private Methods
@@ -349,26 +427,25 @@ namespace SpStateMachine.States {
         /// The function that is invoked that will return return message from the state processing
         /// and use it to check against the onResult queue.
         /// </param>
-        /// <param name="msg">The incoming message to validate against the onEvent list</param>
+        /// <param name="eventMsg">The incoming message to validate against the onEvent list</param>
         /// <returns>The OnEvent, OnResult or default transition</returns>
-        private ISpStateTransition GetTransitionInOrder(Func<ISpEventMessage, ISpEventMessage> stateFunc, ISpEventMessage msg) {
+        private ISpStateTransition GetTransitionInOrder(Func<ISpEventMessage, ISpEventMessage> stateFunc, ISpEventMessage eventMsg) {
+            return WrapErr.ToErrorReportException(9999, () => {
+                // Query the OnEvent queue for a transition BEFORE calling state function (OnEntry, OnTick)
+                ISpStateTransition tr = this.GetTransitionFromOnEventRegistrations(eventMsg);
+                if (tr != null) {
+                    // Call to derived class to get the return message related to the incoming message
+                    tr.ReturnMessage = this.OnGetResponseMsg(this.GetReponseMsg(eventMsg));
+                    return tr;
+                }
 
-            // Query the OnEvent queue for a transition BEFORE calling state function
-            ISpStateTransition tr = this.GetTransitionFromOnEventRegistrations(msg);
-            if (tr != null) {
-                // Call to derived class to replace the incoming message with its paired return message
-                // The user can override the OnGetResponse on a state by state basis to stuff data in
-                // particular return message types
-                tr.ReturnMessage = this.OnGetResponseMsg(this.GetReponseMsg(msg));
-                return tr;
-            }
-
-            // TODO - clarify this - we use the event id after processing so the return message is already selected
-            // Think that the derived should just send the same Msg or another msg back so that we can get the response msg from the same call as above
-            if ((tr = this.GetTransitionFromOnResultRegistrations(stateFunc.Invoke(msg))) != null) {
-                return tr;
-            }
-            return this.GetDefaultTransition(msg);
+                // TODO - clarify this - we use the event id after processing so the return message is already selected
+                // Think that the derived should just send the same Msg or another msg back so that we can get the response msg from the same call as above
+                if ((tr = this.GetTransitionFromOnResultRegistrations(stateFunc.Invoke(eventMsg))) != null) {
+                    return tr;
+                }
+                return this.GetDefaultTransition(eventMsg);
+            });
         }
 
 
@@ -376,38 +453,21 @@ namespace SpStateMachine.States {
         /// Get the transition object from the store or null if not found
         /// </summary>
         /// <param name="store">The store to search</param>
-        /// <param name="msg">The message to insert in the transition object</param>
+        /// <param name="eventMsg">The message to insert in the transition object</param>
         /// <returns>The transition object from the store or null if not found</returns>
-        private ISpStateTransition GetTransitionFromStore(Dictionary<int, ISpStateTransition> store, ISpEventMessage msg) {
+        private ISpStateTransition GetTransitionFromStore(Dictionary<int, ISpStateTransition> store, ISpEventMessage eventMsg) {
             return WrapErr.ToErrorReportException(50204, () => {
-                if (store.Keys.Contains(msg.EventId)) {
-                    Log.Debug("SpState", "GetTransition", String.Format("Found transition for event:{0}", this.ConvertEventIdToString(msg.EventId)));
+                if (store.Keys.Contains(eventMsg.EventId)) {
+                    Log.Debug("SpState", "GetTransition", String.Format("Found transition for event:{0}", this.ConvertEventIdToString(eventMsg.EventId)));
 
                     // Clone Transition object from store since its pointers get reset later
-                    ISpStateTransition tr = (ISpStateTransition)store[msg.EventId].Clone();
-                    this.LogTransition(tr, msg);
-                    tr.ReturnMessage = msg;
+                    ISpStateTransition tr = (ISpStateTransition)store[eventMsg.EventId].Clone();
+                    this.LogTransition(tr, eventMsg);
+                    tr.ReturnMessage = eventMsg;
                     return tr;
                 }
                 return null;
             });
-        }
-
-
-        /// <summary>
-        /// Factor out the reporting of state transitions for clarity
-        /// </summary>
-        /// <param name="tr"></param>
-        /// <param name="msg"></param>
-        private void LogTransition(ISpStateTransition tr, ISpEventMessage msg) {
-            Log.Debug("SpState", "LogTransition",
-                String.Format(
-                    "Transition Type:{0} From:{1} To:{2} On Msg:{3} Event:{4}",
-                    tr.TransitionType,
-                    this.FullName,
-                    tr.NextState == null ? "Unknown" : tr.NextState.FullName,
-                    this.ConvertMsgTypedToString(msg.TypeId),
-                    this.ConvertEventIdToString(msg.EventId)));
         }
 
 
@@ -418,14 +478,16 @@ namespace SpStateMachine.States {
         /// <param name="id"></param>
         private void InitStateIds(ISpState parent, int id) {
             // Add any ancestor state ids to the chain
-            if (parent != null) {
-                WrapErr.ChkVar(parent.IdChain, 50205, "The parent has a null id chain");
-                this.idChain.Clear();
-                parent.IdChain.ForEach((item) => this.idChain.Add(item));
-            }
-            // This state id is the leaf
-            this.idChain.Add(id);
-            this.BuildName();
+            WrapErr.ToErrorReportException(9999, () => {
+                if (parent != null) {
+                    WrapErr.ChkVar(parent.IdChain, 50205, "The parent has a null id chain");
+                    this.idChain.Clear();
+                    parent.IdChain.ForEach((item) => this.idChain.Add(item));
+                }
+                // This state id is the leaf
+                this.idChain.Add(id);
+                this.BuildName();
+            });
         }
 
 
@@ -433,12 +495,14 @@ namespace SpStateMachine.States {
         /// Builds the fully resolved name by iterating through the  the name based on the 
         /// </summary>
         private void BuildName() {
-            StringBuilder sb = new StringBuilder(75);
-            this.IdChain.ForEach((item) => {
-                sb.Append(String.Format(".{0}", this.ConvertStateIdToString(item)));
+            WrapErr.ToErrorReportException(9999, () => {
+                StringBuilder sb = new StringBuilder(75);
+                this.IdChain.ForEach((item) => {
+                    sb.Append(String.Format(".{0}", this.StateIdString(item)));
+                });
+                this.fullName = sb.Length > 0 ? sb.ToString(1, sb.Length - 1) : "FullNameSearchFailed";
+                this.name = this.idChain.Count > 0 ? this.StateIdString(this.idChain[this.idChain.Count - 1]) : "NameSearchFailed";
             });
-            this.fullName = sb.Length > 0 ? sb.ToString(1, sb.Length - 1) : "FullNameSearchFailed";
-            this.name = this.idChain.Count > 0 ? this.ConvertStateIdToString(this.idChain[this.idChain.Count - 1]) : "NameSearchFailed";
         }
 
         #endregion

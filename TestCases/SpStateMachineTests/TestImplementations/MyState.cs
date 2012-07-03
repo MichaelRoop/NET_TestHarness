@@ -143,7 +143,8 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         protected override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
             Log.Info("MyState", "GetResponseMsg", String.Format("For msg:{0}", msg.TypeId.ToStateId()));
 
-            MyBaseResponse response = new MyBaseResponse(MyMsgType.SimpleResponse, (MyBaseMsg)msg, MyReturnCode.FailedPresure, "lalalal");
+//            MyBaseResponse response = new MyBaseResponse(MyMsgType.SimpleResponse, (MyBaseMsg)msg, MyReturnCode.FailedPresure, "lalalal");
+            MyBaseResponse response = new MyBaseResponse(MyMsgType.SimpleResponse, msg, MyReturnCode.FailedPresure, "lalalal");
 
             Log.Info("MyState", "GetResponseMsg", String.Format("Made bogus response msg:{0}", response.TypeId.ToStateId()));
 
