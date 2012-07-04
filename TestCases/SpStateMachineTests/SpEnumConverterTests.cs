@@ -6,7 +6,7 @@ using NUnit.Framework;
 using TestCases.TestToolSet;
 using SpStateMachine.Utils;
 
-namespace TestCases.SpStateMachineTests.TestImplementations {
+namespace TestCases.SpStateMachineTests {
 
     enum TestEnum {
         Gnarly,
@@ -40,6 +40,28 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
         #endregion
 
+        #region ToInt
+
+        [Test]
+        public void _0_ToInt_Extension_Good() {
+            int val = 99;
+            TestHelpers.CatchUnexpected(() => {
+                val = TestEnum.Whoopee.ToInt();
+            });
+            Assert.AreEqual(2, val, "Did not return right number for TestEnum.Whoopee");
+        }
+
+        [Test]
+        public void _0_ToInt_Direct_Good() {
+            int val = 99;
+            TestHelpers.CatchUnexpected(() => {
+                val = SpEnumConverterExtensions.ToInt(TestEnum.Gnarly);
+            });
+            Assert.AreEqual(0, val, "Did not return right number for TestEnum.Gnarly");
+        }
+
+        #endregion
+        
         #region ToEnum
 
         [Test]
@@ -47,8 +69,6 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
             TestHelpers.CatchExpected(9999, "SpEnumConverterExtensions", "ToEnum", "Enum Conversion Failed Attempting to Convert to Type 'Int32' with Value '10'", () => {
                 SpEnumConverterExtensions.ToEnum<int>(10);
             });
-
-            //Error Converting int '10' to Enum Type 'Int32'
         }
         
         [Test]
