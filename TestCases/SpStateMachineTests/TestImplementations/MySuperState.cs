@@ -99,12 +99,10 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         /// </summary>
         /// <param name="id">The message id to convert to string</param>
         /// <returns></returns>
-        protected override string ConvertMsgTypedToString(int id) {
+        protected override string ConvertMsgTypeIdToString(int id) {
             return SpConverter.IntToEnum<MyMsgType>(id).ToString();
         }
-
-
-
+        
 
         /// <summary>
         /// Get the default return message for the success

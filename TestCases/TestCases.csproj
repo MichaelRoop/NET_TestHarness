@@ -69,6 +69,7 @@
     <Compile Include="SpStateMachineTests\SpStateMachineTests.cs" />
     <Compile Include="SpStateMachineTests\SpStateMachineEngineTests.cs" />
     <Compile Include="SpStateMachineTests\SpStateTests.cs" />
+    <Compile Include="SpStateMachineTests\SpToolsTests.cs" />
     <Compile Include="SpStateMachineTests\StateMachineScratchPad.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\Messages\MyBaseResponse.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\Messages\MySimpleOkResponse.cs" />

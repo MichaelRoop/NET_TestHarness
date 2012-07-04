@@ -43,6 +43,15 @@ namespace SpStateMachine.States {
         /// <summary>Fully resolved state name</summary>
         private string fullName = "";
 
+        /// <summary>Name cache for state int Id lookups</summary>
+        private Dictionary<int,string> stateIdCache = new Dictionary<int, string>();
+
+        /// <summary>Name cache for event int Id lookups</summary>
+        private Dictionary<int,string> eventIdCache = new Dictionary<int, string>();
+
+        /// <summary>Name cache for msg int Id lookups</summary>
+        private Dictionary<int,string> msgIdCache = new Dictionary<int, string>();
+
         private readonly string className = "SpState";
 
         #endregion
@@ -268,7 +277,9 @@ namespace SpStateMachine.States {
         /// <summary>
         /// Allows derived classes to convert the type to string if they are using strongly 
         /// typed convetible enums. By default this level just calls int.ToString() so you
-        /// would end up with a name chaine some like '2.4.12'
+        /// would end up with a name chaine some like '2.4.12'. Although the derived class
+        /// can call this directly it should rather call the GetCachedStateId in order to 
+        /// maximize efficiency
         /// </summary>
         /// <param name="id">The id to convert to string</param>
         /// <returns></returns>
@@ -279,7 +290,8 @@ namespace SpStateMachine.States {
         /// <summary>
         /// Allows derived classes to convert the event id to string if they are using strongly 
         /// typed convetible enums. By default this level just calls int.ToString(). It will also 
-        /// make the logs more readeable
+        /// make the logs more readeable. Although the derived class can call this directly 
+        /// it should rather call the GetCachedEventId in order to maximize efficiency  
         /// </summary>
         /// <param name="id">The id to convert to string</param>
         /// <returns></returns>
@@ -291,11 +303,12 @@ namespace SpStateMachine.States {
         /// <summary>
         /// Allows derived classes to convert the message id to string if they are using strongly 
         /// typed convetible enums. By default this level just calls int.ToString(). It will also 
-        /// make the logs more readeable
+        /// make the logs more readeable. Although the derived class can call this directly it 
+        /// should rather call the GetCachedMsgTypeId in order to maximize efficiency
         /// </summary>
         /// <param name="id">The message id to convert to string</param>
         /// <returns></returns>
-        protected virtual string ConvertMsgTypedToString(int id) {
+        protected virtual string ConvertMsgTypeIdToString(int id) {
             return id.ToString();
         }
         
@@ -361,48 +374,44 @@ namespace SpStateMachine.States {
             return ret;
         }
 
-
-        #region Int to String Converter wrappers
+        #region Cached id names
 
         /// <summary>
-        /// Wraps the virtual ConvertMsgTypedToString call in error checking
+        /// Allows derived classes to convert the type to string if they are using strongly 
+        /// typed convetible enums. By default this level just calls int.ToString() so you
+        /// would end up with a name chaine some like '2.4.12'
         /// </summary>
-        /// <param name="eventMsg">The event message holding the type id</param>
-        /// <returns>A string representing the Message Type Id</returns>
-        protected string MsgTypeString(ISpEventMessage eventMsg) {
-            WrapErr.ChkParam(eventMsg, "msg", 9999);
-            return WrapErr.ToErrorReportException(9999, "Overriden ConvertMsgTypedToString failed", () => {
-                return this.ConvertMsgTypedToString(eventMsg.TypeId);
-            });
+        /// <param name="id">The id to convert to string</param>
+        /// <returns></returns>
+        protected string GetCachedStateId(int id) {
+            return SpTools.GetIdString(id, this.stateIdCache, this.ConvertStateIdToString);
+        }
+
+        /// <summary>
+        /// Allows derived classes to convert the event id to string if they are using strongly 
+        /// typed convetible enums. By default this level just calls int.ToString(). It will also 
+        /// make the logs more readeable
+        /// </summary>
+        /// <param name="id">The id to convert to string</param>
+        /// <returns></returns>
+        protected string GetCachedEventId(int id) {
+            return SpTools.GetIdString(id, this.eventIdCache, this.ConvertEventIdToString);
         }
 
 
         /// <summary>
-        /// Wraps the virtual ConvertEventIdToString call in error checking
+        /// Allows derived classes to convert the message id to string if they are using strongly 
+        /// typed convetible enums. By default this level just calls int.ToString(). It will also 
+        /// make the logs more readeable
         /// </summary>
-        /// <param name="eventMsg">The event message holding the event id</param>
-        /// <returns>A string representing the Event Id</returns>
-        protected string EventIdString(ISpEventMessage eventMsg) {
-            WrapErr.ChkParam(eventMsg, "msg", 9999);
-            return WrapErr.ToErrorReportException(9999, "Overriden ConvertEventIdToString failed", () => {
-                return this.ConvertEventIdToString(eventMsg.EventId);
-            });
+        /// <param name="id">The message id to convert to string</param>
+        /// <returns></returns>
+        protected string GetCachedMsgTypeId(int id) {
+            return SpTools.GetIdString(id, this.msgIdCache, this.ConvertMsgTypeIdToString);
         }
-
         
-        /// <summary>
-        /// Wraps the virtual ConvertStateIdToString call in error checking
-        /// </summary>
-        /// <param name="id">The int state id</param>
-        /// <returns>A string representing the State Id</returns>
-        protected string StateIdString(int id) {
-            return WrapErr.ToErrorReportException(9999, "Overriden ConvertStateIdToString failed", () => {
-                return this.ConvertStateIdToString(id);
-            });
-        }
-
         #endregion
-
+        
         /// <summary>
         /// Factor out the reporting of state transitions for clarity
         /// </summary>
@@ -416,8 +425,8 @@ namespace SpStateMachine.States {
                         tr.TransitionType,
                         this.FullName,
                         tr.NextState == null ? "Unknown" : tr.NextState.FullName,
-                        this.MsgTypeString(eventMsg),
-                        this.EventIdString(eventMsg)));
+                        this.GetCachedMsgTypeId(eventMsg.TypeId),
+                        this.GetCachedEventId(eventMsg.EventId)));
             });
         }
         
@@ -464,7 +473,7 @@ namespace SpStateMachine.States {
         private ISpStateTransition GetTransitionFromStore(Dictionary<int, ISpStateTransition> store, ISpEventMessage eventMsg) {
             return WrapErr.ToErrorReportException(50204, () => {
                 if (store.Keys.Contains(eventMsg.EventId)) {
-                    Log.Debug("SpState", "GetTransition", String.Format("Found transition for event:{0}", this.ConvertEventIdToString(eventMsg.EventId)));
+                    Log.Debug("SpState", "GetTransition", String.Format("Found transition for event:{0}", this.GetCachedEventId(eventMsg.EventId)));
 
                     // Clone Transition object from store since its pointers get reset later
                     ISpStateTransition tr = (ISpStateTransition)store[eventMsg.EventId].Clone();
@@ -504,10 +513,10 @@ namespace SpStateMachine.States {
             WrapErr.ToErrorReportException(9999, () => {
                 StringBuilder sb = new StringBuilder(75);
                 this.IdChain.ForEach((item) => {
-                    sb.Append(String.Format(".{0}", this.StateIdString(item)));
+                    sb.Append(String.Format(".{0}", this.GetCachedStateId(item)));
                 });
                 this.fullName = sb.Length > 0 ? sb.ToString(1, sb.Length - 1) : "FullNameSearchFailed";
-                this.name = this.idChain.Count > 0 ? this.StateIdString(this.idChain[this.idChain.Count - 1]) : "NameSearchFailed";
+                this.name = this.idChain.Count > 0 ? this.GetCachedStateId(this.idChain[this.idChain.Count - 1]) : "NameSearchFailed";
             });
         }
 

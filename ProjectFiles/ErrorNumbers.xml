@@ -107,8 +107,31 @@
 
 
 
+  <!-- SpStateMachine.SpTools -->
+  <Error code="51000" class="SpTools" method="GetIdString" message="Null currentStrings Argument" />
+  <Error code="51001" class="SpTools" method="GetIdString" message="Null converterFunc Argument" />
+  <Error code="51002" class="SpTools" method="GetIdString" message="Unexpected Error" />
+  <Error code="51003" class="SpTools" method="GetIdString" message="Error in Calling Id to String Converter Method" />
+  <Error code="51004" class="SpTools" method="" message="" />
+  <Error code="51005" class="SpTools" method="" message="" />
+  <Error code="51006" class="SpTools" method="" message="" />
+  <Error code="51007" class="SpTools" method="" message="" />
+  <Error code="51008" class="SpTools" method="" message="" />
+  <Error code="51009" class="SpTools" method="" message="" />
+
+  <Error code="51010" class="SpTools" method="" message="" />
+  <Error code="51011" class="SpTools" method="" message="" />
+  <Error code="51012" class="SpTools" method="" message="" />
+  <Error code="51013" class="SpTools" method="" message="" />
+  <Error code="51014" class="SpTools" method="" message="" />
+  <Error code="51015" class="SpTools" method="" message="" />
+  <Error code="51016" class="SpTools" method="" message="" />
+  <Error code="51017" class="SpTools" method="" message="" />
+  <Error code="51018" class="SpTools" method="" message="" />
+  <Error code="51019" class="SpTools" method="" message="" />
+
+
   <Error code="" class="" method="" message="" />
-  
   <Error code="" class="" method="" message="" />
   <Error code="" class="" method="" message="" />
   <Error code="" class="" method="" message="" />
@@ -118,4 +141,5 @@
   <Error code="" class="" method="" message="" />
   <Error code="" class="" method="" message="" />
   <Error code="" class="" method="" message="" />
+
 </Errors>

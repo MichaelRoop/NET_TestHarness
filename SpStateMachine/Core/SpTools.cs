@@ -19,15 +19,19 @@ namespace SpStateMachine.Core {
         /// <param name="converterFunc">The converted to convert the key to a string value if not in the Dictionary</param>
         /// <returns></returns>
         public static string GetIdString(int key, Dictionary<int, string> currentStrings, Func<int, string> converterFunc) {
-            WrapErr.ChkParam(currentStrings, "currentStrings", 9999);
-            WrapErr.ChkParam(converterFunc, "converterFunc", 9999);
-            return WrapErr.ToErrorReportException(9999, () => {
+            WrapErr.ChkParam(currentStrings, "currentStrings", 51000);
+            WrapErr.ChkParam(converterFunc, "converterFunc", 51001);
+            return WrapErr.ToErrorReportException(51002, () => {
                 if (currentStrings.Keys.Contains(key)) {
                     return currentStrings[key];
                 }
-                string val = converterFunc.Invoke(key);
-                currentStrings.Add(key, val);
-                return val;
+
+                // Do another wrap level to isolate the user defined conversion failure
+                string ret =  WrapErr.ToErrorReportException(51003, "Error in Calling Id to String Converter Method", () => {
+                    return converterFunc.Invoke(key);
+                });
+                currentStrings.Add(key, ret);
+                return ret;
             });
         }
 
