@@ -61,15 +61,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
                 //this.GetCurrentState().
 
                 //return this.GetOnResultTransition(myMsg);
-
-
-
             }
-
-            
-
-
-
 
 
             return base.OnRuntimeTransitionRequest(msg);
@@ -88,7 +80,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         /// </summary>
         /// <param name="id">The id to convert to string</param>
         /// <returns></returns>
-        protected override string ConvertEventIdToString(int id) {
+        protected sealed override string ConvertEventIdToString(int id) {
             return SpConverter.IntToEnum<MyEventType>(id).ToString();
         }
 
@@ -99,7 +91,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         /// </summary>
         /// <param name="id">The message id to convert to string</param>
         /// <returns></returns>
-        protected override string ConvertMsgTypeIdToString(int id) {
+        protected sealed override string ConvertMsgTypeIdToString(int id) {
             return SpConverter.IntToEnum<MyMsgType>(id).ToString();
         }
         
@@ -109,11 +101,11 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        protected override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
+        protected sealed override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
             return MySpTools.GetDefaultReturnMsg(msg);
         }
 
-        protected override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
+        protected sealed override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
             // TODO - build a factory to get the right response message
 
             throw new NotImplementedException();

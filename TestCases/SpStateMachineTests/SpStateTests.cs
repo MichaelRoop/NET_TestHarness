@@ -30,9 +30,8 @@ namespace TestCases.SpStateMachineTests {
 
         public StImpl(int id, T wo) : this(null, id, wo) { }
 
-
-
-        protected override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
+        
+        protected sealed override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
             return new MyBaseResponse(
                 MyMsgType.SimpleResponse, 
                 new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Tick), 
@@ -40,12 +39,24 @@ namespace TestCases.SpStateMachineTests {
                 "OK"); 
         }
 
-        protected override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
+        protected sealed override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
             return new MyBaseResponse(
                 MyMsgType.SimpleResponse,
                 new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Tick),
                 MyReturnCode.Success,
                 "OK");
+        }
+
+        protected sealed override string ConvertStateIdToString(int id) {
+            return id.ToString();
+        }
+
+        protected sealed override string ConvertEventIdToString(int id) {
+            return id.ToString();
+        }
+
+        protected sealed override string ConvertMsgTypeIdToString(int id) {
+            return id.ToString();
         }
     }
 

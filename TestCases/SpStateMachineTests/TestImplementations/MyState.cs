@@ -29,7 +29,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         }
 
 
-        protected override string ConvertStateIdToString(int id) {
+        protected sealed override string ConvertStateIdToString(int id) {
             return SpConverter.IntToEnum<MyStateID>(id).ToString();
         }
 
@@ -40,7 +40,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         /// </summary>
         /// <param name="id">The id to convert to string</param>
         /// <returns></returns>
-        protected override string ConvertEventIdToString(int id) {
+        protected sealed override string ConvertEventIdToString(int id) {
             return SpConverter.IntToEnum<MyEventType>(id).ToString();
         }
 
@@ -52,7 +52,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         /// </summary>
         /// <param name="id">The message id to convert to string</param>
         /// <returns></returns>
-        protected override string ConvertMsgTypeIdToString(int id) {
+        protected sealed override string ConvertMsgTypeIdToString(int id) {
             return SpConverter.IntToEnum<MyMsgType>(id).ToString();
         }
 
@@ -82,13 +82,13 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         /// Provides the default return msg
         /// </summary>
         /// <param name="msg">The incomming message</param>
-        protected override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
+        protected sealed override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
             return MySpTools.GetDefaultReturnMsg(msg);
         }
 
 
 
-        protected override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
+        protected sealed override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
             Log.Info("MyState", "GetResponseMsg", String.Format("For msg:{0}", SpConverter.IntToEnum<MyMsgType>(msg.TypeId)));
             MyBaseResponse response = new MyBaseResponse(MyMsgType.SimpleResponse, msg, MyReturnCode.FailedPresure, "lalalal");
             Log.Info("MyState", "GetResponseMsg", String.Format("Made bogus response msg:{0}", SpConverter.IntToEnum<MyMsgType>(response.TypeId)));

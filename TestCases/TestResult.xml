@@ -1,135 +1,135 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--This file represents the results of running a test suite-->
-<test-results name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\TestCases.csproj" total="78" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2012-07-04" time="16:58:27">
+<test-results name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\TestCases.csproj" total="78" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2012-07-04" time="17:16:17">
   <environment nunit-version="2.6.0.12051" clr-version="2.0.50727.5448" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases" machine-name="MAIN-PC" user="Michael" user-domain="MAIN-PC" />
   <culture-info current-culture="en-US" current-uiculture="en-US" />
-  <test-suite type="Project" name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\TestCases.csproj" executed="True" result="Success" success="True" time="13.661" asserts="0">
+  <test-suite type="Project" name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\TestCases.csproj" executed="True" result="Success" success="True" time="13.652" asserts="0">
     <results>
-      <test-suite type="Assembly" name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\bin\Debug\TestCases.dll" executed="True" result="Success" success="True" time="13.655" asserts="0">
+      <test-suite type="Assembly" name="U:\Data\Data\Programming\Projects\NET_TestHarness\TestCases\bin\Debug\TestCases.dll" executed="True" result="Success" success="True" time="13.645" asserts="0">
         <results>
-          <test-suite type="Namespace" name="TestCases" executed="True" result="Success" success="True" time="13.654" asserts="0">
+          <test-suite type="Namespace" name="TestCases" executed="True" result="Success" success="True" time="13.644" asserts="0">
             <results>
-              <test-suite type="Namespace" name="SpStateMachineTests" executed="True" result="Success" success="True" time="13.654" asserts="0">
+              <test-suite type="Namespace" name="SpStateMachineTests" executed="True" result="Success" success="True" time="13.644" asserts="0">
                 <results>
-                  <test-suite type="TestFixture" name="EventStoreTests" executed="True" result="Success" success="True" time="0.300" asserts="0">
+                  <test-suite type="TestFixture" name="EventStoreTests" executed="True" result="Success" success="True" time="0.242" asserts="0">
                     <results>
-                      <test-case name="TestCases.SpStateMachineTests.EventStoreTests._0_Base_MutilDisposed" executed="True" result="Success" success="True" time="0.045" asserts="0" />
-                      <test-case name="TestCases.SpStateMachineTests.EventStoreTests._0_PriorityEventStore_Add" executed="True" result="Success" success="True" time="0.002" asserts="0" />
-                      <test-case name="TestCases.SpStateMachineTests.EventStoreTests._0_PriorityEventStore_AddSequence" executed="True" result="Success" success="True" time="0.016" asserts="36" />
+                      <test-case name="TestCases.SpStateMachineTests.EventStoreTests._0_Base_MutilDisposed" executed="True" result="Success" success="True" time="0.043" asserts="0" />
+                      <test-case name="TestCases.SpStateMachineTests.EventStoreTests._0_PriorityEventStore_Add" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                      <test-case name="TestCases.SpStateMachineTests.EventStoreTests._0_PriorityEventStore_AddSequence" executed="True" result="Success" success="True" time="0.015" asserts="36" />
                       <test-case name="TestCases.SpStateMachineTests.EventStoreTests._0_SimpleDequeQueue_Add" executed="True" result="Success" success="True" time="0.000" asserts="0" />
                       <test-case name="TestCases.SpStateMachineTests.EventStoreTests._0_SimpleDequeQueue_AddSequencing" executed="True" result="Success" success="True" time="0.001" asserts="16" />
-                      <test-case name="TestCases.SpStateMachineTests.EventStoreTests._50110_Base_Constructor_NullParam" executed="True" result="Success" success="True" time="0.137" asserts="5" />
+                      <test-case name="TestCases.SpStateMachineTests.EventStoreTests._50110_Base_Constructor_NullParam" executed="True" result="Success" success="True" time="0.082" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.EventStoreTests._50111_Base_Add_Disposed" executed="True" result="Success" success="True" time="0.002" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.EventStoreTests._50112_Base_Add_NullMsg" executed="True" result="Success" success="True" time="0.001" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.EventStoreTests._50113_Base_Get_Disposed" executed="True" result="Success" success="True" time="0.002" asserts="5" />
-                      <test-case name="TestCases.SpStateMachineTests.EventStoreTests._50150_PriorityEventStore_AddEvent_UnhandledPriority" executed="True" result="Success" success="True" time="0.006" asserts="5" />
+                      <test-case name="TestCases.SpStateMachineTests.EventStoreTests._50150_PriorityEventStore_AddEvent_UnhandledPriority" executed="True" result="Success" success="True" time="0.002" asserts="5" />
                     </results>
                   </test-suite>
-                  <test-suite type="TestFixture" name="MessagesTests" executed="True" result="Success" success="True" time="0.006" asserts="0">
+                  <test-suite type="TestFixture" name="MessagesTests" executed="True" result="Success" success="True" time="0.007" asserts="0">
                     <results>
                       <test-case name="TestCases.SpStateMachineTests.MessagesTests._0_SpBaseResponseCopyOverGuid" executed="True" result="Success" success="True" time="0.002" asserts="1" />
                     </results>
                   </test-suite>
-                  <test-suite type="TestFixture" name="SimpleEventListnerTests" executed="True" result="Success" success="True" time="1.435" asserts="0">
+                  <test-suite type="TestFixture" name="SimpleEventListnerTests" executed="True" result="Success" success="True" time="1.434" asserts="0">
                     <results>
-                      <test-case name="TestCases.SpStateMachineTests.SimpleEventListnerTests._0_MessageReceived_validMsg" executed="True" result="Success" success="True" time="0.203" asserts="4" />
-                      <test-case name="TestCases.SpStateMachineTests.SimpleEventListnerTests._0_ResponseReceived_validMsg" executed="True" result="Success" success="True" time="0.201" asserts="4" />
+                      <test-case name="TestCases.SpStateMachineTests.SimpleEventListnerTests._0_MessageReceived_validMsg" executed="True" result="Success" success="True" time="0.202" asserts="4" />
+                      <test-case name="TestCases.SpStateMachineTests.SimpleEventListnerTests._0_ResponseReceived_validMsg" executed="True" result="Success" success="True" time="0.200" asserts="4" />
                       <test-case name="TestCases.SpStateMachineTests.SimpleEventListnerTests._50030_RaiseEvent_CatchUserMessageDelegateException" executed="True" result="Success" success="True" time="0.251" asserts="4" />
                       <test-case name="TestCases.SpStateMachineTests.SimpleEventListnerTests._50030_RaiseEvent_CatchUserResponseDelegateException" executed="True" result="Success" success="True" time="0.251" asserts="4" />
-                      <test-case name="TestCases.SpStateMachineTests.SimpleEventListnerTests._50031_MessageReceived_NoSubscribers" executed="True" result="Success" success="True" time="0.251" asserts="4" />
+                      <test-case name="TestCases.SpStateMachineTests.SimpleEventListnerTests._50031_MessageReceived_NoSubscribers" executed="True" result="Success" success="True" time="0.252" asserts="4" />
                       <test-case name="TestCases.SpStateMachineTests.SimpleEventListnerTests._50031_RaiseEvent_ResponseNoSubscribers" executed="True" result="Success" success="True" time="0.250" asserts="4" />
                       <test-case name="TestCases.SpStateMachineTests.SimpleEventListnerTests._50032_PostMessage_Disposed" executed="True" result="Success" success="True" time="0.001" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.SimpleEventListnerTests._50033_PostResponse_Disposed" executed="True" result="Success" success="True" time="0.001" asserts="5" />
                     </results>
                   </test-suite>
-                  <test-suite type="TestFixture" name="SpEnumConverterTests" executed="True" result="Success" success="True" time="0.055" asserts="0">
+                  <test-suite type="TestFixture" name="SpEnumConverterTests" executed="True" result="Success" success="True" time="0.053" asserts="0">
                     <results>
-                      <test-case name="TestCases.SpStateMachineTests.SpEnumConverterTests._0_SpIntToEnum_FromConstructionParam" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                      <test-case name="TestCases.SpStateMachineTests.SpEnumConverterTests._0_SpIntToEnum_FromConstructionParam" executed="True" result="Success" success="True" time="0.004" asserts="1" />
                       <test-case name="TestCases.SpStateMachineTests.SpEnumConverterTests._0_ToEnum_Extension_Good" executed="True" result="Success" success="True" time="0.002" asserts="0" />
                       <test-case name="TestCases.SpStateMachineTests.SpEnumConverterTests._0_ToInt_ConverterClass_Good" executed="True" result="Success" success="True" time="0.002" asserts="1" />
-                      <test-case name="TestCases.SpStateMachineTests.SpEnumConverterTests._0_ToInt_Direct_Good" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                      <test-case name="TestCases.SpStateMachineTests.SpEnumConverterTests._0_ToInt_Direct_Good" executed="True" result="Success" success="True" time="0.001" asserts="1" />
                       <test-case name="TestCases.SpStateMachineTests.SpEnumConverterTests._0_ToInt_Extension_Good" executed="True" result="Success" success="True" time="0.001" asserts="1" />
                       <test-case name="TestCases.SpStateMachineTests.SpEnumConverterTests._9999_SpIntToEnum_OutOfRange" executed="True" result="Success" success="True" time="0.002" asserts="5" />
-                      <test-case name="TestCases.SpStateMachineTests.SpEnumConverterTests._9999_ToEnum_DirectCall_OutOfRange" executed="True" result="Success" success="True" time="0.002" asserts="5" />
+                      <test-case name="TestCases.SpStateMachineTests.SpEnumConverterTests._9999_ToEnum_DirectCall_OutOfRange" executed="True" result="Success" success="True" time="0.001" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.SpEnumConverterTests._9999_ToEnum_DirectCall_UsingNonEnum" executed="True" result="Success" success="True" time="0.002" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.SpEnumConverterTests._9999_ToEnum_Extension_OutOfRange" executed="True" result="Success" success="True" time="0.001" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.SpEnumConverterTests._9999_ToEnum_Extension_UsingNonEnum" executed="True" result="Success" success="True" time="0.001" asserts="5" />
                     </results>
                   </test-suite>
-                  <test-suite type="TestFixture" name="SpPeriodicWakeupOnlyTests" executed="True" result="Success" success="True" time="0.524" asserts="0">
+                  <test-suite type="TestFixture" name="SpPeriodicWakeupOnlyTests" executed="True" result="Success" success="True" time="0.522" asserts="0">
                     <results>
-                      <test-case name="TestCases.SpStateMachineTests.SpPeriodicWakeupOnlyTests._50080_EventReceived_Disposed" executed="True" result="Success" success="True" time="0.103" asserts="5" />
+                      <test-case name="TestCases.SpStateMachineTests.SpPeriodicWakeupOnlyTests._50080_EventReceived_Disposed" executed="True" result="Success" success="True" time="0.102" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.SpPeriodicWakeupOnlyTests._50081_EventReceived_UnhandledType" executed="True" result="Success" success="True" time="0.101" asserts="4" />
                       <test-case name="TestCases.SpStateMachineTests.SpPeriodicWakeupOnlyTests._50082_WaitOnEvent_Disposed" executed="True" result="Success" success="True" time="0.101" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.SpPeriodicWakeupOnlyTests._50084_OnPeriodicTimer_Busy" executed="True" result="Success" success="True" time="0.201" asserts="4" />
                     </results>
                   </test-suite>
-                  <test-suite type="TestFixture" name="SpStateMachineEngineTests" executed="True" result="Success" success="True" time="2.951" asserts="0">
+                  <test-suite type="TestFixture" name="SpStateMachineEngineTests" executed="True" result="Success" success="True" time="3.019" asserts="0">
                     <results>
-                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineEngineTests._0_Dispose_MultiDisposeSafe" executed="True" result="Success" success="True" time="0.864" asserts="4" />
+                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineEngineTests._0_Dispose_MultiDisposeSafe" executed="True" result="Success" success="True" time="0.931" asserts="4" />
                       <test-case name="TestCases.SpStateMachineTests.SpStateMachineEngineTests._0_DisposeObject_Success" executed="True" result="Success" success="True" time="0.004" asserts="0" />
                       <test-case name="TestCases.SpStateMachineTests.SpStateMachineEngineTests._50050_SpStateMachineEngine_nullListner" executed="True" result="Success" success="True" time="0.002" asserts="5" />
-                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineEngineTests._50051_SpStateMachineEngine_nullStore" executed="True" result="Success" success="True" time="0.002" asserts="5" />
+                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineEngineTests._50051_SpStateMachineEngine_nullStore" executed="True" result="Success" success="True" time="0.001" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.SpStateMachineEngineTests._50052_SpStateMachineEngine_nullBehavior" executed="True" result="Success" success="True" time="0.002" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.SpStateMachineEngineTests._50053_SpStateMachineEngine_nullStateMachine" executed="True" result="Success" success="True" time="0.002" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.SpStateMachineEngineTests._50054_SpStateMachineEngine_nullTimer" executed="True" result="Success" success="True" time="0.002" asserts="5" />
-                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineEngineTests._50056_StartDisposed" executed="True" result="Success" success="True" time="0.509" asserts="5" />
-                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineEngineTests._50057_StopDisposed" executed="True" result="Success" success="True" time="0.506" asserts="5" />
-                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineEngineTests._50058_DriverThreadUnexpectedError" executed="True" result="Success" success="True" time="0.505" asserts="4" />
+                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineEngineTests._50056_StartDisposed" executed="True" result="Success" success="True" time="0.506" asserts="5" />
+                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineEngineTests._50057_StopDisposed" executed="True" result="Success" success="True" time="0.509" asserts="5" />
+                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineEngineTests._50058_DriverThreadUnexpectedError" executed="True" result="Success" success="True" time="0.507" asserts="4" />
                       <test-case name="TestCases.SpStateMachineTests.SpStateMachineEngineTests._50060_DisposeObject_ErrorDisposingInternalObjects" executed="True" result="Success" success="True" time="0.504" asserts="4" />
                     </results>
                   </test-suite>
-                  <test-suite type="TestFixture" name="SpStateMachineTests" executed="True" result="Success" success="True" time="0.168" asserts="0">
+                  <test-suite type="TestFixture" name="SpStateMachineTests" executed="True" result="Success" success="True" time="0.165" asserts="0">
                     <results>
-                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineTests._0_Dispose_Multi" executed="True" result="Success" success="True" time="0.074" asserts="0" />
-                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineTests._0_Tick_Ok" executed="True" result="Success" success="True" time="0.033" asserts="0" />
+                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineTests._0_Dispose_Multi" executed="True" result="Success" success="True" time="0.072" asserts="0" />
+                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineTests._0_Tick_Ok" executed="True" result="Success" success="True" time="0.034" asserts="0" />
                       <test-case name="TestCases.SpStateMachineTests.SpStateMachineTests._50170_Ctor_WrappedObject" executed="True" result="Success" success="True" time="0.002" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.SpStateMachineTests._50171_Ctor_NullState" executed="True" result="Success" success="True" time="0.001" asserts="5" />
-                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineTests._50172_Tick_NullMsg" executed="True" result="Success" success="True" time="0.001" asserts="5" />
+                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineTests._50172_Tick_NullMsg" executed="True" result="Success" success="True" time="0.002" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.SpStateMachineTests._50173_Dispose_ChildManagedDisposeFail" executed="True" result="Success" success="True" time="0.002" asserts="5" />
-                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineTests._50174_Dispose_ChildManagedDisposeFail" executed="True" result="Success" success="True" time="0.001" asserts="5" />
-                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineTests._50175_Dispose_ManagedResources_Error" executed="True" result="Success" success="True" time="0.002" asserts="5" />
+                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineTests._50174_Dispose_ChildManagedDisposeFail" executed="True" result="Success" success="True" time="0.002" asserts="5" />
+                      <test-case name="TestCases.SpStateMachineTests.SpStateMachineTests._50175_Dispose_ManagedResources_Error" executed="True" result="Success" success="True" time="0.003" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.SpStateMachineTests._50176_Tick_Disposed" executed="True" result="Success" success="True" time="0.002" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.SpStateMachineTests._50177_Tick_StateNullTransition" executed="True" result="Success" success="True" time="0.003" asserts="5" />
                     </results>
                   </test-suite>
-                  <test-suite type="TestFixture" name="SpStateTests" executed="True" result="Success" success="True" time="0.123" asserts="0">
+                  <test-suite type="TestFixture" name="SpStateTests" executed="True" result="Success" success="True" time="0.113" asserts="0">
                     <results>
-                      <test-case name="TestCases.SpStateMachineTests.SpStateTests._0_OnEntry_ExecutedTwiceWithOnExitBetween" executed="True" result="Success" success="True" time="0.014" asserts="0" />
+                      <test-case name="TestCases.SpStateMachineTests.SpStateTests._0_OnEntry_ExecutedTwiceWithOnExitBetween" executed="True" result="Success" success="True" time="0.016" asserts="0" />
                       <test-case name="TestCases.SpStateMachineTests.SpStateTests._0_OnTick_AfterOnEntry" executed="True" result="Success" success="True" time="0.003" asserts="0" />
-                      <test-case name="TestCases.SpStateMachineTests.SpStateTests._50200_Constructor_NullWrappedObject" executed="True" result="Success" success="True" time="0.001" asserts="5" />
+                      <test-case name="TestCases.SpStateMachineTests.SpStateTests._50200_Constructor_NullWrappedObject" executed="True" result="Success" success="True" time="0.002" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.SpStateTests._50201_OnEntry_ExecutedTwice" executed="True" result="Success" success="True" time="0.002" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.SpStateTests._50205_OnTick_WithoutOnEntry" executed="True" result="Success" success="True" time="0.001" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.SpStateTests._50206_InitStateIds_ParentNullIdChain" executed="True" result="Success" success="True" time="0.057" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.SpStateTests._50207_InitStateIds_UnexpectedError" executed="True" result="Success" success="True" time="0.002" asserts="5" />
                     </results>
                   </test-suite>
-                  <test-suite type="TestFixture" name="SpToolsTests" executed="True" result="Success" success="True" time="0.033" asserts="0">
+                  <test-suite type="TestFixture" name="SpToolsTests" executed="True" result="Success" success="True" time="0.031" asserts="0">
                     <results>
-                      <test-case name="TestCases.SpStateMachineTests.SpToolsTests._0_GetIdString_OkAddedToCache" executed="True" result="Success" success="True" time="0.002" asserts="4" />
+                      <test-case name="TestCases.SpStateMachineTests.SpToolsTests._0_GetIdString_OkAddedToCache" executed="True" result="Success" success="True" time="0.001" asserts="4" />
                       <test-case name="TestCases.SpStateMachineTests.SpToolsTests._0_GetIdString_OkFromCache" executed="True" result="Success" success="True" time="0.001" asserts="2" />
                       <test-case name="TestCases.SpStateMachineTests.SpToolsTests._51000_GetIdString_NullDictionary" executed="True" result="Success" success="True" time="0.001" asserts="5" />
-                      <test-case name="TestCases.SpStateMachineTests.SpToolsTests._51001_GetIdString_NullFunc" executed="True" result="Success" success="True" time="0.002" asserts="5" />
-                      <test-case name="TestCases.SpStateMachineTests.SpToolsTests._51003_GetIdString_ConverterError" executed="True" result="Success" success="True" time="0.003" asserts="5" />
+                      <test-case name="TestCases.SpStateMachineTests.SpToolsTests._51001_GetIdString_NullFunc" executed="True" result="Success" success="True" time="0.001" asserts="5" />
+                      <test-case name="TestCases.SpStateMachineTests.SpToolsTests._51003_GetIdString_ConverterError" executed="True" result="Success" success="True" time="0.001" asserts="5" />
                     </results>
                   </test-suite>
-                  <test-suite type="TestFixture" name="StateMachineScratchPad" executed="True" result="Success" success="True" time="6.226" asserts="0">
+                  <test-suite type="TestFixture" name="StateMachineScratchPad" executed="True" result="Success" success="True" time="6.227" asserts="0">
                     <results>
-                      <test-case name="TestCases.SpStateMachineTests.StateMachineScratchPad.TestDeferedTransitionsInSuperState" executed="True" result="Success" success="True" time="2.211" asserts="3" />
+                      <test-case name="TestCases.SpStateMachineTests.StateMachineScratchPad.TestDeferedTransitionsInSuperState" executed="True" result="Success" success="True" time="2.212" asserts="3" />
                       <test-case name="TestCases.SpStateMachineTests.StateMachineScratchPad.TestExitStateTransitionsInSuperState" executed="True" result="Success" success="True" time="4.003" asserts="6" />
                     </results>
                   </test-suite>
-                  <test-suite type="TestFixture" name="WinSimplePeriodicTimerTests" executed="True" result="Success" success="True" time="1.748" asserts="0">
+                  <test-suite type="TestFixture" name="WinSimplePeriodicTimerTests" executed="True" result="Success" success="True" time="1.747" asserts="0">
                     <results>
-                      <test-case name="TestCases.SpStateMachineTests.WinSimplePeriodicTimerTests._0_SetInterval_OK" executed="True" result="Success" success="True" time="0.000" asserts="0" />
+                      <test-case name="TestCases.SpStateMachineTests.WinSimplePeriodicTimerTests._0_SetInterval_OK" executed="True" result="Success" success="True" time="0.001" asserts="0" />
                       <test-case name="TestCases.SpStateMachineTests.WinSimplePeriodicTimerTests._0_Start_Multi" executed="True" result="Success" success="True" time="0.000" asserts="0" />
-                      <test-case name="TestCases.SpStateMachineTests.WinSimplePeriodicTimerTests._0_Stop_Multi" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+                      <test-case name="TestCases.SpStateMachineTests.WinSimplePeriodicTimerTests._0_Stop_Multi" executed="True" result="Success" success="True" time="0.000" asserts="0" />
                       <test-case name="TestCases.SpStateMachineTests.WinSimplePeriodicTimerTests._50000_SetInterval_ZeroTimespan" executed="True" result="Success" success="True" time="0.001" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.WinSimplePeriodicTimerTests._50002_SetInterval_Disposed" executed="True" result="Success" success="True" time="0.008" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.WinSimplePeriodicTimerTests._50003_Start_Disposed" executed="True" result="Success" success="True" time="0.001" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.WinSimplePeriodicTimerTests._50005_Start_Disposed" executed="True" result="Success" success="True" time="0.001" asserts="5" />
                       <test-case name="TestCases.SpStateMachineTests.WinSimplePeriodicTimerTests.MultiDispose" executed="True" result="Success" success="True" time="0.001" asserts="0" />
-                      <test-case name="TestCases.SpStateMachineTests.WinSimplePeriodicTimerTests.OnWakeup_noSubscribers" executed="True" result="Success" success="True" time="0.200" asserts="0" />
+                      <test-case name="TestCases.SpStateMachineTests.WinSimplePeriodicTimerTests.OnWakeup_noSubscribers" executed="True" result="Success" success="True" time="0.201" asserts="0" />
                       <test-case name="TestCases.SpStateMachineTests.WinSimplePeriodicTimerTests.OnWakeup_PulseCount" executed="True" result="Success" success="True" time="1.501" asserts="1" />
                     </results>
                   </test-suite>

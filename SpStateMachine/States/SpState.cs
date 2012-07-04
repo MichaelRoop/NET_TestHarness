@@ -272,45 +272,6 @@ namespace SpStateMachine.States {
         protected virtual ISpStateTransition GetDefaultTransition(ISpEventMessage eventMsg) {
             return new SpStateTransition(SpStateTransitionType.SameState, null, this.GetDefaultReturnMsg(eventMsg));
         }
-
-
-        /// <summary>
-        /// Allows derived classes to convert the type to string if they are using strongly 
-        /// typed convetible enums. By default this level just calls int.ToString() so you
-        /// would end up with a name chaine some like '2.4.12'. Although the derived class
-        /// can call this directly it should rather call the GetCachedStateId in order to 
-        /// maximize efficiency
-        /// </summary>
-        /// <param name="id">The id to convert to string</param>
-        /// <returns></returns>
-        protected virtual string ConvertStateIdToString(int id) {
-            return id.ToString();
-        }
-
-        /// <summary>
-        /// Allows derived classes to convert the event id to string if they are using strongly 
-        /// typed convetible enums. By default this level just calls int.ToString(). It will also 
-        /// make the logs more readeable. Although the derived class can call this directly 
-        /// it should rather call the GetCachedEventId in order to maximize efficiency  
-        /// </summary>
-        /// <param name="id">The id to convert to string</param>
-        /// <returns></returns>
-        protected virtual string ConvertEventIdToString(int id) {
-            return id.ToString();
-        }
-
-
-        /// <summary>
-        /// Allows derived classes to convert the message id to string if they are using strongly 
-        /// typed convetible enums. By default this level just calls int.ToString(). It will also 
-        /// make the logs more readeable. Although the derived class can call this directly it 
-        /// should rather call the GetCachedMsgTypeId in order to maximize efficiency
-        /// </summary>
-        /// <param name="id">The message id to convert to string</param>
-        /// <returns></returns>
-        protected virtual string ConvertMsgTypeIdToString(int id) {
-            return id.ToString();
-        }
         
         #endregion
 
@@ -330,6 +291,43 @@ namespace SpStateMachine.States {
         /// <returns></returns>
         protected abstract ISpEventMessage GetReponseMsg(ISpEventMessage msg);
 
+
+        /// <summary>
+        /// Allows derived classes to convert the type to string if they are using strongly 
+        /// typed convetible enums. you can also just decide to use int.ToString you could
+        /// end up with a name chaine some like '2.4.12'.
+        /// *NOTE*: Although the derived class can call this directly it should rather call the 
+        /// GetCachedStateId in order to maximize efficiency. The cached call will only
+        /// ever call this conversion method once per unique id
+        /// </summary>
+        /// <param name="id">The id to convert to string</param>
+        /// <returns></returns>
+        protected abstract string ConvertStateIdToString(int id);
+
+
+        /// <summary>
+        /// Allows derived classes to convert the event id to string if they are using strongly 
+        /// typed convetible enums. It will also make the logs more readeable. 
+        /// *NOTE*: Although the derived class can call this directly it should rather call 
+        /// the GetCachedEventId in order to maximize efficiency. The cached call will only
+        /// ever call this conversion method once per unique id  
+        /// </summary>
+        /// <param name="id">The id to convert to string</param>
+        /// <returns></returns>
+        protected abstract string ConvertEventIdToString(int id);
+
+
+        /// <summary>
+        /// Allows derived classes to convert the message id to string if they are using strongly 
+        /// typed convetible enums. It will also make the logs more readeable. 
+        /// *NOTE*: Although the derived class can call this directly it should rather call 
+        /// the GetCachedMsgTypeId in order to maximize efficiency. The cached call will only
+        /// ever call this conversion method once per unique id
+        /// </summary>
+        /// <param name="id">The message id to convert to string</param>
+        /// <returns></returns>
+        protected abstract string ConvertMsgTypeIdToString(int id);
+        
         #endregion
 
         #region Protected Methods
