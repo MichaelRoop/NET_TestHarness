@@ -5,6 +5,7 @@ using System.Text;
 using SpStateMachine.Core;
 using SpStateMachine.Messages;
 using SpStateMachine.Interfaces;
+using SpStateMachine.Converters;
 
 namespace TestCases.SpStateMachineTests.TestImplementations.Messages {
 
@@ -25,7 +26,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.Messages {
         /// <param name="code">The return code</param>
         /// <param name="status">The return string</param>
         public MyBaseResponse(MyMsgType msgType, ISpEventMessage msg, MyReturnCode code, string status)
-            : base(msgType.Int(), msg, code.Int(), status) {
+            : base(new SpEnumToInt(msgType), msg, new SpEnumToInt(code), status) {
         }
 
 

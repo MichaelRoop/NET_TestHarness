@@ -135,9 +135,9 @@ namespace SpStateMachine.Messages {
         /// <param name="typeId">The type id to cast to derived for payload retrieval</param>
         /// <param name="eventId">The event identifier</param>
         /// <param name="priority">The priority of the message</param>
-        public SpBaseEventMsg(int typeId, int eventId, SpEventPriority priority) {
-            this.typeId = typeId;
-            this.eventId = eventId;
+        public SpBaseEventMsg(ISpToInt typeId, ISpToInt eventId, SpEventPriority priority) {
+            this.typeId = typeId.ToInt();
+            this.eventId = eventId.ToInt();
             this.priority = priority;
         }
 
@@ -147,7 +147,7 @@ namespace SpStateMachine.Messages {
         /// </summary>
         /// <param name="typeId">The type id to cast to derived for payload retrieval</param>
         /// <param name="eventId">The event identifier</param>
-        public SpBaseEventMsg(int typeId, int eventId)
+        public SpBaseEventMsg(ISpToInt typeId, ISpToInt eventId)
             : this(typeId, eventId, SpEventPriority.Normal) {
         }
 

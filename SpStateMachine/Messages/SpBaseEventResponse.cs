@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SpStateMachine.Interfaces;
+using SpStateMachine.Converters;
 
 namespace SpStateMachine.Messages {
 
@@ -25,11 +26,11 @@ namespace SpStateMachine.Messages {
         /// <param name="msg">The message that this is responding to</param>
         /// <param name="returnCode">The operation return code</param>
         /// <param name="returnStatus">Additional information on the operation status</param>
-        public SpBaseEventResponse(int typeId, ISpEventMessage msg, int returnCode, string returnStatus)
-            : base(typeId, msg.EventId) {
+        public SpBaseEventResponse(ISpToInt typeId, ISpEventMessage msg, ISpToInt returnCode, string returnStatus)
+            : base(typeId, new SpIntToInt(msg.EventId)) {
                 // Transfer the message guid to the response for correlation
                 this.Uid = msg.Uid;
-                this.ReturnCode = returnCode;
+                this.ReturnCode = returnCode.ToInt();
                 this.ReturnStatus = ReturnStatus;
         }
 
@@ -42,8 +43,8 @@ namespace SpStateMachine.Messages {
         /// The type identifier in case you need to cast to a derived type to retrieve a payload
         /// </param>
         /// <param name="msg">The message that this is responding to</param>
-        public SpBaseEventResponse(int typeId, ISpEventMessage msg)
-            : this(typeId, msg, 0, "") {
+        public SpBaseEventResponse(ISpToInt typeId, ISpEventMessage msg)
+            : this(typeId, msg, new SpIntToInt(0), "") {
         }
 
     }

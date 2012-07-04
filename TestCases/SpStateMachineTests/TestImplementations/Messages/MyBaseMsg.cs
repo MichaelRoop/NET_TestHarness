@@ -22,7 +22,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.Messages {
         /// <param name="eventId">The event identifier</param>
         /// <param name="priority">The priority of the message</param>
         public MyBaseMsg(MyMsgType msgType, MyEventType eventType, SpEventPriority priority)
-            : base(msgType.Int(), SpConverter.EnumToInt(eventType), priority) {
+            : base(new SpEnumToInt(msgType), new SpEnumToInt(eventType), priority) {
         }
 
 

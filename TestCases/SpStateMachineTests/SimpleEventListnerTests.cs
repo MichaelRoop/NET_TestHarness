@@ -5,6 +5,7 @@ using SpStateMachine.EventListners;
 using SpStateMachine.Interfaces;
 using SpStateMachine.Messages;
 using TestCases.TestToolSet;
+using SpStateMachine.Converters;
 
 namespace TestCases.SpStateMachineTests {
 
@@ -42,7 +43,7 @@ namespace TestCases.SpStateMachineTests {
         public void _50032_PostMessage_Disposed() {
             TestHelpers.CatchExpected(50032, "SimpleEventListner", "PostMessage", "Attempting to use Disposed Object", () => {
                 this.listner.Dispose();
-                this.listner.PostMessage(new SpBaseEventMsg(25, 100));
+                this.listner.PostMessage(new SpBaseEventMsg(new SpIntToInt(25), new SpIntToInt(100)));
             });
         }
 
@@ -54,7 +55,7 @@ namespace TestCases.SpStateMachineTests {
         public void _50033_PostResponse_Disposed() {
             TestHelpers.CatchExpected(50033, "SimpleEventListner", "PostResponse", "Attempting to use Disposed Object", () => {
                 this.listner.Dispose();
-                this.listner.PostResponse(new SpBaseEventMsg(25, 100));
+                this.listner.PostResponse(new SpBaseEventMsg(new SpIntToInt(25), new SpIntToInt(100)));
             });
         }
 
@@ -74,7 +75,7 @@ namespace TestCases.SpStateMachineTests {
                     received = true;
                     msgCopy = msg;
                 });
-                this.listner.PostMessage(new SpBaseEventMsg(25, 100));
+                this.listner.PostMessage(new SpBaseEventMsg(new SpIntToInt(25), new SpIntToInt(100)));
             });
             // On thread pool so have to wait for response
             Thread.Sleep(200);
@@ -99,7 +100,7 @@ namespace TestCases.SpStateMachineTests {
                     received = true;
                     msgCopy = msg;
                 });
-                this.listner.PostResponse(new SpBaseEventResponse(2, new SpBaseEventMsg(1, 58)));
+                this.listner.PostResponse(new SpBaseEventResponse(new SpIntToInt(2), new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(58))));
             });
             // On thread pool so have to wait for response
             Thread.Sleep(200);
@@ -113,7 +114,7 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _50031_RaiseEvent_ResponseNoSubscribers() {
             TestHelpers.CatchUnexpected(() => {
-                this.listner.PostResponse(new SpBaseEventResponse(2, new SpBaseEventMsg(1, 1)));
+                this.listner.PostResponse(new SpBaseEventResponse(new SpIntToInt(2), new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(1))));
             });
             Thread.Sleep(250);
             this.logReader.Validate(50031, "SimpleEventListner", "RaiseEvent", "No subscribers to 'Response' message");
@@ -123,7 +124,7 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _50031_MessageReceived_NoSubscribers() {
             TestHelpers.CatchUnexpected(() => {
-                this.listner.PostMessage(new SpBaseEventMsg(1, 1));
+                this.listner.PostMessage(new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(1)));
             });
             Thread.Sleep(250);
             this.logReader.Validate(50031, "SimpleEventListner", "RaiseEvent", "No subscribers to 'Message' message");
@@ -138,7 +139,7 @@ namespace TestCases.SpStateMachineTests {
                     Console.WriteLine("** Response Received triggered **");
                     throw new Exception("User Exception in delegate");
                 });
-                this.listner.PostResponse(new SpBaseEventResponse(2, new SpBaseEventMsg(1, 1)));
+                this.listner.PostResponse(new SpBaseEventResponse(new SpIntToInt(2), new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(1))));
             });
             // Allow the thread pool to catch up
             Thread.Sleep(250);
@@ -153,7 +154,7 @@ namespace TestCases.SpStateMachineTests {
                     Console.WriteLine("** Message Received triggered **");
                     throw new Exception("User Exception in delegate");
                 });
-                this.listner.PostMessage(new SpBaseEventResponse(2, new SpBaseEventMsg(1, 1)));
+                this.listner.PostMessage(new SpBaseEventResponse(new SpIntToInt(2), new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(1))));
             });
             // Allow the thread pool to catch up
             Thread.Sleep(250);
