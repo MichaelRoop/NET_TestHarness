@@ -170,7 +170,7 @@ namespace SpStateMachine.States {
             WrapErr.ChkFalse(this.IsEntryExcecuted, 50201, "OnEntry Cannot be Executed More Than Once Until OnExit is Called");
             this.SetEntered(true);
             return WrapErr.ToErrorReportException(9999, () => {
-                return this.GetTransitionInOrder(this.ExecOnEntry, msg);
+                return this.GetTransition(this.ExecOnEntry, msg);
             });
         }
 
@@ -184,7 +184,7 @@ namespace SpStateMachine.States {
             //Log.Info(this.className, "ExecOnTick", this.FullName);
             WrapErr.ChkTrue(this.IsEntryExcecuted, 50205, "OnTick Cannot be Executed Before OnEntry");
             return WrapErr.ToErrorReportException(9999, () => {
-                return this.GetTransitionInOrder(this.ExecOnTick, msg);
+                return this.GetTransition(this.ExecOnTick, msg);
             });
         }
 
@@ -345,7 +345,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="eventMsg">The incomming event message</param>
         /// <returns>The transition if present, otherwise null</returns>
-        protected ISpStateTransition GetTransitionFromOnEventRegistrations(ISpEventMessage eventMsg) {
+        protected ISpStateTransition GetOnEventTransition(ISpEventMessage eventMsg) {
             return this.GetTransitionFromStore(this.onEventTransitions, eventMsg);
         }
 
@@ -355,7 +355,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="eventMsg">The incomming event message</param>
         /// <returns>The transition if present, otherwise null</returns>
-        protected ISpStateTransition GetTransitionFromOnResultRegistrations(ISpEventMessage eventMsg) {
+        protected ISpStateTransition GetOnResultTransition(ISpEventMessage eventMsg) {
             return this.GetTransitionFromStore(this.onResultTransitions, eventMsg);
         }
         
@@ -441,19 +441,19 @@ namespace SpStateMachine.States {
         /// </param>
         /// <param name="eventMsg">The incoming message to validate against the onEvent list</param>
         /// <returns>The OnEvent, OnResult or default transition</returns>
-        private ISpStateTransition GetTransitionInOrder(Func<ISpEventMessage, ISpEventMessage> stateFunc, ISpEventMessage eventMsg) {
+        private ISpStateTransition GetTransition(Func<ISpEventMessage, ISpEventMessage> stateFunc, ISpEventMessage eventMsg) {
             return WrapErr.ToErrorReportException(9999, () => {
                 // Query the OnEvent queue for a transition BEFORE calling state function (OnEntry, OnTick)
-                ISpStateTransition tr = this.GetTransitionFromOnEventRegistrations(eventMsg);
+                ISpStateTransition tr = this.GetOnEventTransition(eventMsg);
                 if (tr != null) {
-                    // Call to derived class to get the return message related to the incoming message
+                    // TODO - This needs some more thought - Call to derived class to get the return message related to the incoming message
                     tr.ReturnMessage = this.OnGetResponseMsg(this.GetReponseMsg(eventMsg));
                     return tr;
                 }
 
                 // TODO - clarify this - we use the event id after processing so the return message is already selected
                 // Think that the derived should just send the same Msg or another msg back so that we can get the response msg from the same call as above
-                if ((tr = this.GetTransitionFromOnResultRegistrations(stateFunc.Invoke(eventMsg))) != null) {
+                if ((tr = this.GetOnResultTransition(stateFunc.Invoke(eventMsg))) != null) {
                     return tr;
                 }
                 return this.GetDefaultTransition(eventMsg);

@@ -288,7 +288,7 @@ namespace SpStateMachine.States {
         private ISpStateTransition GetSuperStateOnResultTransition(ISpEventMessage msg) {
 
             // Check super state registered result transitions against Sub State event id
-            ISpStateTransition tr = this.GetTransitionFromOnResultRegistrations(msg);
+            ISpStateTransition tr = this.GetOnResultTransition(msg);
             WrapErr.ChkVar(tr, 9999, () => {
                 return String.Format(
                     "State {0} Specified Exit but SuperState {1} has no handlers for that event id:{2}",
@@ -301,7 +301,7 @@ namespace SpStateMachine.States {
 
 
         private ISpStateTransition GetSuperStateOnEventTransition(ISpEventMessage msg) {
-            ISpStateTransition tr = this.GetTransitionFromOnEventRegistrations(msg);
+            ISpStateTransition tr = this.GetOnEventTransition(msg);
             if (tr != null) {
                 // Get the appropriate related response message to add to transition
                 tr.ReturnMessage = this.OnGetResponseMsg(msg);
