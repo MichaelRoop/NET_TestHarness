@@ -5,6 +5,10 @@ using System.Text;
 using NUnit.Framework;
 using TestCases.TestToolSet;
 using SpStateMachine.Core;
+using SpStateMachine.Interfaces;
+using SpStateMachine.Messages;
+using SpStateMachine.Converters;
+using Rhino.Mocks;
 
 namespace TestCases.SpStateMachineTests {
 
@@ -37,8 +41,7 @@ namespace TestCases.SpStateMachineTests {
         private readonly string className = "SpTools";
 
         #endregion
-
-
+        
         #region GetIdString
 
         [Test]
@@ -84,9 +87,7 @@ namespace TestCases.SpStateMachineTests {
             Assert.IsFalse(converterCalled, "Converter should have been called");
             Assert.AreEqual("One Hundred State", ret);
         }
-
-
-
+        
         [Test]
         public void _51000_GetIdString_NullDictionary() {
             TestHelpers.CatchExpected(51000, this.className, "GetIdString", "Null currentStrings Argument", () => {
@@ -107,6 +108,75 @@ namespace TestCases.SpStateMachineTests {
                 SpTools.GetIdString(0, new Dictionary<int, string>(), (key) => { throw new Exception("Blah!"); });
             });
         }
+
+        #endregion
+
+        #region RegisterTransition
+
+        private ISpEventMessage validMsg = new SpBaseEventMsg(new SpIntToInt(2), new SpIntToInt(4));
+        private ISpStateTransition validTransition = 
+            new SpStateTransition(SpStateTransitionType.SameState, null, new SpBaseEventMsg(new SpIntToInt(22), new SpIntToInt(34)));
+        private ISpStateTransition validTransition2 = 
+            new SpStateTransition(SpStateTransitionType.SameState, null, new SpBaseEventMsg(new SpIntToInt(33), new SpIntToInt(98)));
+
+
+        [Test]
+        public void _0_RegisterTransition_Recoverable() {
+            Dictionary<int,ISpStateTransition> store = new Dictionary<int, ISpStateTransition>();
+            TestHelpers.CatchUnexpected(() => {
+                SpTools.RegisterTransition("OnResult", new SpIntToInt(91), this.validTransition, store);
+                SpTools.RegisterTransition("OnResult", new SpIntToInt(29), this.validTransition2, store);
+            });
+            Assert.IsTrue(store.Keys.Contains(91), "Missing key 91");
+            Assert.IsTrue(store.Keys.Contains(29), "Missing key 29");
+        }
+
+        
+        [Test]
+        public void _51004_RegisterTransition_NullEventIdConverter() {
+            TestHelpers.CatchExpected(51004, this.className, "RegisterTransition", "Null eventId Argument", () => {
+                SpTools.RegisterTransition("OnResult", null, this.validTransition, new Dictionary<int,ISpStateTransition>());
+            });
+        }
+
+        [Test]
+        public void _51005_RegisterTransition_NullTransition() {
+            TestHelpers.CatchExpected(51005, this.className, "RegisterTransition", "Null transition Argument", () => {
+                SpTools.RegisterTransition("OnResult", new SpIntToInt(2), null, new Dictionary<int,ISpStateTransition>());
+            });
+        }
+
+
+        [Test]
+        public void _51006_RegisterTransition_NullDictionary() {
+            TestHelpers.CatchExpected(51006, this.className, "RegisterTransition", "Null store Argument", () => {
+                SpTools.RegisterTransition("OnResult", new SpIntToInt(2), this.validTransition, null);
+            });
+        }
+
+        [Test]
+        public void _51007_RegisterTransition_IdConverterFails() {
+            ISpToInt toInt = MockRepository.GenerateMock<ISpToInt>();
+            toInt.Expect((o) => o.ToInt()).Throw(new Exception("Woof Exception"));
+
+            Dictionary<int,ISpStateTransition> store = new Dictionary<int,ISpStateTransition>();
+            TestHelpers.CatchExpected(51007, this.className, "RegisterTransition", "Error on Event Id Converter for 'OnResult' Event Type", () => {
+                SpTools.RegisterTransition("OnResult", toInt, this.validTransition, store);
+            });
+        }
+
+
+        [Test]
+        public void _51008_RegisterTransition_AlreadyRegistered() {
+            Dictionary<int,ISpStateTransition> store = new Dictionary<int,ISpStateTransition>();
+            store.Add(22, this.validTransition);
+
+            TestHelpers.CatchExpected(51008, this.className, "RegisterTransition", "Already Contain a 'OnResult' Transition for Id:22", () => {
+                SpTools.RegisterTransition("OnResult", new SpIntToInt(22), this.validTransition, store);
+            });
+        }
+
+
 
         #endregion
 

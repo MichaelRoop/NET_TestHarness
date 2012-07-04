@@ -158,6 +158,8 @@ namespace SpStateMachine.States {
 
         #region ISpState Methods
 
+        #region Virtual 
+
         /// <summary>
         /// Excecuted once when the state becomes the current state
         /// </summary>
@@ -199,6 +201,9 @@ namespace SpStateMachine.States {
             });
         }
 
+        #endregion
+
+        #region Sealed Method
 
         /// <summary>
         /// Register a state transition from incoming event. Left virtual to allow a derived class
@@ -206,12 +211,8 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="eventId">The id converter of the incoming event</param>
         /// <param name="transition">The transition object</param>
-        public virtual void RegisterOnEventTransition(ISpToInt eventId, ISpStateTransition transition) {
-            int tmp = eventId.ToInt();
-            WrapErr.ChkFalse(this.onEventTransitions.Keys.Contains(tmp), 50202, () => {
-                return String.Format("OnEvent Already Contains Transition for Id:{0}", tmp);
-            });
-            this.onEventTransitions.Add(tmp, transition);
+        public void RegisterOnEventTransition(ISpToInt eventId, ISpStateTransition transition) {
+            SpTools.RegisterTransition("OnEvent", eventId, transition, this.onEventTransitions); 
         }
         
 
@@ -222,13 +223,11 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="eventId">The id converter of the event as the result of state processing</param>
         /// <param name="transition">The transition object</param>
-        public virtual void RegisterOnResultTransition(ISpToInt eventId, ISpStateTransition transition) {
-            int tmp = eventId.ToInt();
-            WrapErr.ChkFalse(this.onResultTransitions.Keys.Contains(tmp), 50203, () => {
-                return String.Format("OnResult Already Contains Transition for Id:{0}", eventId);
-            });
-            this.onResultTransitions.Add(tmp, transition);
+        public void RegisterOnResultTransition(ISpToInt eventId, ISpStateTransition transition) {
+            SpTools.RegisterTransition("OnResult", eventId, transition, this.onResultTransitions); 
         }
+
+        #endregion
 
         #endregion
 

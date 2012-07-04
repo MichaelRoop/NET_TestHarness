@@ -85,8 +85,8 @@
   <!-- SpStateMachine.SpState -->
   <Error code="50200" class="SpState" method="SpState" message="Null Wrapped Object Argument" />
   <Error code="50201" class="SpState" method="OnEntry" message="OnEntry Cannot be Executed More Than Once" />
-  <Error code="50202" class="SpState" method="RegisterOnEventTransition" message="Transition Id already Registered" />
-  <Error code="50203" class="SpState" method="RegisterOnResultTransition" message="Transition Id already Registered" />
+  <Error code="50202" class="SpState" method="" message="" />
+  <Error code="50203" class="SpState" method="" message="" />
   <Error code="50204" class="SpState" method="GetTransitionFromStore" message="Unexpected Error" />
   <Error code="50205" class="SpState" method="OnTick" message="OnTick Cannot be Executed Before OnEntry" />
   <Error code="50206" class="SpState" method="InitStateIds" message="Null id Chain" />
@@ -112,13 +112,12 @@
   <Error code="51001" class="SpTools" method="GetIdString" message="Null converterFunc Argument" />
   <Error code="51002" class="SpTools" method="GetIdString" message="Unexpected Error" />
   <Error code="51003" class="SpTools" method="GetIdString" message="Error in Calling Id to String Converter Method" />
-  <Error code="51004" class="SpTools" method="" message="" />
-  <Error code="51005" class="SpTools" method="" message="" />
-  <Error code="51006" class="SpTools" method="" message="" />
-  <Error code="51007" class="SpTools" method="" message="" />
-  <Error code="51008" class="SpTools" method="" message="" />
+  <Error code="51004" class="SpTools" method="RegisterTransition" message="Null eventId Argument" />
+  <Error code="51005" class="SpTools" method="RegisterTransition" message="Null transition Argument" />
+  <Error code="51006" class="SpTools" method="RegisterTransition" message="Null store Argument" />
+  <Error code="51007" class="SpTools" method="RegisterTransition" message="Error on Converting Id to Int" />
+  <Error code="51008" class="SpTools" method="RegisterTransition" message="Transition Already Registered" />
   <Error code="51009" class="SpTools" method="" message="" />
-
   <Error code="51010" class="SpTools" method="" message="" />
   <Error code="51011" class="SpTools" method="" message="" />
   <Error code="51012" class="SpTools" method="" message="" />
@@ -129,6 +128,20 @@
   <Error code="51017" class="SpTools" method="" message="" />
   <Error code="51018" class="SpTools" method="" message="" />
   <Error code="51019" class="SpTools" method="" message="" />
+
+  <Error code="51020" class="SpTools" method="" message="" />
+  <Error code="51021" class="SpTools" method="" message="" />
+  <Error code="51022" class="SpTools" method="" message="" />
+  <Error code="51023" class="SpTools" method="" message="" />
+  <Error code="51024" class="SpTools" method="" message="" />
+  <Error code="51025" class="SpTools" method="" message="" />
+  <Error code="51026" class="SpTools" method="" message="" />
+  <Error code="51027" class="SpTools" method="" message="" />
+  <Error code="51028" class="SpTools" method="" message="" />
+  <Error code="51029" class="SpTools" method="" message="" />
+
+
+
 
 
   <Error code="" class="" method="" message="" />

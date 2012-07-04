@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ChkUtils;
+using SpStateMachine.Interfaces;
 
 namespace SpStateMachine.Core {
 
@@ -34,6 +35,32 @@ namespace SpStateMachine.Core {
                 return ret;
             });
         }
+
+
+        /// <summary>
+        /// Register a state transition for an event
+        /// </summary>
+        /// <param name="eventId">The id converter of the event type</param>
+        /// <param name="transition">The transition object</param>
+        public static void RegisterTransition(string type, ISpToInt eventId, ISpStateTransition transition, Dictionary<int, ISpStateTransition> store) {
+            WrapErr.ChkParam(eventId, "eventId", 51004);
+            WrapErr.ChkParam(transition, "transition", 51005);
+            WrapErr.ChkParam(store, "store", 51006);
+
+            // Wrap the id converter separately
+            int tmp = WrapErr.ToErrorReportException(51007,
+                () => { return String.Format("Error on Event Id Converter for '{0}' Event Type", type); },
+                () => { return eventId.ToInt(); });
+
+            // Duplicate transitions on same Event is a no no.
+            WrapErr.ChkFalse(store.Keys.Contains(tmp), 51008, 
+                () => { return String.Format("Already Contain a '{0}' Transition for Id:{1}", type, tmp); });
+            store.Add(tmp, transition);
+        }
+
+
+
+
 
 
     }
