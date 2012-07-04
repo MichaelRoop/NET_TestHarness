@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ChkUtils;
 
-namespace SpStateMachine.Utils {
+namespace SpStateMachine.Converters {
 
     /// <summary>
     /// Extension tools to enable developers to use enums for strong typing in generating

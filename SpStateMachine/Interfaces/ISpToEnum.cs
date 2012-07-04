@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace SpStateMachine.Interfaces {
 
     /// <summary>
-    /// Interface defining an int to Enum Converter
+    /// Defines an interface to pass an int convertible to Enum
     /// </summary>
-    /// <typeparam name="T">The type of Enum to convert</typeparam>
+    /// <remarks>This allows strong typing of int type values as Enum</remarks>
+    /// <author>Michael Roop</author>
+    /// <typeparam name="T">
+    /// The type of Enum to convert. The struct constraint forces the type to 
+    /// be non nullable.  The implementation has to do the checking if Enum
+    /// </typeparam>
     public interface ISpToEnum<T> where T : struct {
 
         /// <summary>
@@ -17,13 +18,6 @@ namespace SpStateMachine.Interfaces {
         /// <returns>Returns a type T enum</returns>
         T ToEnum();
 
-
-        /// <summary>
-        /// Convert an int value into an enum
-        /// </summary>
-        /// <param name="id">The int value to convert</param>
-        /// <returns>An enum</returns>
-        T ToEnum(int id);
-
     }
+
 }

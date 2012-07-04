@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using TestCases.TestToolSet;
-using SpStateMachine.Utils;
 using SpStateMachine.Converters;
 
 namespace TestCases.SpStateMachineTests {
@@ -69,6 +68,17 @@ namespace TestCases.SpStateMachineTests {
             Assert.AreEqual(0, val, "Did not return right number for TestEnum.Gnarly");
         }
 
+
+        [Test]
+        public void _0_ToInt_ConverterClass_Good() {
+            int val = 99;
+            TestHelpers.CatchUnexpected(() => {
+                val = SpConverter.EnumToInt(TestEnum.Gnarly);
+            });
+            Assert.AreEqual(0, val, "Did not return right number for TestEnum.Gnarly");
+        }
+
+
         #endregion
         
         #region ToEnum
@@ -114,60 +124,26 @@ namespace TestCases.SpStateMachineTests {
             });
         }
 
-
-
-
-//            return WrapErr.ToErrorReportException(9999, "Error Converting from Int to Enum", () => {
-
-
         #endregion
 
-    }
-
-    [TestFixture]
-    public class SpToEnumTests {
-
-        #region Data
-
-        HelperLogReader logReader = new HelperLogReader();
-
-        #endregion
-
-        #region Setup
-
-        [SetUp]
-        public void TestSetup() {
-            this.logReader.StartLogging();
-        }
-
-        [TearDown]
-        public void TestTeardown() {
-            this.logReader.StopLogging();
-            this.logReader.Clear();
-        }
-
-        #endregion
+        #region SpIntToEnum class wrapper
 
         [Test]
-        public void _0_ToAnyEnum_Static_MixedTypes() {
-            Assert.AreEqual(GrouchTestEnum.Groucho, SpToEnum<GrouchTestEnum>.ToAnyEnum(2));
-            Assert.AreEqual(TestEnum.Gnarly, SpToEnum<TestEnum>.ToAnyEnum(0));
-        }
-
-
-        [Test]
-        public void _0_ToEnum_FromConstructionParam() {
-            Assert.AreEqual(GrouchTestEnum.Groucho, new SpToEnum<GrouchTestEnum>(2).ToEnum());
+        public void _0_SpIntToEnum_FromConstructionParam() {
+            Assert.AreEqual(GrouchTestEnum.Groucho, new SpIntToEnum<GrouchTestEnum>(2).ToEnum());
         }
 
         [Test]
-        public void _0_ToEnum_FromMethodParam() {
-            Assert.AreEqual(GrouchTestEnum.Larry, new SpToEnum<GrouchTestEnum>(1).ToEnum(0));
+        public void _9999_SpIntToEnum_OutOfRange() {
+            TestHelpers.CatchExpected(9999, "SpEnumConverterExtensions", "ToEnum", "Enum Conversion Out of Range Attempting to Convert to Type 'GrouchTestEnum' with Value '39'", () => {
+                new SpIntToEnum<GrouchTestEnum>(39).ToEnum();
+            });
         }
+
+        #endregion
 
 
     }
-
 
 
 }

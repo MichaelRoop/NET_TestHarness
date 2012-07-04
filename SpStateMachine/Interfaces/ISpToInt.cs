@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace SpStateMachine.Interfaces {
 
     /// <summary>
-    /// Defines an interface for an Enum to Int Converter
+    /// Defines an interface to pass an Enum convertible to Int
     /// </summary>
+    /// <remarks>This allows strong typing of int type arguments as Enum</remarks>
     /// <author>Michael Roop</author>
     public interface ISpToInt {
 
@@ -16,6 +13,7 @@ namespace SpStateMachine.Interfaces {
         /// </summary>
         /// <returns></returns>
         int ToInt();
+
     }
 
 }
