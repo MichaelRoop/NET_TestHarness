@@ -21,11 +21,11 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         #region Constructors
 
         public MySuperState(MyStateID id, MyDataClass dataClass)
-            : base(id.Int(), dataClass) {
+            : base(new SpEnumToInt(id), dataClass) {
         }
 
         public MySuperState(ISpState parent, MyStateID id, MyDataClass dataClass)
-            : base(parent, id.Int(), dataClass) {
+            : base(parent, new SpEnumToInt(id), dataClass) {
         }
 
         #endregion
@@ -77,7 +77,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
 
         protected override string ConvertStateIdToString(int id) {
-            return id.ToStateId().ToString();
+            return SpConverter.IntToEnum<MyStateID>(id).ToString();
         }
 
 
@@ -100,7 +100,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         /// <param name="id">The message id to convert to string</param>
         /// <returns></returns>
         protected override string ConvertMsgTypedToString(int id) {
-            return id.ToMsgType().ToString();
+            return SpConverter.IntToEnum<MyMsgType>(id).ToString();
         }
 
 

@@ -54,7 +54,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpSuperState(int id, T wrappedObject)
+        public SpSuperState(ISpToInt id, T wrappedObject)
             : base(id, wrappedObject) {
         }
 
@@ -65,7 +65,7 @@ namespace SpStateMachine.States {
         /// <param name="parent">The parent state</param>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpSuperState(ISpState parent, int id, T wrappedObject)
+        public SpSuperState(ISpState parent, ISpToInt id, T wrappedObject)
             : base(parent, id, wrappedObject) {
         }
 

@@ -26,7 +26,7 @@ namespace TestCases.SpStateMachineTests {
 
     public class StImpl<T> : SpState<T> where T : class, IDisposable {
 
-        public StImpl(ISpState parent, int id, T wo) : base(parent, id, wo) { }
+        public StImpl(ISpState parent, int id, T wo) : base(parent, new SpIntToInt(id), wo) { }
 
         public StImpl(int id, T wo) : this(null, id, wo) { }
 

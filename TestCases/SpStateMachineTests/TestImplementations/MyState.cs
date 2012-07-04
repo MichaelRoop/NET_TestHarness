@@ -21,16 +21,16 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
 
         public MyState(MyStateID id, MyDataClass dataClass)
-            : base(id.Int(), dataClass) {
+            : base(new SpEnumToInt(id), dataClass) {
         }
 
         public MyState(ISpState parent, MyStateID id, MyDataClass dataClass)
-            : base(parent, id.Int(), dataClass) {
+            : base(parent, new SpEnumToInt(id), dataClass) {
         }
 
 
         protected override string ConvertStateIdToString(int id) {
-            return id.ToStateId().ToString();
+            return SpConverter.IntToEnum<MyStateID>(id).ToString();
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         /// <param name="id">The message id to convert to string</param>
         /// <returns></returns>
         protected override string ConvertMsgTypedToString(int id) {
-            return id.ToMsgType().ToString();
+            return SpConverter.IntToEnum<MyMsgType>(id).ToString();
         }
 
 
@@ -89,9 +89,9 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
 
         protected override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
-            Log.Info("MyState", "GetResponseMsg", String.Format("For msg:{0}", msg.TypeId.ToStateId()));
+            Log.Info("MyState", "GetResponseMsg", String.Format("For msg:{0}", SpConverter.IntToEnum<MyMsgType>(msg.TypeId)));
             MyBaseResponse response = new MyBaseResponse(MyMsgType.SimpleResponse, msg, MyReturnCode.FailedPresure, "lalalal");
-            Log.Info("MyState", "GetResponseMsg", String.Format("Made bogus response msg:{0}", response.TypeId.ToStateId()));
+            Log.Info("MyState", "GetResponseMsg", String.Format("Made bogus response msg:{0}", SpConverter.IntToEnum<MyMsgType>(response.TypeId)));
             return response;
 
 

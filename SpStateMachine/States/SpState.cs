@@ -128,7 +128,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpState(int id, T wrappedObject)
+        public SpState(ISpToInt id, T wrappedObject)
             : this(null, id, wrappedObject) {
         }
 
@@ -137,11 +137,11 @@ namespace SpStateMachine.States {
         /// Constructor
         /// </summary>
         /// <param name="parent">The parent state</param>
-        /// <param name="id">Unique state id</param>
+        /// <param name="id">Unique state id converter</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpState(ISpState parent, int id, T wrappedObject) {
+        public SpState(ISpState parent, ISpToInt id, T wrappedObject) {
             WrapErr.ChkParam(wrappedObject, "wrappedObject", 50200);
-            this.InitStateIds(parent, id);
+            this.InitStateIds(parent, id.ToInt());
             this.wrappedObject = wrappedObject;
         }
 
