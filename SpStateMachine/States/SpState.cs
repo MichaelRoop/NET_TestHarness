@@ -469,19 +469,14 @@ namespace SpStateMachine.States {
         /// <returns>The transition object from the store or null if not found</returns>
         private ISpStateTransition GetTransitionFromStore(Dictionary<int, ISpStateTransition> store, ISpEventMessage eventMsg) {
             return WrapErr.ToErrorReportException(50204, () => {
-                if (store.Keys.Contains(eventMsg.EventId)) {
-                    Log.Debug("SpState", "GetTransition", String.Format("Found transition for event:{0}", this.GetCachedEventId(eventMsg.EventId)));
-
-                    // Clone Transition object from store since its pointers get reset later
-                    ISpStateTransition tr = (ISpStateTransition)store[eventMsg.EventId].Clone();
-                    this.LogTransition(tr, eventMsg);
-                    tr.ReturnMessage = eventMsg;
-                    return tr;
+                ISpStateTransition t = SpTools.GetTransitionCloneFromStore(store, eventMsg);
+                if (t != null) {
+                    this.LogTransition(t, eventMsg);
                 }
-                return null;
+                return t;
             });
         }
-
+        
 
         /// <summary>
         /// Initialise the state id chain from ancestors to this state 

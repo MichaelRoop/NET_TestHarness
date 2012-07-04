@@ -117,9 +117,9 @@
   <Error code="51006" class="SpTools" method="RegisterTransition" message="Null store Argument" />
   <Error code="51007" class="SpTools" method="RegisterTransition" message="Error on Converting Id to Int" />
   <Error code="51008" class="SpTools" method="RegisterTransition" message="Transition Already Registered" />
-  <Error code="51009" class="SpTools" method="" message="" />
-  <Error code="51010" class="SpTools" method="" message="" />
-  <Error code="51011" class="SpTools" method="" message="" />
+  <Error code="51009" class="SpTools" method="GetTransitionCloneFromStore" message="Null store Argument" />
+  <Error code="51010" class="SpTools" method="GetTransitionCloneFromStore" message="Null eventMsg Argument" />
+  <Error code="51011" class="SpTools" method="GetTransitionCloneFromStore" message="Unexpected Error" />
   <Error code="51012" class="SpTools" method="" message="" />
   <Error code="51013" class="SpTools" method="" message="" />
   <Error code="51014" class="SpTools" method="" message="" />

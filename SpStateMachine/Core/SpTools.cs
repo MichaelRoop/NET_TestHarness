@@ -59,6 +59,26 @@ namespace SpStateMachine.Core {
         }
 
 
+        /// <summary>
+        /// Get a clone of the transition object from the store or null if not found
+        /// </summary>
+        /// <param name="store">The store to search</param>
+        /// <param name="eventMsg">The message to insert in the transition object</param>
+        /// <returns>The transition object from the store or null if not found</returns>
+        public static ISpStateTransition GetTransitionCloneFromStore(Dictionary<int, ISpStateTransition> store, ISpEventMessage eventMsg) {
+            WrapErr.ChkParam(store, "store", 51009);
+            WrapErr.ChkParam(eventMsg, "eventMsg", 51010);
+
+            return WrapErr.ToErrorReportException(51011, () => {
+                if (store.Keys.Contains(eventMsg.EventId)) {
+                    // Clone Transition object from store since its pointers get reset later
+                    ISpStateTransition tr = (ISpStateTransition)store[eventMsg.EventId].Clone();
+                    tr.ReturnMessage = eventMsg;
+                    return tr;
+                }
+                return null;
+            });
+        }
 
 
 

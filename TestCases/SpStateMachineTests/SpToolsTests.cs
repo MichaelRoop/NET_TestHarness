@@ -113,11 +113,13 @@ namespace TestCases.SpStateMachineTests {
 
         #region RegisterTransition
 
-        private ISpEventMessage validMsg = new SpBaseEventMsg(new SpIntToInt(2), new SpIntToInt(4));
+        private ISpEventMessage validMsg = new SpBaseEventMsg(new SpIntToInt(2), new SpIntToInt(41));
+        private ISpEventMessage validMsg2 = new SpBaseEventMsg(new SpIntToInt(3), new SpIntToInt(42));
+
         private ISpStateTransition validTransition = 
             new SpStateTransition(SpStateTransitionType.SameState, null, new SpBaseEventMsg(new SpIntToInt(22), new SpIntToInt(34)));
         private ISpStateTransition validTransition2 = 
-            new SpStateTransition(SpStateTransitionType.SameState, null, new SpBaseEventMsg(new SpIntToInt(33), new SpIntToInt(98)));
+            new SpStateTransition(SpStateTransitionType.Defered, null, new SpBaseEventMsg(new SpIntToInt(33), new SpIntToInt(98)));
 
 
         [Test]
@@ -130,7 +132,6 @@ namespace TestCases.SpStateMachineTests {
             Assert.IsTrue(store.Keys.Contains(91), "Missing key 91");
             Assert.IsTrue(store.Keys.Contains(29), "Missing key 29");
         }
-
         
         [Test]
         public void _51004_RegisterTransition_NullEventIdConverter() {
@@ -178,7 +179,75 @@ namespace TestCases.SpStateMachineTests {
 
 
 
+        #endregion 
+        
+        #region GetTransitionCloneFromStore
+
+        [Test]
+        public void _0_GetTransitionCloneFromStore_Ok() {
+            Dictionary<int,ISpStateTransition> store = new Dictionary<int, ISpStateTransition>();
+            TestHelpers.CatchUnexpected(() => {
+                SpTools.RegisterTransition("OnResult", new SpIntToInt(this.validMsg.EventId), this.validTransition, store);
+                SpTools.RegisterTransition("OnResult", new SpIntToInt(this.validMsg2.EventId), this.validTransition2, store);
+            });
+
+            ISpStateTransition t = SpTools.GetTransitionCloneFromStore(store, this.validMsg2);
+            Assert.AreEqual(t.NextState, this.validTransition2.NextState);
+            Assert.AreEqual(t.ReturnMessage.EventId, this.validMsg2.EventId);
+        }
+
+        [Test]
+        public void _0_GetTransitionCloneFromStore_CloneIsGood() {
+            Dictionary<int,ISpStateTransition> store = new Dictionary<int, ISpStateTransition>();
+            TestHelpers.CatchUnexpected(() => {
+                SpTools.RegisterTransition("OnResult", new SpIntToInt(this.validMsg.EventId), this.validTransition, store);
+                SpTools.RegisterTransition("OnResult", new SpIntToInt(this.validMsg2.EventId), this.validTransition2, store);
+            });
+
+            ISpStateTransition t = SpTools.GetTransitionCloneFromStore(store, this.validMsg2);
+            Assert.AreEqual(t.TransitionType, this.validTransition2.TransitionType);
+            Assert.AreEqual(t.ReturnMessage.EventId, this.validMsg2.EventId);
+
+            t.TransitionType = SpStateTransitionType.ExitState;
+            t.ReturnMessage = null;
+
+            Assert.AreNotEqual(t.TransitionType, this.validTransition2.TransitionType);
+            Assert.IsNotNull(this.validTransition2.ReturnMessage);
+        }
+
+        [Test]
+        public void _51009_GetTransitionCloneFromStore_NullEventIdConverter() {
+            TestHelpers.CatchExpected(51009, this.className, "GetTransitionCloneFromStore", "Null store Argument", () => {
+                SpTools.GetTransitionCloneFromStore(null, this.validMsg);
+            });
+        }
+
+        [Test]
+        public void _51010_GetTransitionCloneFromStore_NullEventMsg() {
+            TestHelpers.CatchExpected(51010, this.className, "GetTransitionCloneFromStore", "Null eventMsg Argument", () => {
+                Dictionary<int,ISpStateTransition> store = new Dictionary<int, ISpStateTransition>();
+                SpTools.RegisterTransition("OnResult", new SpIntToInt(22), this.validTransition, store);
+                SpTools.GetTransitionCloneFromStore(store, null);
+            });
+        }
+
+
+        [Test]
+        public void _51011_GetTransitionCloneFromStore_ErrorOnClone() {
+            TestHelpers.CatchExpected(51011, this.className, "GetTransitionCloneFromStore", "Unexpected Error Occured", () => {
+                ISpStateTransition tr = MockRepository.GenerateMock<ISpStateTransition>();
+                tr.Expect(o => o.Clone()).Throw(new Exception("Clone Exception"));
+
+                Dictionary<int,ISpStateTransition> store = new Dictionary<int, ISpStateTransition>();
+                SpTools.RegisterTransition("OnResult", new SpIntToInt(this.validMsg.EventId), tr, store);
+                SpTools.RegisterTransition("OnResult", new SpIntToInt(23), this.validTransition, store);
+
+                SpTools.GetTransitionCloneFromStore(store, this.validMsg);
+            });
+        }
+
         #endregion
+
 
 
     }
