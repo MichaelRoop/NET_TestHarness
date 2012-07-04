@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\SpPeriodicWakeupOnly.cs" />
+    <Compile Include="Converters\SpToEnum.cs" />
+    <Compile Include="Converters\SpToInt.cs" />
     <Compile Include="Core\BehaviorResponseEventType.cs" />
     <Compile Include="Core\SpEventPriority.cs" />
     <Compile Include="Core\SpStateMachineEngine.cs" />
@@ -51,6 +53,8 @@
     <Compile Include="EventStores\BaseEventStore.cs" />
     <Compile Include="EventStores\PriorityEventStore.cs" />
     <Compile Include="EventStores\SimpleDequeEventStore.cs" />
+    <Compile Include="Interfaces\ISpToEnum.cs" />
+    <Compile Include="Interfaces\ISpToInt.cs" />
     <Compile Include="Interfaces\ISpBehaviorOnEvent.cs" />
     <Compile Include="Interfaces\ISpEventMessage.cs" />
     <Compile Include="Interfaces\ISpEventListner.cs" />
@@ -66,6 +70,8 @@
     <Compile Include="States\SpState.cs" />
     <Compile Include="Core\SpMachine.cs" />
     <Compile Include="States\SpSuperState.cs" />
+    <Compile Include="Utils\SpEnumConverter.cs" />
+    <Compile Include="Utils\SpEnumConverterExtensions.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

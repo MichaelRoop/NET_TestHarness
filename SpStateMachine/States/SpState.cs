@@ -181,7 +181,7 @@ namespace SpStateMachine.States {
         /// <summary>
         /// Always invoked on object exit
         /// </summary>
-        public void OnExit() {
+        public virtual void OnExit() {
             Log.Info(this.className, "ExecOnExit", this.FullName);
             // TODO - check that OnEntry has happened ??
             this.SetEntered(false);
@@ -192,7 +192,8 @@ namespace SpStateMachine.States {
 
 
         /// <summary>
-        /// Register a state transition from incoming event
+        /// Register a state transition from incoming event. Left virtual to allow a derived class
+        /// to create a blocking scenario if they want to use enums for the ids (see examples)
         /// </summary>
         /// <param name="eventId">The id of the incoming event</param>
         /// <param name="transition">The transition object</param>
@@ -205,7 +206,9 @@ namespace SpStateMachine.States {
         
 
         /// <summary>
-        /// Register a state transition from the result of state processing
+        /// Register a state transition from the result of state processing. Left virtual to allow a 
+        /// derived class to create a blocking scenario if they want to use enums for the ids 
+        /// (see examples)
         /// </summary>
         /// <param name="eventId">The id of the event as the result of state processing</param>
         /// <param name="transition">The transition object</param>

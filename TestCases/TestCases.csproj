@@ -83,6 +83,7 @@
     <Compile Include="SpStateMachineTests\TestImplementations\MyStateMachine.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\Messages\MyBaseMsg.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MySuperState.cs" />
+    <Compile Include="SpStateMachineTests\SpEnumConverterTests.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\States\ActiveSt.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\States\FailedSt.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\States\IdleSt.cs" />

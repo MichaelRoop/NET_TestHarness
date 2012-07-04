@@ -5,6 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using TestCases.TestToolSet;
 using SpStateMachine.Utils;
+using SpStateMachine.Converters;
 
 namespace TestCases.SpStateMachineTests {
 
@@ -14,6 +15,14 @@ namespace TestCases.SpStateMachineTests {
         Whoopee,
         Splat,
     }
+
+    enum GrouchTestEnum {
+        Larry,
+        Curly,
+        Groucho,
+        Max,
+    }
+
 
 
     [TestFixture]
@@ -113,7 +122,52 @@ namespace TestCases.SpStateMachineTests {
 
         #endregion
 
+    }
+
+    [TestFixture]
+    public class SpToEnumTests {
+
+        #region Data
+
+        HelperLogReader logReader = new HelperLogReader();
+
+        #endregion
+
+        #region Setup
+
+        [SetUp]
+        public void TestSetup() {
+            this.logReader.StartLogging();
+        }
+
+        [TearDown]
+        public void TestTeardown() {
+            this.logReader.StopLogging();
+            this.logReader.Clear();
+        }
+
+        #endregion
+
+        [Test]
+        public void _0_ToAnyEnum_Static_MixedTypes() {
+            Assert.AreEqual(GrouchTestEnum.Groucho, SpToEnum<GrouchTestEnum>.ToAnyEnum(2));
+            Assert.AreEqual(TestEnum.Gnarly, SpToEnum<TestEnum>.ToAnyEnum(0));
+        }
+
+
+        [Test]
+        public void _0_ToEnum_FromConstructionParam() {
+            Assert.AreEqual(GrouchTestEnum.Groucho, new SpToEnum<GrouchTestEnum>(2).ToEnum());
+        }
+
+        [Test]
+        public void _0_ToEnum_FromMethodParam() {
+            Assert.AreEqual(GrouchTestEnum.Larry, new SpToEnum<GrouchTestEnum>(1).ToEnum(0));
+        }
 
 
     }
+
+
+
 }
