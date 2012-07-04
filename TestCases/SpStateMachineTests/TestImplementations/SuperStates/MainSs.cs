@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SpStateMachine.Core;
+using SpStateMachine.Converters;
 
 namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
 
@@ -21,9 +22,9 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
             //notStarted.RegisterOnEventTransition(MyEventType.Start, new SpStateTransition(SpStateTransitionType.NextState, recovery, null));
             //notStarted.RegisterOnEventTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.ExitState, null, null));
 
-            // Register OnResult so that the Superstate can handle its state's ExitState transitions
-            notStarted.RegisterOnResultTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.NextState, recovery, null));
 
+            // Register OnResult so that the Superstate can handle its state's ExitState transitions
+            notStarted.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.NextState, recovery, null));
 
             //// Register active state transitions
             //active.RegisterOnEventTransition(MyEventType.Stop, new SpStateTransition(SpStateTransitionType.NextState, idle, null));

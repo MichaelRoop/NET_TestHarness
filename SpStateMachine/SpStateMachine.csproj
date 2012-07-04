@@ -50,6 +50,7 @@
     <Compile Include="Core\SpStateMachineEngine.cs" />
     <Compile Include="Core\SpStateTransition.cs" />
     <Compile Include="Core\SpStateTransitionType.cs" />
+    <Compile Include="Core\SpTools.cs" />
     <Compile Include="EventListners\SimpleEventListner.cs" />
     <Compile Include="EventStores\BaseEventStore.cs" />
     <Compile Include="EventStores\PriorityEventStore.cs" />

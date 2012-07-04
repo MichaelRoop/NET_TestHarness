@@ -5,6 +5,7 @@ using System.Text;
 using SpStateMachine.Interfaces;
 using TestCases.SpStateMachineTests.TestImplementations.States;
 using SpStateMachine.Core;
+using SpStateMachine.Converters;
 
 namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
 
@@ -20,19 +21,20 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
             this.AddSubState(active);
 
             // Register Idle state transitions
-            idle.RegisterOnEventTransition(MyEventType.Start, new SpStateTransition(SpStateTransitionType.NextState, active, null));
-            idle.RegisterOnEventTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.ExitState, null, null));
+            idle.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Start), new SpStateTransition(SpStateTransitionType.NextState, active, null));
+            idle.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.ExitState, null, null));
 
             // results
-            idle.RegisterOnResultTransition(MyEventType.Start, new SpStateTransition(SpStateTransitionType.NextState, active, null));
+            idle.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Start), new SpStateTransition(SpStateTransitionType.NextState, active, null));
 
 
             // Register active state transitions
-            active.RegisterOnEventTransition(MyEventType.Stop, new SpStateTransition(SpStateTransitionType.NextState, idle, null));
+            active.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition(SpStateTransitionType.NextState, idle, null));
             //active.RegisterOnEventTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.ExitState, null, null));
-            active.RegisterOnEventTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.Defered, null, null));
+            active.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.Defered, null, null));
 
-            active.RegisterOnResultTransition(MyEventType.Stop, new SpStateTransition(SpStateTransitionType.NextState, idle, null));
+            active.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition(SpStateTransitionType.NextState, idle, null));
+
 
 
             // Register my defered
@@ -43,7 +45,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
             //this.RegisterOnResultTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.NextState, idle, null));
 
 
-            this.RegisterOnResultTransition(MyEventType.Stop, new SpStateTransition(SpStateTransitionType.NextState, idle, null));
+            this.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition(SpStateTransitionType.NextState, idle, null));
 
 
             this.SetEntryState(idle);

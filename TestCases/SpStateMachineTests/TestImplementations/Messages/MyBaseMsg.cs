@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SpStateMachine.Messages;
 using SpStateMachine.Core;
+using SpStateMachine.Converters;
 
 namespace TestCases.SpStateMachineTests.TestImplementations.Messages {
 
@@ -21,7 +22,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.Messages {
         /// <param name="eventId">The event identifier</param>
         /// <param name="priority">The priority of the message</param>
         public MyBaseMsg(MyMsgType msgType, MyEventType eventType, SpEventPriority priority)
-            : base(msgType.Int(), eventType.Int(), priority) {
+            : base(msgType.Int(), SpConverter.EnumToInt(eventType), priority) {
         }
 
 

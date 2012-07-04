@@ -195,13 +195,14 @@ namespace SpStateMachine.States {
         /// Register a state transition from incoming event. Left virtual to allow a derived class
         /// to create a blocking scenario if they want to use enums for the ids (see examples)
         /// </summary>
-        /// <param name="eventId">The id of the incoming event</param>
+        /// <param name="eventId">The id converter of the incoming event</param>
         /// <param name="transition">The transition object</param>
-        public virtual void RegisterOnEventTransition(int eventId, ISpStateTransition transition) {
-            WrapErr.ChkFalse(this.onEventTransitions.Keys.Contains(eventId), 50202, () => {
-                return String.Format("OnEvent Already Contains Transition for Id:{0}", eventId);
+        public virtual void RegisterOnEventTransition(ISpToInt eventId, ISpStateTransition transition) {
+            int tmp = eventId.ToInt();
+            WrapErr.ChkFalse(this.onEventTransitions.Keys.Contains(tmp), 50202, () => {
+                return String.Format("OnEvent Already Contains Transition for Id:{0}", tmp);
             });
-            this.onEventTransitions.Add(eventId, transition);
+            this.onEventTransitions.Add(tmp, transition);
         }
         
 
@@ -210,13 +211,14 @@ namespace SpStateMachine.States {
         /// derived class to create a blocking scenario if they want to use enums for the ids 
         /// (see examples)
         /// </summary>
-        /// <param name="eventId">The id of the event as the result of state processing</param>
+        /// <param name="eventId">The id converter of the event as the result of state processing</param>
         /// <param name="transition">The transition object</param>
-        public virtual void RegisterOnResultTransition(int eventId, ISpStateTransition transition) {
-            WrapErr.ChkFalse(this.onResultTransitions.Keys.Contains(eventId), 50203, () => {
+        public virtual void RegisterOnResultTransition(ISpToInt eventId, ISpStateTransition transition) {
+            int tmp = eventId.ToInt();
+            WrapErr.ChkFalse(this.onResultTransitions.Keys.Contains(tmp), 50203, () => {
                 return String.Format("OnResult Already Contains Transition for Id:{0}", eventId);
             });
-            this.onResultTransitions.Add(eventId, transition);
+            this.onResultTransitions.Add(tmp, transition);
         }
 
         #endregion

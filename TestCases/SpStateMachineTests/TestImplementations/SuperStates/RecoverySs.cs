@@ -5,6 +5,7 @@ using System.Text;
 using TestCases.SpStateMachineTests.TestImplementations.States;
 using SpStateMachine.Core;
 using SpStateMachine.Interfaces;
+using SpStateMachine.Converters;
 
 namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
 
@@ -20,12 +21,12 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
             this.AddSubState(active);
 
             // Register Idle state transitions
-            idle.RegisterOnEventTransition(MyEventType.Start, new SpStateTransition(SpStateTransitionType.NextState, active, null));
-            idle.RegisterOnEventTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.ExitState, null, null));
+            idle.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Start), new SpStateTransition(SpStateTransitionType.NextState, active, null));
+            idle.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.ExitState, null, null));
 
             // Register active state transitions
-            active.RegisterOnEventTransition(MyEventType.Stop, new SpStateTransition(SpStateTransitionType.NextState, idle, null));
-            active.RegisterOnEventTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.ExitState, null, null));
+            active.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition(SpStateTransitionType.NextState, idle, null));
+            active.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.ExitState, null, null));
 
 
             // Only on events registered.  On abor goes exit state

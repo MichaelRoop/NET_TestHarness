@@ -17,6 +17,7 @@ using ChkUtils;
 using TestCases.SpStateMachineTests.TestImplementations;
 using TestCases.SpStateMachineTests.TestImplementations.Messages;
 using TestCases.SpStateMachineTests.TestImplementations.SuperStates;
+using SpStateMachine.Converters;
 
 namespace TestCases.SpStateMachineTests {
 
@@ -66,8 +67,7 @@ namespace TestCases.SpStateMachineTests {
                 Console.WriteLine("State s2 name:{0}", s2.FullName);
 
 
-                s.RegisterOnEventTransition(MyEventType.Stop, new SpStateTransition(SpStateTransitionType.NextState, s2, null));
-
+                s.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition(SpStateTransitionType.NextState, s2, null));
 
                 ISpStateMachine sm = new MyStateMachine(dataClass, s);
                 ISpEventStore store = new SimpleDequeEventStore(new MyTickMsg());
