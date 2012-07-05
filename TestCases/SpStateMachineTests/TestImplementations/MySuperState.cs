@@ -30,6 +30,22 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
         #endregion
 
+
+        //protected override ISpEventMessage ExecOnTick(ISpEventMessage eventMsg) {
+        //    Console.WriteLine("########## {0} has received OnTick event:{1}", this.FullName, eventMsg.EventId);
+        //    return base.ExecOnEntry(eventMsg);
+        //    // just push the same one back
+        //    //return eventMsg;
+        //}
+        //protected override ISpEventMessage ExecOnTick(ISpEventMessage eventMsg) {
+        //    Console.WriteLine("########## {0} has received OnTick event:{1}", this.FullName, eventMsg.EventId);
+        //    return base.ExecOnEntry(eventMsg);
+        //    // just push the same one back
+        //    //return eventMsg;
+        //}
+
+
+
         #region SpStateOverrides
 
         protected override ISpEventMessage OnRuntimeTransitionRequest(ISpEventMessage msg) {

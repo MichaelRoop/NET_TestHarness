@@ -148,6 +148,80 @@ namespace TestCases.SpStateMachineTests {
 
         #region InitStateIds
 
+        class tstA {
+        }
+
+        class tstState : SpState<tstA> {
+            public tstState(ISpState parent, tstA o)
+                : base(parent, new SpIntToInt(3), o) {
+            }
+
+            protected override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
+                throw new NotImplementedException();
+            }
+
+            protected override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
+                throw new NotImplementedException();
+            }
+
+            #region Converters
+            protected override string ConvertStateIdToString(int id) {
+                return id.ToString();
+            }
+
+            protected override string ConvertEventIdToString(int id) {
+                return id.ToString();
+            }
+
+            protected override string ConvertMsgTypeIdToString(int id) {
+                return id.ToString();
+            }
+            #endregion
+        }
+
+        class tstSuperState : SpSuperState<tstA> {
+            public tstSuperState(tstA o)
+                : base(new SpIntToInt(1), o) {
+            }
+
+            protected override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
+                throw new NotImplementedException();
+            }
+
+            protected override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
+                throw new NotImplementedException();
+            }
+
+            #region Converters
+            protected override string ConvertStateIdToString(int id) {
+                return id.ToString();
+            }
+
+            protected override string ConvertEventIdToString(int id) {
+                return id.ToString();
+            }
+
+            protected override string ConvertMsgTypeIdToString(int id) {
+                return id.ToString();
+            }
+            #endregion 
+        }
+
+        [Test]
+        public void _0_() {
+            tstA o = new tstA();
+
+            ISpState ss = new tstSuperState(o);
+            ISpState s = new tstState(ss, o);
+
+            Console.WriteLine("SS name:{0} - FullName:{1}", ss.Name, ss.FullName);
+            Console.WriteLine("S name:{0} - FullName:{1}", s.Name, s.FullName);
+
+
+        }
+
+
+
         [Test]
         public void _50206_InitStateIds_ParentNullIdChain() {
             IDisposable wo = MockRepository.GenerateMock<IDisposable>();

@@ -6,6 +6,8 @@ using SpStateMachine.Interfaces;
 using ChkUtils;
 using SpStateMachine.Core;
 using LogUtils;
+using SpStateMachine.Messages;
+using SpStateMachine.Converters;
 
 namespace SpStateMachine.States {
 
@@ -29,22 +31,39 @@ namespace SpStateMachine.States {
 
         #region ISpState Properties
 
+        ///// <summary>
+        ///// From Get the fully resolved state name in format
+        ///// grandparent.parent.state. The super state gets the information from its
+        ///// current state rather than that current state will contain the proper
+        ///// currently resolved state of the state machine
+        ///// </summary>
+        //public override string FullName {
+        //    get {
+        //        // TODO - need to thread protect access to current thread var
+        //        //if (this.currentState != null) {
+        //        //    return this.currentState.FullName;
+        //        //}
+        //        return base.FullName;
+        //    }
+        //}
+
         /// <summary>
-        /// From Get the fully resolved state name in format
-        /// grandparent.parent.state. The super state gets the information from its
-        /// current state rather than that current state will contain the proper
-        /// currently resolved state of the state machine
+        /// Get the fully resolved state name in format parent.parent.state.substate with 
+        /// the all the acestors and children until the farthest leaf
+        /// state being the leaf
         /// </summary>
-        public override string FullName {
+        public sealed override string CurrentStateName {
             get {
                 // TODO - need to thread protect access to current thread var
                 if (this.currentState != null) {
-                    return this.currentState.FullName;
+                    return this.currentState.CurrentStateName;
                 }
-                return base.FullName;
+
+                // In this case the current super state is the leaf
+                return this.FullName;
             }
         }
-
+        
         #endregion
 
         #region Constructors
@@ -103,11 +122,20 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg">The incoming message with event</param>
         /// <returns>The return transition object with result information</returns>
-        public override ISpStateTransition OnEntry(ISpEventMessage msg) {
+        public sealed override ISpStateTransition OnEntry(ISpEventMessage msg) {
             Log.Info(this.className, "OnEntry", this.FullName);
             WrapErr.ChkVar(this.entryState, 9999, "The 'SentEntryState() Must be Called in the Constructor");
 
-            // TODO - Find if there are exit conditions OnEntry at the SuperState level and excecute them first - might have to exit immediately
+            // Find if there are exit conditions OnEntry at the SuperState level and excecute them first 
+            // This will check OnEvent transitions and transitions from the overriden ExecOnEntry
+            ISpStateTransition t = base.OnEntry(msg);
+            if (t.TransitionType != SpStateTransitionType.SameState) {
+                // The OnEntry at the superstate level has been set to true but the current state OnEntry has never been called so we
+                // must set the superstate as 'Not Entered' in order for it to NOT tick the OnExit of the current state
+                this.SetEntered(false);
+                return t;
+            }
+
             // TODO - Clean up logic. Does the SuperState even tick its current state since its OnEntry would be fired with the OnTick below?
             // TODO - Either we check if the Superstate has OnEvent stuff here and ignore the current state so it will get ticked on first 
             // TODO - SuperState OnTick or we check SuperState OnEvent Stuff AND do the GetTransition from the substate entry method
@@ -126,7 +154,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg">The incoming message with event</param>
         /// <returns>The return transition object with result information</returns>
-        public override ISpStateTransition OnTick(ISpEventMessage msg) {
+        public sealed override ISpStateTransition OnTick(ISpEventMessage msg) {
             Log.Info(this.className, "OnTick", this.FullName);
             WrapErr.ChkVar(this.entryState, 9999, "The 'SentEntryState() Must be Called in the Constructor");
             WrapErr.ChkVar(this.currentState, 9999, "Current state is not set");
@@ -145,6 +173,20 @@ namespace SpStateMachine.States {
                 return this.GetTransition(this.currentState.OnTick, msg);
             }
         }
+
+
+        public sealed override void OnExit() {
+            // If the superstate OnEntry was did not exit immediately because of a registered OnEvent 
+            // transition the current substate OnEntry would have been called and must not be reset
+            // with a call to the substate OnExit
+            if (this.IsEntryExcecuted) {
+                this.currentState.OnExit();
+            }
+
+            // This will cause any cleanup code defined for the super state to exit
+            base.OnExit();
+        }
+
 
         #endregion
 

@@ -121,6 +121,18 @@ namespace SpStateMachine.States {
             }
         }
 
+
+        /// <summary>
+        /// Get the fully resolved state name in format parent.parent.state.substate with 
+        /// the all the acestors and children until the farthest leaf
+        /// state being the leaf
+        /// </summary>
+        public virtual string CurrentStateName {
+            get {
+                return this.fullName;
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -166,7 +178,7 @@ namespace SpStateMachine.States {
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
         public virtual ISpStateTransition OnEntry(ISpEventMessage msg) {
-            Log.Info(this.className, "ExecOnEntry", this.FullName);
+            Log.Info(this.className, "OnEntry", this.FullName);
             WrapErr.ChkFalse(this.IsEntryExcecuted, 50201, "OnEntry Cannot be Executed More Than Once Until OnExit is Called");
             this.SetEntered(true);
             return WrapErr.ToErrorReportException(9999, () => {
@@ -193,7 +205,7 @@ namespace SpStateMachine.States {
         /// Always invoked on object exit
         /// </summary>
         public virtual void OnExit() {
-            Log.Info(this.className, "ExecOnExit", this.FullName);
+            Log.Info(this.className, "OnExit", this.FullName);
             // TODO - check that OnEntry has happened ??
             this.SetEntered(false);
             WrapErr.ToErrorReportException(9999, () => {
@@ -418,12 +430,12 @@ namespace SpStateMachine.States {
             WrapErr.ToErrorReportException(9999, () => {
                 Log.Debug("SpState", "LogTransition",
                     String.Format(
-                        "Transition Type:{0} From:{1} To:{2} On Msg:{3} Event:{4}",
+                        "{0} OnMsg({1} - {2}) - From:{3} To:{4}",
                         tr.TransitionType,
-                        this.FullName,
-                        tr.NextState == null ? "Unknown" : tr.NextState.FullName,
                         this.GetCachedMsgTypeId(eventMsg.TypeId),
-                        this.GetCachedEventId(eventMsg.EventId)));
+                        this.GetCachedEventId(eventMsg.EventId),
+                        this.FullName,
+                        tr.NextState == null ? "Unknown" : tr.NextState.FullName));
             });
         }
         

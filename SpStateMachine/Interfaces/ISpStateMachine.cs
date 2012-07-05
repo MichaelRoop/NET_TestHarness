@@ -1,13 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SpStateMachine.Interfaces {
 
+    /// <summary>
+    /// Operational interface into the states comprising the 
+    /// state machine
+    /// </summary>
+    /// <author>Michael Roop</author>
     public interface ISpStateMachine : IDisposable {
 
-        ISpEventMessage Tick(ISpEventMessage eventObject);
+        /// <summary>
+        /// The current state which has all the ancestors and the actual
+        /// operational state as the leaf.
+        /// </summary>
+        string CurrentStateName { get; }
+
+
+        /// <summary>
+        /// Tick the current state to execute the action based on the event message
+        /// </summary>
+        /// <param name="eventMessage">The event message</param>
+        /// <returns>The return message from the action</returns>
+        ISpEventMessage Tick(ISpEventMessage eventMessage);
 
     }
 }

@@ -138,7 +138,7 @@ namespace TestCases.SpStateMachineTests {
         }
 
 
-        [Test]
+        [Test, Explicit]
         public void TestDeferedTransitionsInSuperState() {
 
             TestHelpers.CatchUnexpected(() => {
@@ -169,7 +169,7 @@ namespace TestCases.SpStateMachineTests {
         }
 
 
-        [Test]
+        [Test, Explicit]
         public void TestExitStateTransitionsInSuperState() {
 
             TestHelpers.CatchUnexpected(() => {

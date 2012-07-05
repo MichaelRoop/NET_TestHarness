@@ -34,11 +34,17 @@ namespace SpStateMachine.Interfaces {
         string Name { get; }
 
         /// <summary>
-        /// Get the fully resolved state name in format
-        /// parent.parent.state
+        /// Get the fully resolved state name in format parent.parent.state with the current
+        /// state being the leaf
         /// </summary>
         string FullName { get; }
 
+
+        /// <summary>
+        /// Get the fully resolved state name in format parent.parent.state.substate with 
+        /// all acestors and children until the farthest sub state being the leaf
+        /// </summary>
+        string CurrentStateName { get; }
 
         #endregion
 

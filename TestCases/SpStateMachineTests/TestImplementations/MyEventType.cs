@@ -19,6 +19,8 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         /// <summary>Test event to push a class to do a defered transition</summary>
         ThinkAboutIt,
 
+        ExitAborted,
+
 
         // -- reponses
 

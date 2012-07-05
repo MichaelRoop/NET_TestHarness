@@ -71,6 +71,7 @@
     <Compile Include="SpStateMachineTests\SpStateTests.cs" />
     <Compile Include="SpStateMachineTests\SpToolsTests.cs" />
     <Compile Include="SpStateMachineTests\StateMachineScratchPad.cs" />
+    <Compile Include="SpStateMachineTests\StateTransitionTests.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\Messages\MyBaseResponse.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\Messages\MySimpleOkResponse.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\Messages\MyTickMsg.cs" />
@@ -89,6 +90,9 @@
     <Compile Include="SpStateMachineTests\TestImplementations\States\FailedSt.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\States\IdleSt.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\States\WaitOnInput.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\SuperStates\CascadeOnExit\Level2Ss.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\SuperStates\CascadeOnExit\Level3Ss.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\SuperStates\CascadeOnExit\LevelMainSs.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\SuperStates\MainSs.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\SuperStates\NotStartedSs.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\SuperStates\RecoverySs.cs" />

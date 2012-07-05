@@ -22,7 +22,22 @@ namespace SpStateMachine.Core {
         /// <summary>The object that the State Machine represents</summary>
         T wrappedObject = null;
 
+        /// <summary>Flag to indicate if the first 'OnEntry' has been called</summary>
         private bool isStarted = false;
+
+        #endregion
+
+        #region ISpStateMachine Properties
+
+        /// <summary>
+        /// The current state which has all the ancestors and the actual
+        /// operational state as the leaf.
+        /// </summary>
+        public string CurrentStateName {
+            get {
+                return this.state.CurrentStateName;
+            }
+        }
 
         #endregion
 
@@ -62,8 +77,14 @@ namespace SpStateMachine.Core {
         
         #endregion
 
-        #region SpStateMachine
+        #region ISpStateMachine Methods
 
+
+        /// <summary>
+        /// Tick the current state to execute the action based on the event message
+        /// </summary>
+        /// <param name="eventMessage">The event message</param>
+        /// <returns>The return message from the action</returns>
         public ISpEventMessage Tick(ISpEventMessage msg) {
             WrapErr.ChkDisposed(this.disposed, 50176);
             WrapErr.ChkParam(msg, "msg", 50172);
@@ -71,6 +92,8 @@ namespace SpStateMachine.Core {
             // First tick to drive it from entry to regular
             ISpStateTransition tr = null;
             bool tmpIsStarted = this.isStarted;
+
+            //Log.Debug("SpMachine", "Tick", String.Format("isStarted:{0}", this.isStarted));
 
             if (!this.isStarted) {
                 this.isStarted = true;

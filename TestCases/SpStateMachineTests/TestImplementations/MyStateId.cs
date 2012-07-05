@@ -16,6 +16,10 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         Started,        // Super state
         Recovery,       // Super state
 
+        Level2,
+        Level3,
+
+
         //======================================
         // State level
 
