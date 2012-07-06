@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using ChkUtils;
 using LogUtils;
@@ -193,7 +192,7 @@ namespace SpStateMachine.States {
 
         #region ISpState Methods
 
-        #region Virtual 
+        #region Virtual
 
         /// <summary>
         /// Excecuted once when the state becomes the current state
@@ -224,6 +223,9 @@ namespace SpStateMachine.States {
             });
         }
 
+        #endregion
+
+        #region Closed
 
         /// <summary>
         /// Always invoked on object exit
@@ -232,31 +234,25 @@ namespace SpStateMachine.States {
             Log.Info(this.className, "OnExit", String.Format("'{0}' State", this.FullName));
             // TODO - check that OnEntry has happened ??
             WrapErr.ToErrorReportException(9999, () => {
-                // Only execute ExceOnExit code if the state has been entered
+                // Only execute ExceOnExit code if the state had been entered
                 if (this.IsEntryExcecuted) {
                     this.ExecOnExit();
                 }
                 else {
-                    Log.Warning(9999,
-                        String.Format(
-                            "ExecOnExit for State:{0} not called because OnEntry was preempted by an OnEvent Transition",
-                            this.FullName));
+                    Log.Warning(9999, String.Format(
+                        "ExecOnExit for State:{0} not called because OnEntry was preempted by an OnEvent Transition",
+                        this.FullName));
                 }
             }, 
-            () => {
-                //Log.Info(this.className, "OnExit", String.Format("{0} State - ENTERED MARKED FALSE", this.FullName));
-                this.isEntered = false;
-                //this.SetEntered(false);
-            });
+            () => { this.isEntered = false; });
         }
 
         #endregion
 
-        #region Sealed Method
+        #region Sealed Methods
 
         /// <summary>
-        /// Register a state transition from incoming event. Left virtual to allow a derived class
-        /// to create a blocking scenario if they want to use enums for the ids (see examples)
+        /// Register a state transition from incoming event. 
         /// </summary>
         /// <param name="eventId">The id converter of the incoming event</param>
         /// <param name="transition">The transition object</param>
@@ -266,9 +262,7 @@ namespace SpStateMachine.States {
         
 
         /// <summary>
-        /// Register a state transition from the result of state processing. Left virtual to allow a 
-        /// derived class to create a blocking scenario if they want to use enums for the ids 
-        /// (see examples)
+        /// Register a state transition from the result of state processing.
         /// </summary>
         /// <param name="eventId">The id converter of the event as the result of state processing</param>
         /// <param name="transition">The transition object</param>
