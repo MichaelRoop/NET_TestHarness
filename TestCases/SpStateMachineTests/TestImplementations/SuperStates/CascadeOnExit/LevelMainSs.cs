@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SpStateMachine.Converters;
 using SpStateMachine.Core;
+using TestCases.SpStateMachineTests.TestImplementations.Messages;
 
 namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates.CascadeOnExit {
 
@@ -24,7 +25,9 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates.CascadeO
 
 
             // Register OnResult so that the Superstate can handle its state's ExitState transitions
-            level2.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.NextState, recovery, null));
+//            level2.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.NextState, recovery, null));
+
+            level2.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.NextState, recovery, new MyTickMsg()));
 
 
             //// Register active state transitions

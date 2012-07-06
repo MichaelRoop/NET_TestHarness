@@ -30,9 +30,19 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 //            WrapErr.ChkTrue(false, 9999, "msg is not MyBaseMsg based");
 //            Console.WriteLine("++++++++++++++++");
 
+            if (msg is MyBaseMsg) {
+                return new MySimpleOkResponse((MyBaseMsg)msg);
+            }
+            else if (msg is MyBaseResponse) {
 
+                // TODO - figure this one out
+                return msg;
+            }
 
-            return new MySimpleOkResponse((MyBaseMsg)msg);
+            WrapErr.ChkTrue(false, 9999, "Msg is neither type");
+            return msg;
+
+//            return new MySimpleOkResponse((MyBaseMsg)msg);
         }
 
 

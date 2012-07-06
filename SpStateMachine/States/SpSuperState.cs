@@ -107,19 +107,16 @@ namespace SpStateMachine.States {
         /// <param name="msg">The incoming message with event</param>
         /// <returns>The return transition object with result information</returns>
         public sealed override ISpStateTransition OnEntry(ISpEventMessage msg) {
-            Log.Info(this.className, "OnEntry", this.FullName);
+            Log.Info(this.className, "OnEntry", String.Format("'{0}' State Event {1}", this.FullName, this.ConvertEventIdToString(msg.EventId)));
             WrapErr.ChkVar(this.entryState, 9999, "The 'SentEntryState() Must be Called in the Constructor");
 
             // Find if there are exit conditions OnEntry at the SuperState level and excecute them first 
             // This will check OnEvent transitions queue and transitions from the overriden ExecOnEntry
             ISpStateTransition t = base.OnEntry(msg);
             if (t.TransitionType != SpStateTransitionType.SameState) {
-                // The OnEntry at the superstate level has been set to true but the current state OnEntry has never been called so we
-                // must set the superstate as 'Not Entered' in order for it to NOT tick the OnExit of the current state
-                this.SetEntered(false);
                 return t;
             }
-            
+
             // return transition
             this.currentState = this.entryState;
             return this.currentState.OnEntry(msg);
@@ -132,19 +129,16 @@ namespace SpStateMachine.States {
         /// <param name="msg">The incoming message with event</param>
         /// <returns>The return transition object with result information</returns>
         public sealed override ISpStateTransition OnTick(ISpEventMessage msg) {
-            Log.Info(this.className, "OnTick", this.FullName);
-            WrapErr.ChkVar(this.entryState, 9999, "The 'SentEntryState() Must be Called in the Constructor");
+            //Log.Info(this.className, "OnTick", String.Format("'{0}' State", this.FullName));
+            WrapErr.ChkVar(this.entryState, 9999, "The 'SetEntryState() Must be Called in the Constructor");
             WrapErr.ChkVar(this.currentState, 9999, "Current state is not set");
+            WrapErr.ChkTrue(this.IsEntryExcecuted, 9999, "Tick Being Called before OnEntry");
 
-            // Find if there are OnEvent transitions registered at the superstate level first - do NOT process the ExecOnTick for results
+            // If there are OnEvent transitions registered at the superstate level return immediately
             ISpStateTransition tr = GetSuperStateOnEventTransition(msg);
             if (tr != null) {
                 return tr;
             }
-
-            WrapErr.ChkTrue(this.IsEntryExcecuted, 9999,
-                () => { return String.Format("Tick Being Called before OnEntry to {0}", this.FullName); });
-
             return this.GetTransition(this.currentState.OnTick, msg);
         }
 
@@ -200,6 +194,8 @@ namespace SpStateMachine.States {
         /// <param name="msg"></param>
         /// <returns></returns>
         private ISpStateTransition HandleNextStateTransitionType(ISpStateTransition tr, ISpEventMessage msg) {
+            Log.Info(this.className, "HandleNextStateTransitionType", String.Format("'{0}' State", this.FullName));
+
             WrapErr.ChkTrue(tr.TransitionType == SpStateTransitionType.NextState, 9999, 
                 () => { return String.Format("{0} is not NextState", tr.TransitionType);});
 
@@ -220,7 +216,12 @@ namespace SpStateMachine.States {
             //tr.TransitionType = SpStateTransitionType.SameState;
             //tr.NextState = null;
             //return tr;
-            return this.currentState.OnEntry(msg);
+
+            // Probably want to get the default success return type and pass back? Or if it got here from previous error we do not want to lose that information
+            if (tr.ReturnMessage == null) {
+                return this.currentState.OnEntry(msg);
+            }
+            return this.currentState.OnEntry(tr.ReturnMessage);
         }
 
 
@@ -232,6 +233,7 @@ namespace SpStateMachine.States {
         /// <param name="msg"></param>
         /// <returns></returns>
         private ISpStateTransition HandleExitStateTransitionType(ISpEventMessage msg) {
+            Log.Info(this.className, "HandleExitStateTransitionType", String.Format("'{0}' State", this.FullName));
 
             // TODO - this is really only another kind of defered. The difference is that the superstate does not
             // TODO     called at runtime to handle the event. Rather the event is passed to the super state's
@@ -239,20 +241,16 @@ namespace SpStateMachine.States {
             //          the event id to something else. The difference is that the results are being determined
             //          by the registrations at the superstate level rather than the sub state level
 
-            //// Check super state registered result transitions against Sub State event id
-            //ISpStateTransition tr = this.GetTransitionFromOnResultRegistrations(msg);
-            //WrapErr.ChkVar(tr, 9999, () => {
-            //    return String.Format(
-            //        "State {0} Specified Exit but SuperState {1} has no handlers for that event id:{2}", 
-            //        this.currentState.FullName, this.FullName, this.ConvertEventIdToString(msg.EventId));
-            //});
+            // Check super state registered result transitions against Sub State event id
+            ISpStateTransition tr = this.GetSuperStateOnResultTransition(msg);
+            WrapErr.ChkVar(tr, 9999, () => {
+                return String.Format(
+                    "State {0} Specified Exit but SuperState {1} has no handlers for that event id:{2}",
+                    this.currentState.FullName, this.FullName, this.ConvertEventIdToString(msg.EventId));
+            });
 
-            //// At this point, the transition registered to the superstate should have everything set in it
-            //return tr;
-
-
-            return this.GetSuperStateOnResultTransition(msg);
-
+            // At this point, the transition registered to the superstate should have everything set in it
+            return tr;
         }
 
 
@@ -266,10 +264,7 @@ namespace SpStateMachine.States {
         /// </param>
         /// <returns>The Transition</returns>
         private ISpStateTransition HandleDeferedStateTransitionType(ISpStateTransition tr, ISpEventMessage msg, bool fromSuperState) {
-
-            // TODO - Determine if we allow this super state to return Defered to its owner as a result of its sub state Defered
-            //WrapErr.ChkFalse(superStateLevelEvent, 9999, "Cannot map from Defered transition to another Defered Transition");
-            // This causes the transition to return immediately if it was generated by superstate
+            // If the superstate iteself has a Defered transition it will return immediately to parent
             if (fromSuperState) {
                 return tr;
             }
@@ -277,7 +272,7 @@ namespace SpStateMachine.States {
             // Call super state override method that derived superstate will use to handle decision point and create a new message with event
             ISpEventMessage deferedMsg = this.OnRuntimeTransitionRequest(msg);
 
-            // Process the transition type from the super state level
+            // Process the transition type from the SubState level
             return this.ReadTransitionType(
                 this.GetSuperStateOnResultTransition(deferedMsg), deferedMsg, true);
         }
@@ -299,6 +294,17 @@ namespace SpStateMachine.States {
             });
 
             // At this point, the transition registered to the superstate should have everything set in it  ????
+            // TODO - check this out. Some on Result will be null
+            if (tr.ReturnMessage == null) {
+                tr.ReturnMessage = this.OnGetResponseMsg(msg);
+            }
+            else {
+                // Transfer existing GUID to correlate with sent message
+                // TODO - still would have to figure out how to transfer the payload for response
+                tr.ReturnMessage.Uid = msg.Uid;
+            }
+            
+            this.LogTransition(tr, msg);
             return tr;    
         }
 
@@ -307,7 +313,17 @@ namespace SpStateMachine.States {
             ISpStateTransition tr = this.GetOnEventTransition(msg);
             if (tr != null) {
                 // Get the appropriate related response message to add to transition
-                tr.ReturnMessage = this.OnGetResponseMsg(msg);
+//                tr.ReturnMessage = this.OnGetResponseMsg(msg);
+
+                if (tr.ReturnMessage == null) {
+                    tr.ReturnMessage = this.OnGetResponseMsg(msg);
+                }
+                else {
+                    // Transfer existing GUID to correlate with sent message
+                    // TODO - still would have to figure out how to transfer the payload for response
+                    tr.ReturnMessage.Uid = msg.Uid;
+                }
+                this.LogTransition(tr, msg);
             }
             return tr;
         }
@@ -326,15 +342,14 @@ namespace SpStateMachine.States {
         /// <returns>The appropriate return message</returns>
         protected sealed override void ExecOnExit() {
             Log.Info(this.className, "ExecOnExit", this.FullName);
+            WrapErr.ChkTrue(this.IsEntryExcecuted, 9999, () => { 
+                return String.Format("ExecOnExit called Before OnEntry {0} State", this.FullName);
+            });
 
-            if (this.IsEntryExcecuted) {
-                this.SetEntered(false);
-                if (this.currentState != null) {
-                    this.currentState.OnExit();
-                    this.currentState = null;
-                }
-                // TODO - an overrideable method 
+            if (this.currentState != null) {
+                this.currentState.OnExit();
             }
+            this.currentState = this.entryState;
         }
 
 
@@ -349,20 +364,13 @@ namespace SpStateMachine.States {
         /// <param name="msg"></param>
         /// <returns></returns>
         protected virtual ISpEventMessage OnRuntimeTransitionRequest(ISpEventMessage msg) {
-            WrapErr.ChkTrue(false, 9999,
-                String.Format("Was not overrided"));
+            WrapErr.ChkTrue(false, 9999, () => {
+                return String.Format("Not Overriden to Define Runtime Handling of Defered Transition for {0} State", this.FullName);
+            });
             return msg;
         }
 
         #endregion
-
-
-        protected ISpState GetCurrentState() {
-            return this.currentState;
-        }
-
-
-
 
     }
 }

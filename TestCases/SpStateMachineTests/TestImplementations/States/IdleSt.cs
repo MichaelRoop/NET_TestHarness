@@ -25,7 +25,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.States {
         }
 
         protected override ISpEventMessage ExecOnTick(ISpEventMessage msg) {
-            Log.Info(this.className, "ExecOnTick", this.FullName);
+            Log.Info(this.className, "ExecOnTick", this.FullName + " ********************************************** ");
             if (This.DoIFlipStates) {
                 // TODO - rework msg to allow creation of a msg with another msg to transfer correlation GUID
                 Log.Info(this.className, "ExecOnTick", "Exceeded trigger count, ** changing msg to Start");

@@ -138,7 +138,7 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _50205_OnTick_WithoutOnEntry() {
             IDisposable wo = MockRepository.GenerateMock<IDisposable>();
-            TestHelpers.CatchExpected(50205, "SpState`1", "OnTick", "OnTick Cannot be Executed Before OnEntry", () => {
+            TestHelpers.CatchExpected(50205, "SpState`1", "OnTick", "OnTick for '1' State Cannot be Executed Before OnEntry", () => {
                 ISpState st = new StImpl<IDisposable>(1, wo);
                 st.OnTick(new SpBaseEventMsg(new SpIntToInt(33), new SpIntToInt(22)));
             });

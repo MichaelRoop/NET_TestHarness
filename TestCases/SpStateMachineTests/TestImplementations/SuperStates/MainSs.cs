@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SpStateMachine.Core;
 using SpStateMachine.Converters;
+using TestCases.SpStateMachineTests.TestImplementations.Messages;
 
 namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
 
@@ -24,14 +25,20 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
 
 
             // Register OnResult so that the Superstate can handle its state's ExitState transitions
-            notStarted.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.NextState, recovery, null));
+//            notStarted.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.NextState, recovery, null));
 
-            //// Register active state transitions
+            // REGISTER A PROPER RETURN MSG
+            notStarted.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.NextState, recovery, new MyTickMsg()));
+
+            //// Register active state transitions 
             //active.RegisterOnEventTransition(MyEventType.Stop, new SpStateTransition(SpStateTransitionType.NextState, idle, null));
             //active.RegisterOnEventTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.ExitState, null, null));
 
 
             //// Only on events registered.  On abor goes exit state
+
+
+            //this.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.NextState, recovery, new MyTickMsg()));
 
 
             this.SetEntryState(notStarted);

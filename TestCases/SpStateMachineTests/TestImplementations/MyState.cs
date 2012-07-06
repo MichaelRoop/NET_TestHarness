@@ -91,7 +91,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         protected sealed override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
             //Log.Info("MyState", "GetResponseMsg", String.Format("For msg:{0}", SpConverter.IntToEnum<MyMsgType>(msg.TypeId)));
             MyBaseResponse response = new MyBaseResponse(MyMsgType.SimpleResponse, msg, MyReturnCode.FailedPresure, "lalalal");
-            //Log.Info("MyState", "GetResponseMsg", String.Format("Made bogus response msg:{0}", SpConverter.IntToEnum<MyMsgType>(response.TypeId)));
+            Log.Info("MyState", "GetResponseMsg", String.Format(" ********** Made bogus response msg:{0}", SpConverter.IntToEnum<MyMsgType>(response.TypeId)));
             return response;
 
 

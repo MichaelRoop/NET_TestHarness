@@ -178,11 +178,10 @@ namespace SpStateMachine.States {
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
         public virtual ISpStateTransition OnEntry(ISpEventMessage msg) {
-            Log.Info(this.className, "OnEntry", this.FullName);
+            Log.Info(this.className, "OnEntry", String.Format("'{0}' State {1} - Event", this.FullName, this.ConvertEventIdToString(msg.EventId)));
             WrapErr.ChkFalse(this.IsEntryExcecuted, 50201, "OnEntry Cannot be Executed More Than Once Until OnExit is Called");
-            this.SetEntered(true);
             return WrapErr.ToErrorReportException(9999, () => {
-                return this.GetTransition(this.ExecOnEntry, msg);
+                return this.GetTransition(true, this.ExecOnEntry, msg);
             });
         }
 
@@ -193,10 +192,12 @@ namespace SpStateMachine.States {
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
         public virtual ISpStateTransition OnTick(ISpEventMessage msg) {
-            //Log.Info(this.className, "ExecOnTick", this.FullName);
-            WrapErr.ChkTrue(this.IsEntryExcecuted, 50205, "OnTick Cannot be Executed Before OnEntry");
+            //Log.Info(this.className, "OnTick", String.Format("'{0}' State - {1}", this.FullName, this.ConvertEventIdToString(msg.EventId)));
+            WrapErr.ChkTrue(this.IsEntryExcecuted, 50205, () => {
+                return String.Format("OnTick for '{0}' State Cannot be Executed Before OnEntry", this.FullName);
+            });
             return WrapErr.ToErrorReportException(9999, () => {
-                return this.GetTransition(this.ExecOnTick, msg);
+                return this.GetTransition(false, this.ExecOnTick, msg);
             });
         }
 
@@ -205,11 +206,24 @@ namespace SpStateMachine.States {
         /// Always invoked on object exit
         /// </summary>
         public void OnExit() {
-            Log.Info(this.className, "OnExit", this.FullName);
+            Log.Info(this.className, "OnExit", String.Format("'{0}' State", this.FullName));
             // TODO - check that OnEntry has happened ??
-            this.SetEntered(false);
             WrapErr.ToErrorReportException(9999, () => {
-                this.ExecOnExit();
+                // Only execute ExceOnExit code if the state has been entered
+                if (this.IsEntryExcecuted) {
+                    this.ExecOnExit();
+                }
+                else {
+                    Log.Warning(9999,
+                        String.Format(
+                            "ExecOnExit for State:{0} not called because OnEntry was preempted by an OnEvent Transition",
+                            this.FullName));
+                }
+            }, 
+            () => {
+                //Log.Info(this.className, "OnExit", String.Format("{0} State - ENTERED MARKED FALSE", this.FullName));
+                this.isEntered = false;
+                //this.SetEntered(false);
             });
         }
 
@@ -344,16 +358,6 @@ namespace SpStateMachine.States {
         #region Protected Methods
 
         /// <summary>
-        /// Set the entered flag
-        /// </summary>
-        /// <param name="isEntered"></param>
-        protected void SetEntered(bool isEntered) {
-            Log.Debug(this.className, "SetEntered", String.Format("{0} for {1} State", isEntered, this.FullName));
-            this.isEntered = isEntered;
-        }
-
-
-        /// <summary>
         /// Wrapper to retrieve OnEvent Transition Object
         /// </summary>
         /// <param name="eventMsg">The incomming event message</param>
@@ -454,14 +458,31 @@ namespace SpStateMachine.States {
         /// </param>
         /// <param name="eventMsg">The incoming message to validate against the onEvent list</param>
         /// <returns>The OnEvent, OnResult or default transition</returns>
-        private ISpStateTransition GetTransition(Func<ISpEventMessage, ISpEventMessage> stateFunc, ISpEventMessage eventMsg) {
+        private ISpStateTransition GetTransition(bool onEntry, Func<ISpEventMessage, ISpEventMessage> stateFunc, ISpEventMessage eventMsg) {
             return WrapErr.ToErrorReportException(9999, () => {
                 // Query the OnEvent queue for a transition BEFORE calling state function (OnEntry, OnTick)
                 ISpStateTransition tr = this.GetOnEventTransition(eventMsg);
                 if (tr != null) {
+                    if (tr.ReturnMessage == null) {
+                        //tr.ReturnMessage = this.OnGetResponseMsg(this.GetReponseMsg(eventMsg));
+                        tr.ReturnMessage = this.OnGetResponseMsg(eventMsg);
+                    }
+                    else {
+                        // Transfer existing GUID to correlate with sent message
+                        // TODO - still would have to figure out how to transfer the payload for response
+                        tr.ReturnMessage.Uid = eventMsg.Uid;
+                    }
+
                     // TODO - This needs some more thought - Call to derived class to get the return message related to the incoming message
-                    tr.ReturnMessage = this.OnGetResponseMsg(this.GetReponseMsg(eventMsg));
+                    //tr.ReturnMessage = this.OnGetResponseMsg(this.GetReponseMsg(eventMsg));
+                    tr.ReturnMessage = this.OnGetResponseMsg(eventMsg);
                     return tr;
+                }
+
+                // You only consider the object entered if it gets to the OnEnter and does not find a preemptive transition event
+                // You could get a situation where you cascade down several state depths based on higher up events
+                if (onEntry) {
+                    this.isEntered = true;
                 }
 
                 // TODO - clarify this - we use the event id after processing so the return message is already selected

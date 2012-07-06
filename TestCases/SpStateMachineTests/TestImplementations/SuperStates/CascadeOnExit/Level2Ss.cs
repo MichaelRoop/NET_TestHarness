@@ -6,6 +6,7 @@ using SpStateMachine.Interfaces;
 using TestCases.SpStateMachineTests.TestImplementations.States;
 using SpStateMachine.Converters;
 using SpStateMachine.Core;
+using TestCases.SpStateMachineTests.TestImplementations.Messages;
 
 namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates.CascadeOnExit {
 
@@ -28,7 +29,9 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates.CascadeO
             // results - this idle class just returns whatever msg we send in. So send Start and it will return it as its return value and provok this transition
 
             // Register as the result event from previous state comming from abort to it
-            level3Ss.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.ExitState, null, null));
+            //level3Ss.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.ExitState, null, null));
+
+            level3Ss.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.ExitState, null, new MyTickMsg()));
 
 
             //// Register active state transitions

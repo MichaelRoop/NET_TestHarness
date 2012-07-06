@@ -73,7 +73,19 @@ namespace SpStateMachine.Core {
                 if (store.Keys.Contains(eventMsg.EventId)) {
                     // Clone Transition object from store since its pointers get reset later
                     ISpStateTransition tr = (ISpStateTransition)store[eventMsg.EventId].Clone();
-                    tr.ReturnMessage = eventMsg;
+
+                    if (tr.ReturnMessage == null) {
+                        tr.ReturnMessage = eventMsg;
+                    }
+                    else {
+                        //Log.Info("SpTools", "GetTransitionCloneFromStore", "Found a transition AND - Held msg - transfering GUID");
+                    }
+
+                    // TODO - Look at transfering the GUID here
+                    tr.ReturnMessage.Uid = eventMsg.Uid;
+
+
+                    //tr.ReturnMessage = eventMsg;
                     return tr;
                 }
                 return null;
