@@ -204,7 +204,7 @@ namespace SpStateMachine.States {
         /// <summary>
         /// Always invoked on object exit
         /// </summary>
-        public virtual void OnExit() {
+        public void OnExit() {
             Log.Info(this.className, "OnExit", this.FullName);
             // TODO - check that OnEntry has happened ??
             this.SetEntered(false);
@@ -348,6 +348,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="isEntered"></param>
         protected void SetEntered(bool isEntered) {
+            Log.Debug(this.className, "SetEntered", String.Format("{0} for {1} State", isEntered, this.FullName));
             this.isEntered = isEntered;
         }
 

@@ -83,7 +83,7 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void TestExitStateCascadeInSuperState() {
 
-            TestHelpers.CatchUnexpected(() => {
+            //TestHelpers.CatchUnexpected(() => {
 
                 // Setting flip count will cause back and fourth between active and idle
                 MyDataClass dataClass = new MyDataClass();
@@ -110,7 +110,7 @@ namespace TestCases.SpStateMachineTests {
                 //this.TickAndValidateState(this.GetMsg(MyEventType.Start), sm, "Main.NotStarted.Active");
                 //this.TickAndValidateState(this.GetMsg(MyEventType.Stop), sm, "Main.NotStarted.Idle");
                 //this.TickAndValidateState(this.GetMsg(MyEventType.Abort), sm, "Main.Recovery.Idle");
-            });
+            //});
         }
 
 
@@ -118,7 +118,9 @@ namespace TestCases.SpStateMachineTests {
         #region Private Methods
 
         private ISpEventMessage GetMsg(MyEventType eventId) {
-            Console.WriteLine("-- Sending msg:{0}", eventId.ToString());
+            //Console.WriteLine("-- Sending msg:{0}", eventId.ToString());
+
+            Log.Info("","", String.Format("---------------------- Sending msg:{0}", eventId));
             return new MyBaseMsg(MyMsgType.SimpleMsg, eventId);
         }
 
@@ -152,7 +154,9 @@ namespace TestCases.SpStateMachineTests {
 
 
         private void ValidateState(ISpStateMachine sm, string expected) {
-            Console.WriteLine("-- Validate that state is:{0}", expected);
+            Log.Info("", "", String.Format("---------------------- Validate that state is:{0}", expected));
+
+            //Console.WriteLine("-- Validate that state is:{0}", expected);
             //Console.WriteLine("-- Validate that state is:{0} - Current State Name is: {1}", expected, sm.CurrentStateName);
             Assert.AreEqual(expected, sm.CurrentStateName);
         }

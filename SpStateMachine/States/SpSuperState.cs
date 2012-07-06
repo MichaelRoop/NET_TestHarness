@@ -111,7 +111,7 @@ namespace SpStateMachine.States {
             WrapErr.ChkVar(this.entryState, 9999, "The 'SentEntryState() Must be Called in the Constructor");
 
             // Find if there are exit conditions OnEntry at the SuperState level and excecute them first 
-            // This will check OnEvent transitions and transitions from the overriden ExecOnEntry
+            // This will check OnEvent transitions queue and transitions from the overriden ExecOnEntry
             ISpStateTransition t = base.OnEntry(msg);
             if (t.TransitionType != SpStateTransitionType.SameState) {
                 // The OnEntry at the superstate level has been set to true but the current state OnEntry has never been called so we
@@ -119,16 +119,9 @@ namespace SpStateMachine.States {
                 this.SetEntered(false);
                 return t;
             }
-
-            // TODO - Clean up logic. Does the SuperState even tick its current state since its OnEntry would be fired with the OnTick below?
-            // TODO - Either we check if the Superstate has OnEvent stuff here and ignore the current state so it will get ticked on first 
-            // TODO - SuperState OnTick or we check SuperState OnEvent Stuff AND do the GetTransition from the substate entry method
             
             // return transition
-            this.SetEntered(true);
             this.currentState = this.entryState;
-
-            // TODO Could also intercept this also. See below on the OnTick
             return this.currentState.OnEntry(msg);
         }
 
@@ -143,34 +136,17 @@ namespace SpStateMachine.States {
             WrapErr.ChkVar(this.entryState, 9999, "The 'SentEntryState() Must be Called in the Constructor");
             WrapErr.ChkVar(this.currentState, 9999, "Current state is not set");
 
-            // Find if there are OnEvent transitions registered at the superstate level first
+            // Find if there are OnEvent transitions registered at the superstate level first - do NOT process the ExecOnTick for results
             ISpStateTransition tr = GetSuperStateOnEventTransition(msg);
             if (tr != null) {
                 return tr;
             }
-            
-            // behavior of only one call per tick
-            if (!this.currentState.IsEntryExcecuted) {
-                return this.GetTransition(this.currentState.OnEntry, msg);
-            }
-            else {
-                return this.GetTransition(this.currentState.OnTick, msg);
-            }
+
+            WrapErr.ChkTrue(this.IsEntryExcecuted, 9999,
+                () => { return String.Format("Tick Being Called before OnEntry to {0}", this.FullName); });
+
+            return this.GetTransition(this.currentState.OnTick, msg);
         }
-
-
-        public sealed override void OnExit() {
-            // If the superstate OnEntry was did not exit immediately because of a registered OnEvent 
-            // transition the current substate OnEntry would have been called and must not be reset
-            // with a call to the substate OnExit
-            if (this.IsEntryExcecuted) {
-                this.currentState.OnExit();
-            }
-
-            // This will cause any cleanup code defined for the super state to exit
-            base.OnExit();
-        }
-
 
         #endregion
 
@@ -241,9 +217,10 @@ namespace SpStateMachine.States {
             // TODO - In this scenario we do not tick the OnEntry of the new current state until next iteration. Might have to change
 
             // Reset transition to SameState to prevent other transitions along the chain on return
-            tr.TransitionType = SpStateTransitionType.SameState;
-            tr.NextState = null;
-            return tr;
+            //tr.TransitionType = SpStateTransitionType.SameState;
+            //tr.NextState = null;
+            //return tr;
+            return this.currentState.OnEntry(msg);
         }
 
 
@@ -350,7 +327,7 @@ namespace SpStateMachine.States {
         protected sealed override void ExecOnExit() {
             Log.Info(this.className, "ExecOnExit", this.FullName);
 
-            if (!this.IsEntryExcecuted) {
+            if (this.IsEntryExcecuted) {
                 this.SetEntered(false);
                 if (this.currentState != null) {
                     this.currentState.OnExit();
