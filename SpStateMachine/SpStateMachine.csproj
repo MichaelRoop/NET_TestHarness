@@ -74,6 +74,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="States\SpState.cs" />
     <Compile Include="Core\SpMachine.cs" />
+    <Compile Include="States\SpStateBase.cs" />
     <Compile Include="States\SpSuperState.cs" />
     <Compile Include="Converters\SpConverter.cs" />
     <Compile Include="Converters\SpEnumConverterExtensions.cs" />

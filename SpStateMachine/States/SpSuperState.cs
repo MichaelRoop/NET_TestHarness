@@ -7,7 +7,7 @@ using SpStateMachine.Interfaces;
 
 namespace SpStateMachine.States {
 
-    public class SpSuperState<T> : SpState<T> where T : class {
+    public class SpSuperState<T> : SpStateBase<T> where T : class {
 
         #region Data 
 
