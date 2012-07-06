@@ -35,6 +35,11 @@ namespace SpStateMachine.Interfaces {
         SpEventPriority Priority { get; set; }
 
         /// <summary>
+        /// Simple string field payload if needed
+        /// </summary>
+        string StringPayload { get; set; }
+
+        /// <summary>
         /// Used for response messages to report on operation status
         /// </summary>
         int ReturnCode { get; set; }

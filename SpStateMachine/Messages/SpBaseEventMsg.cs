@@ -32,6 +32,9 @@ namespace SpStateMachine.Messages {
         /// <summary>The event priority</summary>
         private SpEventPriority priority = SpEventPriority.Normal;
 
+        /// <summary>Simple string payload field</summary>
+        private string stringPayload = "";
+
         /// <summary>Used for response messages to report on operation status</summary>
         private int returnCode = 0;
 
@@ -94,7 +97,19 @@ namespace SpStateMachine.Messages {
                 this.priority = value;
             }
         }
-
+        
+        /// <summary>
+        /// Simple string field payload if needed
+        /// </summary>
+        public string StringPayload { 
+            get {
+                return this.stringPayload;
+            }
+            set {
+                this.stringPayload = value;
+            }
+        }
+        
         /// <summary>
         /// Used for response messages to report on operation status. . Setter only for WCF transfer
         /// </summary>
@@ -140,8 +155,7 @@ namespace SpStateMachine.Messages {
             this.eventId = eventId.ToInt();
             this.priority = priority;
         }
-
-
+        
         /// <summary>
         /// Constructor for Normal Priority messages
         /// </summary>
