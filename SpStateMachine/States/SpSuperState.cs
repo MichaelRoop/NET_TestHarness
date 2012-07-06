@@ -7,7 +7,7 @@ using SpStateMachine.Interfaces;
 
 namespace SpStateMachine.States {
 
-    public abstract class SpSuperState<T> : SpState<T> where T : class {
+    public class SpSuperState<T> : SpState<T> where T : class {
 
         #region Data 
 
@@ -52,10 +52,11 @@ namespace SpStateMachine.States {
         /// Constructor for first level state
         /// </summary>
         /// <param name="msgFactory">Message Factory</param>
+        /// <param name="idConverter">The integer id to string converter</param>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpSuperState(ISpMsgFactory msgFactory, ISpToInt id, T wrappedObject)
-            : base(msgFactory, id, wrappedObject) {
+        public SpSuperState(ISpMsgFactory msgFactory, ISpIdConverter idConverter, ISpToInt id, T wrappedObject)
+            : base(msgFactory, idConverter, id, wrappedObject) {
         }
 
 
@@ -64,10 +65,11 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="parent">The parent state</param>
         /// <param name="msgFactory">Message Factory</param>
+        /// <param name="idConverter">The integer id to string converter</param>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpSuperState(ISpState parent, ISpMsgFactory msgFactory, ISpToInt id, T wrappedObject)
-            : base(parent, msgFactory, id, wrappedObject) {
+        public SpSuperState(ISpState parent, ISpMsgFactory msgFactory, ISpIdConverter idConverter, ISpToInt id, T wrappedObject)
+            : base(parent, msgFactory, idConverter, id, wrappedObject) {
         }
 
         #endregion
@@ -105,7 +107,7 @@ namespace SpStateMachine.States {
         /// <param name="msg">The incoming message with event</param>
         /// <returns>The return transition object with result information</returns>
         public sealed override ISpStateTransition OnEntry(ISpEventMessage msg) {
-            Log.Info(this.className, "OnEntry", String.Format("'{0}' State Event {1}", this.FullName, this.ConvertEventIdToString(msg.EventId)));
+            Log.Info(this.className, "OnEntry", String.Format("'{0}' State Event {1}", this.FullName, this.GetCachedEventId(msg.EventId)));
             WrapErr.ChkVar(this.entryState, 9999, "The 'SentEntryState() Must be Called in the Constructor");
 
             // Find if there are exit conditions OnEntry at the SuperState level and excecute them first 
@@ -244,7 +246,7 @@ namespace SpStateMachine.States {
             WrapErr.ChkVar(tr, 9999, () => {
                 return String.Format(
                     "State {0} Specified Exit but SuperState {1} has no handlers for that event id:{2}",
-                    this.currentState.FullName, this.FullName, this.ConvertEventIdToString(msg.EventId));
+                    this.currentState.FullName, this.FullName, this.GetCachedEventId(msg.EventId));
             });
 
             // At this point, the transition registered to the superstate should have everything set in it

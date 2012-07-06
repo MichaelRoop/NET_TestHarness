@@ -20,12 +20,14 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
         #region Constructors
 
+        // Singletons are test shortcuts. Should use Interface for DI
+
         public MySuperState(MyStateID id, MyDataClass dataClass)
-            : base(MyMsgFactory.Instance, new SpEnumToInt(id), dataClass) {
+            : base(MyMsgFactory.Instance, MyIdConverter.Instance, new SpEnumToInt(id), dataClass) {
         }
 
         public MySuperState(ISpState parent, MyStateID id, MyDataClass dataClass)
-            : base(parent, MyMsgFactory.Instance, new SpEnumToInt(id), dataClass) {
+            : base(parent, MyMsgFactory.Instance, MyIdConverter.Instance, new SpEnumToInt(id), dataClass) {
         }
 
         #endregion
@@ -81,34 +83,6 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
 
             return base.OnRuntimeTransitionRequest(msg);
-        }
-
-
-        protected override string ConvertStateIdToString(int id) {
-            return SpConverter.IntToEnum<MyStateID>(id).ToString();
-        }
-
-
-        /// <summary>
-        /// Allows derived classes to convert the event id to string if they are using strongly 
-        /// typed convetible enums. By default this level just calls int.ToString(). It will also 
-        /// make the logs more readeable
-        /// </summary>
-        /// <param name="id">The id to convert to string</param>
-        /// <returns></returns>
-        protected sealed override string ConvertEventIdToString(int id) {
-            return SpConverter.IntToEnum<MyEventType>(id).ToString();
-        }
-
-        /// <summary>
-        /// Allows derived classes to convert the message id to string if they are using strongly 
-        /// typed convetible enums. By default this level just calls int.ToString(). It will also 
-        /// make the logs more readeable
-        /// </summary>
-        /// <param name="id">The message id to convert to string</param>
-        /// <returns></returns>
-        protected sealed override string ConvertMsgTypeIdToString(int id) {
-            return SpConverter.IntToEnum<MyMsgType>(id).ToString();
         }
 
         #endregion

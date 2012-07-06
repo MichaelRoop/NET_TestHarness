@@ -99,7 +99,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates.CascadeO
         }
 
         protected override ISpEventMessage ExecOnTick(ISpEventMessage msg) {
-            Log.Info(this.className, "ExecOnTick", String.Format("With event:{0}", this.ConvertEventIdToString(msg.EventId)));
+            Log.Info(this.className, "ExecOnTick", String.Format("With event:{0}", this.GetCachedEventId(msg.EventId)));
             if (SpConverter.IntToEnum<MyEventType>(msg.EventId) == MyEventType.Abort) {
                 Log.Info(this.className, "ExecOnTick", String.Format("Exiting with event {0}", MyEventType.ExitAborted));
                 return ExecOnEntry(new MyBaseMsg(MyMsgType.SimpleResponse, MyEventType.ExitAborted));

@@ -14,7 +14,7 @@ namespace SpStateMachine.States {
     /// </summary>
     /// <typeparam name="T">Generic type that the state represents</typeparam>
     /// <author>Michael Roop</author>
-    public abstract class SpState<T> : ISpState where T : class {
+    public class SpState<T> : ISpState where T : class {
 
         #region Data
 
@@ -54,6 +54,9 @@ namespace SpStateMachine.States {
 
         /// <summary>Factory to produce messages</summary>
         private ISpMsgFactory msgFactory = null;
+
+        /// <summary>Convert the id integers to implementation level string equivalents</summary>
+        private ISpIdConverter idConverter = null;
 
         private readonly string className = "SpState";
 
@@ -161,10 +164,11 @@ namespace SpStateMachine.States {
         /// Constructor for first level state
         /// </summary>
         /// <param name="msgFactory">Message Factory</param>
+        /// <param name="idConverter">The integer id to string converter</param>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpState(ISpMsgFactory msgFactory, ISpToInt id, T wrappedObject)
-            : this(null, msgFactory, id, wrappedObject) {
+        public SpState(ISpMsgFactory msgFactory, ISpIdConverter idConverter, ISpToInt id, T wrappedObject)
+            : this(null, msgFactory, idConverter, id, wrappedObject) {
         }
 
 
@@ -173,12 +177,14 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="parent">The parent state</param>
         /// <param name="msgFactory">Message Factory</param>
+        /// <param name="idConverter">The integer id to string converter</param>
         /// <param name="id">Unique state id converter</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpState(ISpState parent, ISpMsgFactory msgFactory, ISpToInt id, T wrappedObject) {
+        public SpState(ISpState parent, ISpMsgFactory msgFactory, ISpIdConverter idConverter, ISpToInt id, T wrappedObject) {
             WrapErr.ChkParam(msgFactory, "msgFactory", 9999);
             WrapErr.ChkParam(wrappedObject, "wrappedObject", 50200);
             this.msgFactory = msgFactory;
+            this.idConverter = idConverter;
             this.InitStateIds(parent, id.ToInt());
             this.wrappedObject = wrappedObject;
         }
@@ -195,7 +201,7 @@ namespace SpStateMachine.States {
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
         public virtual ISpStateTransition OnEntry(ISpEventMessage msg) {
-            Log.Info(this.className, "OnEntry", String.Format("'{0}' State {1} - Event", this.FullName, this.ConvertEventIdToString(msg.EventId)));
+            Log.Info(this.className, "OnEntry", String.Format("'{0}' State {1} - Event", this.FullName, this.GetCachedEventId(msg.EventId)));
             WrapErr.ChkFalse(this.IsEntryExcecuted, 50201, "OnEntry Cannot be Executed More Than Once Until OnExit is Called");
             return WrapErr.ToErrorReportException(9999, () => {
                 return this.GetTransition(true, this.ExecOnEntry, msg);
@@ -306,46 +312,6 @@ namespace SpStateMachine.States {
         
         #endregion
 
-        #region Abstract Properties and Methods
-
-        /// <summary>
-        /// Allows derived classes to convert the type to string if they are using strongly 
-        /// typed convetible enums. you can also just decide to use int.ToString you could
-        /// end up with a name chaine some like '2.4.12'.
-        /// *NOTE*: Although the derived class can call this directly it should rather call the 
-        /// GetCachedStateId in order to maximize efficiency. The cached call will only
-        /// ever call this conversion method once per unique id
-        /// </summary>
-        /// <param name="id">The id to convert to string</param>
-        /// <returns></returns>
-        protected abstract string ConvertStateIdToString(int id);
-
-
-        /// <summary>
-        /// Allows derived classes to convert the event id to string if they are using strongly 
-        /// typed convetible enums. It will also make the logs more readeable. 
-        /// *NOTE*: Although the derived class can call this directly it should rather call 
-        /// the GetCachedEventId in order to maximize efficiency. The cached call will only
-        /// ever call this conversion method once per unique id  
-        /// </summary>
-        /// <param name="id">The id to convert to string</param>
-        /// <returns></returns>
-        protected abstract string ConvertEventIdToString(int id);
-
-
-        /// <summary>
-        /// Allows derived classes to convert the message id to string if they are using strongly 
-        /// typed convetible enums. It will also make the logs more readeable. 
-        /// *NOTE*: Although the derived class can call this directly it should rather call 
-        /// the GetCachedMsgTypeId in order to maximize efficiency. The cached call will only
-        /// ever call this conversion method once per unique id
-        /// </summary>
-        /// <param name="id">The message id to convert to string</param>
-        /// <returns></returns>
-        protected abstract string ConvertMsgTypeIdToString(int id);
-        
-        #endregion
-
         #region Protected Methods
 
         /// <summary>
@@ -389,7 +355,7 @@ namespace SpStateMachine.States {
         /// <param name="id">The id to convert to string</param>
         /// <returns></returns>
         protected string GetCachedStateId(int id) {
-            return SpTools.GetIdString(id, this.stateIdCache, this.ConvertStateIdToString);
+            return SpTools.GetIdString(id, this.stateIdCache, this.idConverter.StateId);
         }
 
         /// <summary>
@@ -400,7 +366,7 @@ namespace SpStateMachine.States {
         /// <param name="id">The id to convert to string</param>
         /// <returns></returns>
         protected string GetCachedEventId(int id) {
-            return SpTools.GetIdString(id, this.eventIdCache, this.ConvertEventIdToString);
+            return SpTools.GetIdString(id, this.eventIdCache, this.idConverter.EventId);
         }
 
 
@@ -412,7 +378,7 @@ namespace SpStateMachine.States {
         /// <param name="id">The message id to convert to string</param>
         /// <returns></returns>
         protected string GetCachedMsgTypeId(int id) {
-            return SpTools.GetIdString(id, this.msgIdCache, this.ConvertMsgTypeIdToString);
+            return SpTools.GetIdString(id, this.msgIdCache, this.idConverter.MsgTypeId);
         }
         
         #endregion
