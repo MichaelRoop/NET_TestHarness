@@ -176,7 +176,7 @@ namespace SpStateMachine.States {
         /// <param name="id">Unique state id converter</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
         public SpState(ISpState parent, ISpMsgFactory msgFactory, ISpToInt id, T wrappedObject) {
-            WrapErr.ChkParam(wrappedObject, "msgFactory", 9999);
+            WrapErr.ChkParam(msgFactory, "msgFactory", 9999);
             WrapErr.ChkParam(wrappedObject, "wrappedObject", 50200);
             this.msgFactory = msgFactory;
             this.InitStateIds(parent, id.ToInt());
