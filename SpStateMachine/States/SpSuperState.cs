@@ -31,22 +31,6 @@ namespace SpStateMachine.States {
 
         #region ISpState Properties
 
-        ///// <summary>
-        ///// From Get the fully resolved state name in format
-        ///// grandparent.parent.state. The super state gets the information from its
-        ///// current state rather than that current state will contain the proper
-        ///// currently resolved state of the state machine
-        ///// </summary>
-        //public override string FullName {
-        //    get {
-        //        // TODO - need to thread protect access to current thread var
-        //        //if (this.currentState != null) {
-        //        //    return this.currentState.FullName;
-        //        //}
-        //        return base.FullName;
-        //    }
-        //}
-
         /// <summary>
         /// Get the fully resolved state name in format parent.parent.state.substate with 
         /// the all the acestors and children until the farthest leaf

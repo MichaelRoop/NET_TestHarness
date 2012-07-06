@@ -53,7 +53,6 @@ namespace TestCases.SpStateMachineTests {
                 ISpStateMachine sm = new MyStateMachine(dataClass, notStartedSs);
 
                 this.TickAndValidateState(new MyTickMsg(), sm, "NotStarted.Idle");
-                sm.Tick(new MyTickMsg());
                 this.TickAndValidateState(new MyTickMsg(), sm, "NotStarted.Idle");
                 this.TickAndValidateState(this.GetMsg(MyEventType.Start), sm, "NotStarted.Active");
                 this.TickAndValidateState(this.GetMsg(MyEventType.Abort), sm, "NotStarted.Idle");
@@ -73,7 +72,6 @@ namespace TestCases.SpStateMachineTests {
 
                 //this.TickAndValidateState(new MyTickMsg(), sm, "Main.NotStarted");
                 this.TickAndValidateState(new MyTickMsg(), sm, "Main.NotStarted.Idle");
-                sm.Tick(new MyTickMsg());
                 this.TickAndValidateState(new MyTickMsg(), sm, "Main.NotStarted.Idle");
                 this.TickAndValidateState(this.GetMsg(MyEventType.Start), sm, "Main.NotStarted.Active");
                 this.TickAndValidateState(this.GetMsg(MyEventType.Stop), sm, "Main.NotStarted.Idle");
@@ -92,22 +90,19 @@ namespace TestCases.SpStateMachineTests {
                 MySuperState mainSs = new LevelMainSs(dataClass);
                 ISpStateMachine sm = new MyStateMachine(dataClass, mainSs);
 
-                Log.Info("Main Super State", "Get name", String.Format("**The full name for '{0}' is '{1}'", mainSs.Name, mainSs.FullName));
-
-
-
                 this.ValidateState(sm, "Main.Level2.Level3.Idle");
                 this.TickAndValidateState(new MyTickMsg(), sm, "Main.Level2.Level3.Idle");
                 this.TickAndValidateState(this.GetMsg(MyEventType.Start), sm, "Main.Level2.Level3.Active");
 
                 Console.WriteLine("**********************************");
-                this.Tick(this.GetMsg(MyEventType.Abort), sm);
+                //this.Tick(this.GetMsg(MyEventType.Abort), sm);
+                this.TickAndValidateState(this.GetMsg(MyEventType.Abort), sm, "Main.Recovery.Idle");
                 Console.WriteLine("**********************************");
 
                 //this.Tick(new MyTickMsg(), sm);
                 //Console.WriteLine("**********************************");
 
-                //this.TickAndValidateState(new MyTickMsg(), sm, "Main.NotStarted.Idle");
+                //this.TickAndValidateState(new MyTickMsg(), sm, "Main.Recovery");
                 //sm.Tick(new MyTickMsg());
 
 
@@ -151,6 +146,7 @@ namespace TestCases.SpStateMachineTests {
 
         private void TickAndValidateState(ISpEventMessage msg, ISpStateMachine sm, string expected) {
             this.Tick(msg, sm);
+            Thread.Sleep(0);
             this.ValidateState(sm, expected);
         }
 

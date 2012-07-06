@@ -19,8 +19,9 @@ namespace TestCases.SpStateMachineTests.TestImplementations.States {
         }
 
         protected override ISpEventMessage ExecOnEntry(ISpEventMessage msg) {
-            Log.Info(this.className, "ExecOnEntry", "");
-            return base.ExecOnEntry(msg);
+            Log.Info(this.className, "ExecOnEntry", this.FullName);
+            //return base.ExecOnEntry(msg);
+            return this.GetDefaultReturnMsg(msg);
         }
 
         protected override ISpEventMessage ExecOnTick(ISpEventMessage msg) {
@@ -30,15 +31,16 @@ namespace TestCases.SpStateMachineTests.TestImplementations.States {
                 Log.Info(this.className, "ExecOnTick", "Exceeded trigger count, ** changing msg to Stop");
                 MyBaseMsg newMsg = new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop);
                 newMsg.Uid = msg.Uid;
-                return base.ExecOnTick(newMsg);
+                //return base.ExecOnTick(newMsg);
             }
-            return base.ExecOnEntry(msg);
+            //return base.ExecOnEntry(msg);
 
+            return msg;
         }
 
         protected override void ExecOnExit() {
             Log.Info(this.className, "ExecOnExit", "");
-            base.ExecOnExit();
+            //base.ExecOnExit();
         }
 
     }

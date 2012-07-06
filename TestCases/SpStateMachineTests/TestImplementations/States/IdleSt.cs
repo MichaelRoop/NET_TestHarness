@@ -19,25 +19,27 @@ namespace TestCases.SpStateMachineTests.TestImplementations.States {
         }
 
         protected override ISpEventMessage ExecOnEntry(ISpEventMessage msg) {
-            Log.Info(this.className, "ExecOnEntry", "");
-            return base.ExecOnEntry(msg);
+            Log.Info(this.className, "ExecOnEntry", this.FullName);
+            //return base.ExecOnEntry(msg);
+            return this.GetDefaultReturnMsg(msg);
         }
 
         protected override ISpEventMessage ExecOnTick(ISpEventMessage msg) {
-            Log.Info(this.className, "ExecOnTick", "");
+            Log.Info(this.className, "ExecOnTick", this.FullName);
             if (This.DoIFlipStates) {
                 // TODO - rework msg to allow creation of a msg with another msg to transfer correlation GUID
                 Log.Info(this.className, "ExecOnTick", "Exceeded trigger count, ** changing msg to Start");
                 MyBaseMsg newMsg = new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start);
                 newMsg.Uid = msg.Uid;
-                return base.ExecOnTick(newMsg);
+                //return base.ExecOnTick(newMsg);
             }
-            return base.ExecOnEntry(msg);
+            return msg;
+            //return base.ExecOnEntry(msg);
         }
 
         protected override void ExecOnExit() {
             Log.Info(this.className, "ExecOnExit", "");
-            base.ExecOnExit();
+            //base.ExecOnExit();
         }
 
 
