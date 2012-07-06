@@ -19,13 +19,14 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
     /// <remarks>Note usage of enum to enforce strong typing at implementation level</remarks>
     public class MyState : SpState<MyDataClass> {
 
+        // Use MsgFactory Singleton rather than interface for test shortcut
 
         public MyState(MyStateID id, MyDataClass dataClass)
-            : base(new SpEnumToInt(id), dataClass) {
+            : base(MyMsgFactory.Instance, new SpEnumToInt(id), dataClass) {
         }
 
         public MyState(ISpState parent, MyStateID id, MyDataClass dataClass)
-            : base(parent, new SpEnumToInt(id), dataClass) {
+            : base(parent, MyMsgFactory.Instance, new SpEnumToInt(id), dataClass) {
         }
 
 
@@ -55,14 +56,13 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         protected sealed override string ConvertMsgTypeIdToString(int id) {
             return SpConverter.IntToEnum<MyMsgType>(id).ToString();
         }
-
-
+        
 
         protected override ISpEventMessage ExecOnEntry(ISpEventMessage msg) {
             Log.Info("MyState", "ExecOnEntry", String.Format("Raised {0}", msg.EventId));
             This.StrVal = "The message set on Entry";
             This.IntVal = 9876;
-            return this.GetDefaultReturnMsg(msg);
+            return this.MsgFactory.GetDefaultResponse(msg);
         }
 
         protected override ISpEventMessage ExecOnTick(ISpEventMessage msg) {
@@ -76,30 +76,6 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         protected override void ExecOnExit() {
             Log.Info("MyState", "ExecOnExit", this.FullName);
         }
-
-
-        /// <summary>
-        /// Provides the default return msg
-        /// </summary>
-        /// <param name="msg">The incomming message</param>
-        protected sealed override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
-            return MySpTools.GetDefaultReturnMsg(msg);
-        }
-
-
-
-        protected sealed override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
-            //Log.Info("MyState", "GetResponseMsg", String.Format("For msg:{0}", SpConverter.IntToEnum<MyMsgType>(msg.TypeId)));
-            MyBaseResponse response = new MyBaseResponse(MyMsgType.SimpleResponse, msg, MyReturnCode.FailedPresure, "lalalal");
-            Log.Info("MyState", "GetResponseMsg", String.Format(" ********** Made bogus response msg:{0}", SpConverter.IntToEnum<MyMsgType>(response.TypeId)));
-            return response;
-
-
-            //// will get it from a factory eventually
-            //int responseMsgTypeId = 22;
-            //return new SpBaseResponse(responseMsgTypeId, (SpBaseMsg)msg);
-        }
-
 
     }
 }

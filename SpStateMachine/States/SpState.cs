@@ -52,6 +52,9 @@ namespace SpStateMachine.States {
         /// <summary>Name cache for msg int Id lookups</summary>
         private Dictionary<int,string> msgIdCache = new Dictionary<int, string>();
 
+        /// <summary>Factory to produce messages</summary>
+        private ISpMsgFactory msgFactory = null;
+
         private readonly string className = "SpState";
 
         #endregion
@@ -64,6 +67,16 @@ namespace SpStateMachine.States {
         public T This {
             get {
                 return this.wrappedObject;
+            }
+        }
+
+
+        /// <summary>
+        /// The message factory
+        /// </summary>
+        protected ISpMsgFactory MsgFactory {
+            get {
+                return this.msgFactory;
             }
         }
 
@@ -147,10 +160,11 @@ namespace SpStateMachine.States {
         /// <summary>
         /// Constructor for first level state
         /// </summary>
+        /// <param name="msgFactory">Message Factory</param>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpState(ISpToInt id, T wrappedObject)
-            : this(null, id, wrappedObject) {
+        public SpState(ISpMsgFactory msgFactory, ISpToInt id, T wrappedObject)
+            : this(null, msgFactory, id, wrappedObject) {
         }
 
 
@@ -158,10 +172,13 @@ namespace SpStateMachine.States {
         /// Constructor
         /// </summary>
         /// <param name="parent">The parent state</param>
+        /// <param name="msgFactory">Message Factory</param>
         /// <param name="id">Unique state id converter</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpState(ISpState parent, ISpToInt id, T wrappedObject) {
+        public SpState(ISpState parent, ISpMsgFactory msgFactory, ISpToInt id, T wrappedObject) {
+            WrapErr.ChkParam(wrappedObject, "msgFactory", 9999);
             WrapErr.ChkParam(wrappedObject, "wrappedObject", 50200);
+            this.msgFactory = msgFactory;
             this.InitStateIds(parent, id.ToInt());
             this.wrappedObject = wrappedObject;
         }
@@ -266,7 +283,7 @@ namespace SpStateMachine.States {
         /// <param name="eventMsg">The incoming message</param>
         /// <returns>A transition object</returns>
         protected virtual ISpEventMessage ExecOnEntry(ISpEventMessage eventMsg) {
-            return GetDefaultReturnMsg(eventMsg);
+            return this.msgFactory.GetDefaultResponse(eventMsg);
         }
 
 
@@ -277,7 +294,7 @@ namespace SpStateMachine.States {
         /// <param name="eventMsg">The incoming message</param>
         /// <returns>A transition object</returns>
         protected virtual ISpEventMessage ExecOnTick(ISpEventMessage eventMsg) {
-            return GetDefaultReturnMsg(eventMsg);
+            return this.msgFactory.GetDefaultResponse(eventMsg);
         }
 
 
@@ -286,36 +303,10 @@ namespace SpStateMachine.States {
         /// </summary>
         protected virtual void ExecOnExit() {
         }
-
-
-        /// <summary>
-        /// Returns a default transition object set to no transition, no next 
-        /// state and the default return message
-        /// </summary>
-        /// <param name="eventMsg">The incoming message</param>
-        /// <returns>The default transition with no transition set</returns>
-        protected virtual ISpStateTransition GetDefaultTransition(ISpEventMessage eventMsg) {
-            return new SpStateTransition(SpStateTransitionType.SameState, null, this.GetDefaultReturnMsg(eventMsg));
-        }
         
         #endregion
 
         #region Abstract Properties and Methods
-        
-        /// <summary>
-        /// Provides the default return msg
-        /// </summary>
-        /// <param name="msg">The incomming message</param>
-        protected abstract ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg);
-
-
-        /// <summary>
-        /// Get the appropriate paired return message for the message
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <returns></returns>
-        protected abstract ISpEventMessage GetReponseMsg(ISpEventMessage msg);
-
 
         /// <summary>
         /// Allows derived classes to convert the type to string if they are using strongly 
@@ -383,7 +374,7 @@ namespace SpStateMachine.States {
         /// <param name="eventMsg">The return message from the derived class</param>
         protected ISpEventMessage OnGetResponseMsg(ISpEventMessage eventMsg) {
             WrapErr.ChkParam(eventMsg, "eventMsg", 9999);
-            ISpEventMessage ret = this.GetReponseMsg(eventMsg);
+            ISpEventMessage ret = this.msgFactory.GetResponse(eventMsg);
             WrapErr.ChkVar(ret, 9999, "The call to overriden 'GetReponseMsg' returned a null event message");
             return ret;
         }
@@ -490,7 +481,9 @@ namespace SpStateMachine.States {
                 if ((tr = this.GetOnResultTransition(stateFunc.Invoke(eventMsg))) != null) {
                     return tr;
                 }
-                return this.GetDefaultTransition(eventMsg);
+
+                // If no transitions registered return SameState with default success message
+                return new SpStateTransition(SpStateTransitionType.SameState, null, msgFactory.GetDefaultResponse(eventMsg));
             });
         }
 
@@ -510,7 +503,6 @@ namespace SpStateMachine.States {
                 return t;
             });
         }
-        
 
         /// <summary>
         /// Initialise the state id chain from ancestors to this state 
@@ -547,7 +539,6 @@ namespace SpStateMachine.States {
         }
 
         #endregion
-
 
     }
 }

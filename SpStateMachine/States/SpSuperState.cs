@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SpStateMachine.Interfaces;
 using ChkUtils;
-using SpStateMachine.Core;
 using LogUtils;
-using SpStateMachine.Messages;
-using SpStateMachine.Converters;
+using SpStateMachine.Core;
+using SpStateMachine.Interfaces;
 
 namespace SpStateMachine.States {
 
@@ -55,10 +51,11 @@ namespace SpStateMachine.States {
         /// <summary>
         /// Constructor for first level state
         /// </summary>
+        /// <param name="msgFactory">Message Factory</param>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpSuperState(ISpToInt id, T wrappedObject)
-            : base(id, wrappedObject) {
+        public SpSuperState(ISpMsgFactory msgFactory, ISpToInt id, T wrappedObject)
+            : base(msgFactory, id, wrappedObject) {
         }
 
 
@@ -66,10 +63,11 @@ namespace SpStateMachine.States {
         /// Constructor
         /// </summary>
         /// <param name="parent">The parent state</param>
+        /// <param name="msgFactory">Message Factory</param>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpSuperState(ISpState parent, ISpToInt id, T wrappedObject)
-            : base(parent, id, wrappedObject) {
+        public SpSuperState(ISpState parent, ISpMsgFactory msgFactory, ISpToInt id, T wrappedObject)
+            : base(parent, msgFactory, id, wrappedObject) {
         }
 
         #endregion

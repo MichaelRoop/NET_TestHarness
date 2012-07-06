@@ -21,11 +21,11 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         #region Constructors
 
         public MySuperState(MyStateID id, MyDataClass dataClass)
-            : base(new SpEnumToInt(id), dataClass) {
+            : base(MyMsgFactory.Instance, new SpEnumToInt(id), dataClass) {
         }
 
         public MySuperState(ISpState parent, MyStateID id, MyDataClass dataClass)
-            : base(parent, new SpEnumToInt(id), dataClass) {
+            : base(parent, MyMsgFactory.Instance, new SpEnumToInt(id), dataClass) {
         }
 
         #endregion
@@ -109,22 +109,6 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         /// <returns></returns>
         protected sealed override string ConvertMsgTypeIdToString(int id) {
             return SpConverter.IntToEnum<MyMsgType>(id).ToString();
-        }
-        
-
-        /// <summary>
-        /// Get the default return message for the success
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <returns></returns>
-        protected sealed override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
-            return MySpTools.GetDefaultReturnMsg(msg);
-        }
-
-        protected sealed override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
-            // TODO - build a factory to get the right response message
-
-            throw new NotImplementedException();
         }
 
         #endregion

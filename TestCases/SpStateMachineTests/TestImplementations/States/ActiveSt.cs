@@ -21,7 +21,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.States {
         protected override ISpEventMessage ExecOnEntry(ISpEventMessage msg) {
             Log.Info(this.className, "ExecOnEntry", this.FullName);
             //return base.ExecOnEntry(msg);
-            return this.GetDefaultReturnMsg(msg);
+            return this.MsgFactory.GetDefaultResponse(msg);
         }
 
         protected override ISpEventMessage ExecOnTick(ISpEventMessage msg) {

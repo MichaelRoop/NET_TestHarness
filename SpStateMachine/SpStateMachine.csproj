@@ -55,6 +55,7 @@
     <Compile Include="EventStores\BaseEventStore.cs" />
     <Compile Include="EventStores\PriorityEventStore.cs" />
     <Compile Include="EventStores\SimpleDequeEventStore.cs" />
+    <Compile Include="Interfaces\ISpMsgFactory.cs" />
     <Compile Include="Interfaces\ISpToEnum.cs" />
     <Compile Include="Interfaces\ISpToInt.cs" />
     <Compile Include="Interfaces\ISpBehaviorOnEvent.cs" />

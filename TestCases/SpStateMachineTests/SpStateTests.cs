@@ -26,26 +26,26 @@ namespace TestCases.SpStateMachineTests {
 
     public class StImpl<T> : SpState<T> where T : class, IDisposable {
 
-        public StImpl(ISpState parent, int id, T wo) : base(parent, new SpIntToInt(id), wo) { }
+        public StImpl(ISpState parent, int id, T wo) : base(parent, MyMsgFactory.Instance, new SpIntToInt(id), wo) { }
 
         public StImpl(int id, T wo) : this(null, id, wo) { }
 
         
-        protected sealed override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
-            return new MyBaseResponse(
-                MyMsgType.SimpleResponse, 
-                new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Tick), 
-                MyReturnCode.Success, 
-                "OK"); 
-        }
+        //protected sealed override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
+        //    return new MyBaseResponse(
+        //        MyMsgType.SimpleResponse, 
+        //        new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Tick), 
+        //        MyReturnCode.Success, 
+        //        "OK"); 
+        //}
 
-        protected sealed override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
-            return new MyBaseResponse(
-                MyMsgType.SimpleResponse,
-                new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Tick),
-                MyReturnCode.Success,
-                "OK");
-        }
+        //protected sealed override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
+        //    return new MyBaseResponse(
+        //        MyMsgType.SimpleResponse,
+        //        new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Tick),
+        //        MyReturnCode.Success,
+        //        "OK");
+        //}
 
         protected sealed override string ConvertStateIdToString(int id) {
             return id.ToString();
@@ -153,16 +153,16 @@ namespace TestCases.SpStateMachineTests {
 
         class tstState : SpState<tstA> {
             public tstState(ISpState parent, tstA o)
-                : base(parent, new SpIntToInt(3), o) {
+                : base(parent, new MyMsgFactory(), new SpIntToInt(3), o) {
             }
 
-            protected override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
-                throw new NotImplementedException();
-            }
+            //protected override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
+            //    throw new NotImplementedException();
+            //}
 
-            protected override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
-                throw new NotImplementedException();
-            }
+            //protected override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
+            //    throw new NotImplementedException();
+            //}
 
             #region Converters
             protected override string ConvertStateIdToString(int id) {
@@ -181,16 +181,16 @@ namespace TestCases.SpStateMachineTests {
 
         class tstSuperState : SpSuperState<tstA> {
             public tstSuperState(tstA o)
-                : base(new SpIntToInt(1), o) {
+                : base(new MyMsgFactory(), new SpIntToInt(1), o) {
             }
 
-            protected override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
-                throw new NotImplementedException();
-            }
+            //protected override ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
+            //    throw new NotImplementedException();
+            //}
 
-            protected override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
-                throw new NotImplementedException();
-            }
+            //protected override ISpEventMessage GetReponseMsg(ISpEventMessage msg) {
+            //    throw new NotImplementedException();
+            //}
 
             #region Converters
             protected override string ConvertStateIdToString(int id) {

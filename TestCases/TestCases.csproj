@@ -77,6 +77,7 @@
     <Compile Include="SpStateMachineTests\TestImplementations\Messages\MyTickMsg.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyDataClass.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyEventType.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\MyMsgFactory.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyMsgType.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyReturnCode.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MySpTools.cs" />
