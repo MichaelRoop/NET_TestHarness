@@ -126,15 +126,15 @@ namespace SpStateMachine.States {
         //}
 
 
-        /// <summary>
-        /// From Get the fully resolved state name in format
-        /// grandparent.parent.state
-        /// </summary>
-        public sealed override string FullName {
-            get {
-                return base.FullName;
-            }
-        }
+        ///// <summary>
+        ///// From Get the fully resolved state name in format
+        ///// grandparent.parent.state
+        ///// </summary>
+        //public sealed override string FullName {
+        //    get {
+        //        return base.FullName;
+        //    }
+        //}
 
 
         /// <summary>

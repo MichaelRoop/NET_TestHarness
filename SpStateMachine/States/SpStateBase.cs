@@ -130,7 +130,7 @@ namespace SpStateMachine.States {
         /// From Get the fully resolved state name in format
         /// grandparent.parent.state
         /// </summary>
-        public virtual string FullName {
+        public string FullName {
             get {
                 return this.fullName;
             }
