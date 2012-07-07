@@ -78,7 +78,12 @@ namespace TestCases.SpStateMachineTests {
                 this.listner.PostMessage(new SpBaseEventMsg(new SpIntToInt(25), new SpIntToInt(100)));
             });
             // On thread pool so have to wait for response
-            Thread.Sleep(200);
+            for (int i = 0; i < 21; i++) {
+                if (received) {
+                    break;
+                }
+                Thread.Sleep(25);
+            }
             Assert.IsTrue(received, "The received event was not raised");
             Assert.IsNotNull(msgCopy, "Message was not copied");
             Assert.AreEqual(25, msgCopy.TypeId);
@@ -100,10 +105,15 @@ namespace TestCases.SpStateMachineTests {
                     received = true;
                     msgCopy = msg;
                 });
-                this.listner.PostResponse(new SpBaseEventResponse(new SpIntToInt(2), new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(58))));
+                this.listner.PostResponse(new SpBaseEventResponse(new SpIntToInt(2), new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(58)), new SpIntToInt(0), ""));
             });
             // On thread pool so have to wait for response
-            Thread.Sleep(200);
+            for (int i = 0; i < 21; i++) {
+                if (received) {
+                    break;
+                }
+                Thread.Sleep(25);
+            }
             Assert.IsTrue(received, "The received event was not raised");
             Assert.IsNotNull(msgCopy, "Message was not copied");
             Assert.AreEqual(2, msgCopy.TypeId);
@@ -114,9 +124,8 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _50031_RaiseEvent_ResponseNoSubscribers() {
             TestHelpers.CatchUnexpected(() => {
-                this.listner.PostResponse(new SpBaseEventResponse(new SpIntToInt(2), new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(1))));
+                this.listner.PostResponse(new SpBaseEventResponse(new SpIntToInt(2), new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(1)), new SpIntToInt(0), ""));
             });
-            Thread.Sleep(250);
             this.logReader.Validate(50031, "SimpleEventListner", "RaiseEvent", "No subscribers to 'Response' message");
         }
 
@@ -126,7 +135,6 @@ namespace TestCases.SpStateMachineTests {
             TestHelpers.CatchUnexpected(() => {
                 this.listner.PostMessage(new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(1)));
             });
-            Thread.Sleep(250);
             this.logReader.Validate(50031, "SimpleEventListner", "RaiseEvent", "No subscribers to 'Message' message");
         }
 
@@ -139,10 +147,9 @@ namespace TestCases.SpStateMachineTests {
                     Console.WriteLine("** Response Received triggered **");
                     throw new Exception("User Exception in delegate");
                 });
-                this.listner.PostResponse(new SpBaseEventResponse(new SpIntToInt(2), new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(1))));
+                this.listner.PostResponse(new SpBaseEventResponse(new SpIntToInt(2), new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(1)), new SpIntToInt(0), ""));
             });
             // Allow the thread pool to catch up
-            Thread.Sleep(250);
             this.logReader.Validate(50030, "QueueUserWorkItemCallback", "WaitCallback_Context", "Unexpected Error Raising Event 'Response'");
         }
 
@@ -154,10 +161,9 @@ namespace TestCases.SpStateMachineTests {
                     Console.WriteLine("** Message Received triggered **");
                     throw new Exception("User Exception in delegate");
                 });
-                this.listner.PostMessage(new SpBaseEventResponse(new SpIntToInt(2), new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(1))));
+                this.listner.PostMessage(new SpBaseEventResponse(new SpIntToInt(2), new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(1)), new SpIntToInt(0), ""));
             });
             // Allow the thread pool to catch up
-            Thread.Sleep(250);
             this.logReader.Validate(50030, "QueueUserWorkItemCallback", "WaitCallback_Context", "Unexpected Error Raising Event 'Message'");
         }
 

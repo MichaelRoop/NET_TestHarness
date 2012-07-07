@@ -4,6 +4,7 @@ using ChkUtils;
 using ChkUtils.ErrObjects;
 using LogUtils;
 using NUnit.Framework;
+using System.Threading;
 
 namespace TestCases.TestToolSet {
 
@@ -96,7 +97,17 @@ namespace TestCases.TestToolSet {
         /// <param name="code">The error code</param>
         public ErrReport Validate(int code) {
             Console.WriteLine("<Validating>");
-            ErrReport err = this.errors.Find((item) => item.Code == code);
+
+            // Since the thread results are dumped out by a separate thread we may have to wait for 
+            // the results we will wait for 20 of 25ms time slices for max of half second
+            ErrReport err = null;
+            for (int i = 0; i < 26; i++) {
+                err = this.errors.Find((item) => item.Code == code);
+                if (err != null) {
+                    break;
+                }
+                Thread.Sleep(20);
+            }
             Assert.IsNotNull(err, String.Format("There was no error logged for code:{0}", code));
             return err;
         }

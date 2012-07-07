@@ -19,13 +19,16 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         public static ISpEventMessage GetDefaultReturnMsg(ISpEventMessage msg) {
             WrapErr.ChkParam(msg, "msg", 9999);
 
+            return new MySimpleOkResponse(msg);
 
             // From MySpTools
-            return new MyBaseResponse(
-                MyMsgType.SimpleResponse,
-                new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Tick),
-                MyReturnCode.Success,
-                "OK"); 
+            //return new MyBaseResponse(
+            //    MyMsgType.SimpleResponse,
+            //    new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Tick),
+            //    MyReturnCode.Success,
+            //    "OK"); 
+
+
 
 
 //            // TODO - the ChkTrue does not return a message with the exception

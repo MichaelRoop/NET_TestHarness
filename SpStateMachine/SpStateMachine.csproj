@@ -79,7 +79,9 @@
     <Compile Include="Converters\SpConverter.cs" />
     <Compile Include="Converters\SpEnumConverterExtensions.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Transitions\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ChkUtils\ChkUtils.csproj">
       <Project>{8AF7DD7E-394E-4816-B738-0764E1E60DD8}</Project>

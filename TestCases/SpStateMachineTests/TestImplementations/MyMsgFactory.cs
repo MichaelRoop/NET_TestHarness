@@ -33,6 +33,17 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         }
 
         public ISpEventMessage GetResponse(ISpEventMessage msg) {
+
+            // Decisions can be based on the event type and message type
+            switch (SpConverter.IntToEnum<MyEventType>(msg.EventId)) {
+                case MyEventType.Tick:
+                    // Tick never has a payload
+                    break;
+
+            }
+
+
+
             //Log.Info("MyState", "GetResponseMsg", String.Format("For msg:{0}", SpConverter.IntToEnum<MyMsgType>(msg.TypeId)));
             MyBaseResponse response = new MyBaseResponse(MyMsgType.SimpleResponse, msg, MyReturnCode.FailedPresure, "lalalal");
             Log.Info("MyState", "GetResponseMsg", String.Format(" ********** Made bogus response msg:{0}", SpConverter.IntToEnum<MyMsgType>(response.TypeId)));

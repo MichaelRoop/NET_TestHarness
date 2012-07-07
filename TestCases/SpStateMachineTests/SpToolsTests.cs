@@ -111,7 +111,7 @@ namespace TestCases.SpStateMachineTests {
 
         #endregion
 
-        #region RegisterTransition
+        #region Transition Samples
 
         private ISpEventMessage validMsg = new SpBaseEventMsg(new SpIntToInt(2), new SpIntToInt(41));
         private ISpEventMessage validMsg2 = new SpBaseEventMsg(new SpIntToInt(3), new SpIntToInt(42));
@@ -120,6 +120,10 @@ namespace TestCases.SpStateMachineTests {
             new SpStateTransition(SpStateTransitionType.SameState, null, new SpBaseEventMsg(new SpIntToInt(22), new SpIntToInt(34)));
         private ISpStateTransition validTransition2 = 
             new SpStateTransition(SpStateTransitionType.Defered, null, new SpBaseEventMsg(new SpIntToInt(33), new SpIntToInt(98)));
+
+        #endregion
+
+        #region RegisterTransition
 
 
         [Test]
