@@ -32,22 +32,23 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
             return MySpTools.GetDefaultReturnMsg(msg);
         }
 
+        // this is to clone an existing
+
         public ISpEventMessage GetResponse(ISpEventMessage msg) {
 
-            // Decisions can be based on the event type and message type
-            switch (SpConverter.IntToEnum<MyEventType>(msg.EventId)) {
-                case MyEventType.Tick:
-                    // Tick never has a payload
-                    break;
+            MyEventType eventType = SpConverter.IntToEnum<MyEventType>(msg.EventId);
+            MyMsgType msgType = SpConverter.IntToEnum<MyMsgType>(msg.TypeId);
 
-            }
+            // All my messages are Simple Types so I do not need any other info for types. Otherwise I would need a switch
+            return new MyBaseMsg(msgType, eventType, msg.Priority);
 
 
 
-            //Log.Info("MyState", "GetResponseMsg", String.Format("For msg:{0}", SpConverter.IntToEnum<MyMsgType>(msg.TypeId)));
-            MyBaseResponse response = new MyBaseResponse(MyMsgType.SimpleResponse, msg, MyReturnCode.FailedPresure, "lalalal");
-            Log.Info("MyState", "GetResponseMsg", String.Format(" ********** Made bogus response msg:{0}", SpConverter.IntToEnum<MyMsgType>(response.TypeId)));
-            return response;
+
+            ////Log.Info("MyState", "GetResponseMsg", String.Format("For msg:{0}", SpConverter.IntToEnum<MyMsgType>(msg.TypeId)));
+            //MyBaseResponse response = new MyBaseResponse(MyMsgType.SimpleResponse, msg, MyReturnCode.FailedPresure, "lalalal");
+            //Log.Info("MyState", "GetResponseMsg", String.Format(" ********** Made bogus response msg:{0}", SpConverter.IntToEnum<MyMsgType>(response.TypeId)));
+            //return response;
             
             //// will get it from a factory eventually
             //int responseMsgTypeId = 22;

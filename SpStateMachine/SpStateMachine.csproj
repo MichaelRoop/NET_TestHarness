@@ -78,10 +78,9 @@
     <Compile Include="States\SpSuperState.cs" />
     <Compile Include="Converters\SpConverter.cs" />
     <Compile Include="Converters\SpEnumConverterExtensions.cs" />
+    <Compile Include="Transitions\SpSimpleMsgFactory.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Transitions\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\ChkUtils\ChkUtils.csproj">
       <Project>{8AF7DD7E-394E-4816-B738-0764E1E60DD8}</Project>

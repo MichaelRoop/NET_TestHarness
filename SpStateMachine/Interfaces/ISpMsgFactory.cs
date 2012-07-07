@@ -26,5 +26,18 @@ namespace SpStateMachine.Interfaces {
         /// <returns>The default response message</returns>
         ISpEventMessage GetResponse(ISpEventMessage msg);
 
+
+        //ISpEventMessage GetResponse(int registeredMsgId);
+
+
+
+        // Extension Test
+ //       ISpStateTransition GetOnEventTransition(ISpStateTransition registered, ISpEventMessage msg, bool getDefault);
+
+
+//        ISpStateTransition GetDefaultTransitionClone();
+
+
+
     }
 }

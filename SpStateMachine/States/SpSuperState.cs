@@ -299,17 +299,10 @@ namespace SpStateMachine.States {
                     this.currentState.FullName, this.FullName, this.GetCachedEventId(msg.EventId));
             });
 
-            // At this point, the transition registered to the superstate should have everything set in it  ????
-            // TODO - check this out. Some on Result will be null
-            if (tr.ReturnMessage == null) {
-                tr.ReturnMessage = this.GetResponseMsg(msg);
-            }
-            else {
-                // Transfer existing GUID to correlate with sent message
-                // TODO - still would have to figure out how to transfer the payload for response
-                tr.ReturnMessage.Uid = msg.Uid;
-            }
-            
+            // TODO - OnResult may require data transfered to the transition object
+            tr.ReturnMessage = (tr.ReturnMessage == null) ? this.GetResponseMsg(msg) : this.GetResponseMsg(tr.ReturnMessage);
+            tr.ReturnMessage.Uid = msg.Uid;
+
             this.LogTransition(tr, msg);
             return tr;    
         }
@@ -318,15 +311,9 @@ namespace SpStateMachine.States {
         private ISpStateTransition GetSuperStateOnEventTransition(ISpEventMessage msg) {
             ISpStateTransition tr = this.GetOnEventTransition(msg);
             if (tr != null) {
-                // Get the appropriate related response message to add to transition
-                if (tr.ReturnMessage == null) {
-                    tr.ReturnMessage = this.GetResponseMsg(msg);
-                }
-                else {
-                    // Transfer existing GUID to correlate with sent message
-                    // TODO - still would have to figure out how to transfer the payload for response
-                    tr.ReturnMessage.Uid = msg.Uid;
-                }
+                // No Data transferal with OnEvent transitions
+                tr.ReturnMessage = (tr.ReturnMessage == null) ? this.GetResponseMsg(msg) : this.GetResponseMsg(tr.ReturnMessage);
+                tr.ReturnMessage.Uid = msg.Uid;
                 this.LogTransition(tr, msg);
             }
             return tr;

@@ -413,23 +413,14 @@ namespace SpStateMachine.States {
         /// </param>
         /// <param name="eventMsg">The incoming message to validate against the onEvent list</param>
         /// <returns>The OnEvent, OnResult or default transition</returns>
-        private ISpStateTransition GetTransition(bool onEntry, Func<ISpEventMessage, ISpEventMessage> stateFunc, ISpEventMessage eventMsg) {
+        private ISpStateTransition GetTransition(bool onEntry, Func<ISpEventMessage, ISpEventMessage> stateFunc, ISpEventMessage msg) {
             return WrapErr.ToErrorReportException(9999, () => {
                 // Query the OnEvent queue for a transition BEFORE calling state function (OnEntry, OnTick)
-                ISpStateTransition tr = this.GetOnEventTransition(eventMsg);
+                ISpStateTransition tr = this.GetOnEventTransition(msg);
                 if (tr != null) {
-                    if (tr.ReturnMessage == null) {
-                        tr.ReturnMessage = this.GetResponseMsg(eventMsg);
-                    }
-                    else {
-                        // Transfer existing GUID to correlate with sent message
-                        // TODO - still would have to figure out how to transfer the payload for response
-                        tr.ReturnMessage.Uid = eventMsg.Uid;
-                    }
-
-                    // TODO - This needs some more thought - Call to derived class to get the return message related to the incoming message
-                    //tr.ReturnMessage = this.OnGetResponseMsg(this.GetReponseMsg(eventMsg));
-                    tr.ReturnMessage = this.GetResponseMsg(eventMsg);
+                    // No message data transferal for OnEvent transitions
+                    tr.ReturnMessage = (tr.ReturnMessage == null) ? this.GetResponseMsg(msg) : this.GetResponseMsg(tr.ReturnMessage);
+                    tr.ReturnMessage.Uid = msg.Uid;
                     return tr;
                 }
 
@@ -441,12 +432,12 @@ namespace SpStateMachine.States {
 
                 // TODO - clarify this - we use the event id after processing so the return message is already selected
                 // Think that the derived should just send the same Msg or another msg back so that we can get the response msg from the same call as above
-                if ((tr = this.GetOnResultTransition(stateFunc.Invoke(eventMsg))) != null) {
+                if ((tr = this.GetOnResultTransition(stateFunc.Invoke(msg))) != null) {
                     return tr;
                 }
 
                 // If no transitions registered return SameState with default success message
-                return new SpStateTransition(SpStateTransitionType.SameState, null, this.MsgFactory.GetDefaultResponse(eventMsg));
+                return new SpStateTransition(SpStateTransitionType.SameState, null, this.MsgFactory.GetDefaultResponse(msg));
             });
         }
 
