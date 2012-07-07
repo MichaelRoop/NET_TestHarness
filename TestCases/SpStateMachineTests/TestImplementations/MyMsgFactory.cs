@@ -32,7 +32,27 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
             return MySpTools.GetDefaultReturnMsg(msg);
         }
 
-        // this is to clone an existing
+
+        // this will be to transfer content
+        public ISpEventMessage GetResponse(ISpEventMessage msg, ISpEventMessage registeredMsg) {
+            if (registeredMsg == null) {
+                return this.GetResponse(msg);
+            }
+
+            // In this scenario we would make a copy of the registered msg and copy in the data from the original incoming message
+
+            // We only have simple messages. Now we can change the data from the cloned message stored in the transition with
+            // the incoming message data. We will preserve the event and message type from stored object
+            ISpEventMessage ret = this.GetResponse(registeredMsg);
+            ret.Priority = msg.Priority;
+            ret.ReturnCode = msg.ReturnCode;
+            ret.ReturnStatus = msg.ReturnStatus;
+            ret.StringPayload = msg.StringPayload;
+            return ret;
+
+        }
+
+
 
         public ISpEventMessage GetResponse(ISpEventMessage msg) {
 
@@ -40,7 +60,11 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
             MyMsgType msgType = SpConverter.IntToEnum<MyMsgType>(msg.TypeId);
 
             // All my messages are Simple Types so I do not need any other info for types. Otherwise I would need a switch
-            return new MyBaseMsg(msgType, eventType, msg.Priority);
+            return new MyBaseMsg(msgType, eventType, msg.Priority) { 
+                ReturnCode = msg.ReturnCode, 
+                StringPayload = msg.StringPayload, 
+                ReturnStatus = msg.ReturnStatus  
+            };
 
 
 

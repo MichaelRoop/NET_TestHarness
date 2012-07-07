@@ -211,19 +211,11 @@ namespace SpStateMachine.States {
                     this.currentState.FullName, this.GetCachedEventId(msg.EventId));
             });
 
-            // TODO - determine if return message is already attached or needs attaching
-
             this.currentState.OnExit();
             this.currentState = tr.NextState;
 
-            // TODO - In this scenario we do not tick the OnEntry of the new current state until next iteration. Might have to change
-
-            // Reset transition to SameState to prevent other transitions along the chain on return
-            //tr.TransitionType = SpStateTransitionType.SameState;
-            //tr.NextState = null;
-            //return tr;
-
-            // Probably want to get the default success return type and pass back? Or if it got here from previous error we do not want to lose that information
+            // TODO - Look this over - seem weird. Probably want to get the default success return type and pass back? Or if it got here from previous error we do not want to lose that information
+            // TODO Probably tick with default message since it is first entry to new state and previous message may have been a failure event ejecting it from previous state
             if (tr.ReturnMessage == null) {
                 return this.currentState.OnEntry(msg);
             }
@@ -299,12 +291,10 @@ namespace SpStateMachine.States {
                     this.currentState.FullName, this.FullName, this.GetCachedEventId(msg.EventId));
             });
 
-            // TODO - OnResult may require data transfered to the transition object
-            tr.ReturnMessage = (tr.ReturnMessage == null) ? this.GetResponseMsg(msg) : this.GetResponseMsg(tr.ReturnMessage);
-            tr.ReturnMessage.Uid = msg.Uid;
-
-            this.LogTransition(tr, msg);
-            return tr;    
+            this.InitialiseTransactionReturnMsg(tr, msg, () => {
+                return this.MsgFactory.GetResponse(msg, tr.ReturnMessage);
+            });
+            return tr;
         }
 
 
@@ -312,13 +302,12 @@ namespace SpStateMachine.States {
             ISpStateTransition tr = this.GetOnEventTransition(msg);
             if (tr != null) {
                 // No Data transferal with OnEvent transitions
-                tr.ReturnMessage = (tr.ReturnMessage == null) ? this.GetResponseMsg(msg) : this.GetResponseMsg(tr.ReturnMessage);
-                tr.ReturnMessage.Uid = msg.Uid;
-                this.LogTransition(tr, msg);
+                this.InitialiseTransactionReturnMsg(tr, msg, () => { 
+                    return (tr.ReturnMessage == null) ? this.MsgFactory.GetResponse(msg) : this.MsgFactory.GetResponse(tr.ReturnMessage); 
+                });
             }
             return tr;
         }
-
 
         #endregion
 

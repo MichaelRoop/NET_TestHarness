@@ -251,9 +251,6 @@ namespace SpStateMachine.States {
             () => { this.isEntered = false; });
         }
 
-        #endregion
-
-        #region Sealed Methods
 
         /// <summary>
         /// Register a state transition from incoming event. 
@@ -331,18 +328,6 @@ namespace SpStateMachine.States {
             return this.GetTransitionFromStore(this.onResultTransitions, eventMsg);
         }
 
-
-        /// <summary>
-        /// Wraps the call to GetResponseMsg with some error handling
-        /// </summary>
-        /// <param name="eventMsg">The return message from the derived class</param>
-        protected ISpEventMessage GetResponseMsg(ISpEventMessage eventMsg) {
-            WrapErr.ChkParam(eventMsg, "eventMsg", 9999);
-            ISpEventMessage ret = this.MsgFactory.GetResponse(eventMsg);
-            WrapErr.ChkVar(ret, 9999, "The call to overriden 'GetReponseMsg' returned a null event message");
-            return ret;
-        }
-
         #region Cached id names
 
         /// <summary>
@@ -382,22 +367,20 @@ namespace SpStateMachine.States {
         #endregion
 
         /// <summary>
-        /// Factor out the reporting of state transitions for clarity
+        /// Run the call from the Msg Factory to get the transition return value and make sure that the GUID is transfered
+        /// from the original incoming message so the return can be correlated if necessary
         /// </summary>
-        /// <param name="tr">The transition object</param>
-        /// <param name="eventMsg">The event message which pushed this transition</param>
-        protected void LogTransition(ISpStateTransition tr, ISpEventMessage eventMsg) {
+        /// <param name="tr"></param>
+        /// <param name="originalMsg"></param>
+        /// <param name="getResponseMsgAction"></param>
+        protected void InitialiseTransactionReturnMsg(ISpStateTransition tr, ISpEventMessage originalMsg, Func<ISpEventMessage> getResponseMsgAction) {
             WrapErr.ToErrorReportException(9999, () => {
-                Log.Debug("SpState", "LogTransition",
-                    String.Format(
-                        "{0} OnMsg({1} - {2}) - From:{3} To:{4}",
-                        tr.TransitionType,
-                        this.GetCachedMsgTypeId(eventMsg.TypeId),
-                        this.GetCachedEventId(eventMsg.EventId),
-                        this.FullName,
-                        tr.NextState == null ? "Unknown" : tr.NextState.FullName));
+                tr.ReturnMessage = getResponseMsgAction.Invoke();
+                WrapErr.ChkVar(tr.ReturnMessage, 9999, "MsgFactory Returned a null message");
+                tr.ReturnMessage.Uid = originalMsg.Uid;
             });
         }
+
 
         #endregion
 
@@ -419,20 +402,24 @@ namespace SpStateMachine.States {
                 ISpStateTransition tr = this.GetOnEventTransition(msg);
                 if (tr != null) {
                     // No message data transferal for OnEvent transitions
-                    tr.ReturnMessage = (tr.ReturnMessage == null) ? this.GetResponseMsg(msg) : this.GetResponseMsg(tr.ReturnMessage);
-                    tr.ReturnMessage.Uid = msg.Uid;
+                    this.InitialiseTransactionReturnMsg(tr, msg, () => {
+                        return (tr.ReturnMessage == null) ? this.MsgFactory.GetResponse(msg) : this.MsgFactory.GetResponse(tr.ReturnMessage);
+                    });
                     return tr;
                 }
 
-                // You only consider the object entered if it gets to the OnEnter and does not find a preemptive transition event
-                // You could get a situation where you cascade down several state depths based on higher up events
+                // Only considered entered if you do not encounter a preemptive OnEvent transition on entry. In this way
+                // you could get a situation where you cascade down several state depths based on higher up events
                 if (onEntry) {
                     this.isEntered = true;
                 }
 
-                // TODO - clarify this - we use the event id after processing so the return message is already selected
-                // Think that the derived should just send the same Msg or another msg back so that we can get the response msg from the same call as above
+                // Get the transition object from the 'OnResult' queue
                 if ((tr = this.GetOnResultTransition(stateFunc.Invoke(msg))) != null) {
+                    // Clone the return message in the transition and transfer data from incoming msg if necessary
+                    this.InitialiseTransactionReturnMsg(tr, msg, () => {
+                        return this.MsgFactory.GetResponse(msg, tr.ReturnMessage);
+                    });
                     return tr;
                 }
 
@@ -457,6 +444,26 @@ namespace SpStateMachine.States {
                 return t;
             });
         }
+
+
+        /// <summary>
+        /// Factor out the reporting of state transitions for clarity
+        /// </summary>
+        /// <param name="tr">The transition object</param>
+        /// <param name="eventMsg">The event message which pushed this transition</param>
+        private void LogTransition(ISpStateTransition tr, ISpEventMessage eventMsg) {
+            WrapErr.ToErrorReportException(9999, () => {
+                Log.Debug("SpState", "LogTransition",
+                    String.Format(
+                        "{0} OnMsg({1} - {2}) - From:{3} To:{4}",
+                        tr.TransitionType,
+                        this.GetCachedMsgTypeId(eventMsg.TypeId),
+                        this.GetCachedEventId(eventMsg.EventId),
+                        this.FullName,
+                        tr.NextState == null ? "Unknown" : tr.NextState.FullName));
+            });
+        }
+
 
         /// <summary>
         /// Initialise the state id chain from ancestors to this state 

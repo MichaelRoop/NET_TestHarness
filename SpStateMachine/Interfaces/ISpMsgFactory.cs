@@ -27,17 +27,15 @@ namespace SpStateMachine.Interfaces {
         ISpEventMessage GetResponse(ISpEventMessage msg);
 
 
-        //ISpEventMessage GetResponse(int registeredMsgId);
-
-
-
-        // Extension Test
- //       ISpStateTransition GetOnEventTransition(ISpStateTransition registered, ISpEventMessage msg, bool getDefault);
-
-
-//        ISpStateTransition GetDefaultTransitionClone();
-
-
+        /// <summary>
+        /// This will return the response with the GUID and payload transfered 
+        /// from the incoming message but the message type and event type from
+        /// the registered return message if not null
+        /// </summary>
+        /// <param name="msg">The message received by the state machine</param>
+        /// <param name="registeredMsg">The return message stored in the registered transaction</param>
+        /// <returns>The response message</returns>
+        ISpEventMessage GetResponse(ISpEventMessage msg, ISpEventMessage registeredMsg);
 
     }
 }

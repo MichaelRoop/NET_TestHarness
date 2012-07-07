@@ -149,18 +149,24 @@ namespace TestCases.SpStateMachineTests {
         }
 
 
-        private void Tick(ISpEventMessage msg, ISpStateMachine sm) {
+        private ISpEventMessage Tick(ISpEventMessage msg, ISpStateMachine sm) {
+            ISpEventMessage ret = null;
             TestHelpers.CatchUnexpected(() => {
-                sm.Tick(msg);
+                ret = sm.Tick(msg);
             });
+            return ret;
         }
 
 
 
         private void TickAndValidateState(ISpEventMessage msg, ISpStateMachine sm, string expected) {
-            this.Tick(msg, sm);
+            ISpEventMessage ret = this.Tick(msg, sm);
             Thread.Sleep(0);
             this.ValidateState(sm, expected);
+        }
+
+        private void ValidateReturn(ISpEventMessage msg, ISpEventMessage ret) {
+            Assert.AreEqual(msg.Uid, ret.Uid, "Mismatch in GUIDs on return");
         }
 
 
