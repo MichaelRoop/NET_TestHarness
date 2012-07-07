@@ -214,12 +214,10 @@ namespace SpStateMachine.States {
             this.currentState.OnExit();
             this.currentState = tr.NextState;
 
-            // TODO - Look this over - seem weird. Probably want to get the default success return type and pass back? Or if it got here from previous error we do not want to lose that information
-            // TODO Probably tick with default message since it is first entry to new state and previous message may have been a failure event ejecting it from previous state
-            if (tr.ReturnMessage == null) {
-                return this.currentState.OnEntry(msg);
-            }
-            return this.currentState.OnEntry(tr.ReturnMessage);
+            ISpEventMessage newMsg = this.MsgFactory.GetDefaultResponse(msg);
+            // TODO - Double confirm GUID transferal 
+            newMsg.Uid = msg.Uid;
+            return this.currentState.OnEntry(newMsg);
         }
 
 

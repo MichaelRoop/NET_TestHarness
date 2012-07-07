@@ -163,6 +163,7 @@ namespace TestCases.SpStateMachineTests {
             ISpEventMessage ret = this.Tick(msg, sm);
             Thread.Sleep(0);
             this.ValidateState(sm, expected);
+            this.ValidateReturn(msg, ret);
         }
 
         private void ValidateReturn(ISpEventMessage msg, ISpEventMessage ret) {
