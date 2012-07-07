@@ -7,6 +7,12 @@ using SpStateMachine.Interfaces;
 
 namespace SpStateMachine.States {
 
+    /// <summary>
+    /// Implementation of the SpSuperState which handles the virtuals left exposed 
+    /// by the State Base and acts as a container of SpState objects as sub states
+    /// </summary>
+    /// <typeparam name="T">Generic type that the state represents</typeparam>
+    /// <author>Michael Roop</author>
     public class SpSuperState<T> : SpStateBase<T> where T : class {
 
         #region Data 
@@ -296,7 +302,7 @@ namespace SpStateMachine.States {
             // At this point, the transition registered to the superstate should have everything set in it  ????
             // TODO - check this out. Some on Result will be null
             if (tr.ReturnMessage == null) {
-                tr.ReturnMessage = this.OnGetResponseMsg(msg);
+                tr.ReturnMessage = this.GetResponseMsg(msg);
             }
             else {
                 // Transfer existing GUID to correlate with sent message
@@ -313,10 +319,8 @@ namespace SpStateMachine.States {
             ISpStateTransition tr = this.GetOnEventTransition(msg);
             if (tr != null) {
                 // Get the appropriate related response message to add to transition
-//                tr.ReturnMessage = this.OnGetResponseMsg(msg);
-
                 if (tr.ReturnMessage == null) {
-                    tr.ReturnMessage = this.OnGetResponseMsg(msg);
+                    tr.ReturnMessage = this.GetResponseMsg(msg);
                 }
                 else {
                     // Transfer existing GUID to correlate with sent message

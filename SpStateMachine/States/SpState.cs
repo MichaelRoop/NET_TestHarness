@@ -9,7 +9,8 @@ using SpStateMachine.Interfaces;
 namespace SpStateMachine.States {
 
     /// <summary>
-    /// Base implementation of the ISpState interface
+    /// Implementation of the SpState which handles the virtuals left exposed 
+    /// by the State Base
     /// </summary>
     /// <typeparam name="T">Generic type that the state represents</typeparam>
     /// <author>Michael Roop</author>

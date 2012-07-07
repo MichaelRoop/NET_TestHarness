@@ -85,17 +85,7 @@ namespace SpStateMachine.States {
         #endregion
 
         #region ISpState Properties
-
-        /// <summary>
-        /// Queries if OnEntry has already been invoked. It can only
-        /// be invoked once until the OnExit is called
-        /// </summary>
-        public bool IsEntryExcecuted {
-            get {
-                return this.isEntered;
-            }
-        }
-
+        
         /// <summary>
         /// The unique state identifier
         /// </summary>
@@ -145,6 +135,20 @@ namespace SpStateMachine.States {
         public virtual string CurrentStateName {
             get {
                 return this.fullName;
+            }
+        }
+
+        #endregion
+
+        #region SpState Protected Properties
+
+        /// <summary>
+        /// Queries if OnEntry has already been invoked. It can only
+        /// be invoked once until the OnExit is called
+        /// </summary>
+        protected bool IsEntryExcecuted {
+            get {
+                return this.isEntered;
             }
         }
 
@@ -283,7 +287,7 @@ namespace SpStateMachine.States {
         /// <param name="eventMsg">The incoming message</param>
         /// <returns>A transition object</returns>
         protected virtual ISpEventMessage ExecOnEntry(ISpEventMessage eventMsg) {
-            return this.msgFactory.GetDefaultResponse(eventMsg);
+            return this.MsgFactory.GetDefaultResponse(eventMsg);
         }
 
 
@@ -294,7 +298,7 @@ namespace SpStateMachine.States {
         /// <param name="eventMsg">The incoming message</param>
         /// <returns>A transition object</returns>
         protected virtual ISpEventMessage ExecOnTick(ISpEventMessage eventMsg) {
-            return this.msgFactory.GetDefaultResponse(eventMsg);
+            return this.MsgFactory.GetDefaultResponse(eventMsg);
         }
 
 
@@ -332,9 +336,9 @@ namespace SpStateMachine.States {
         /// Wraps the call to GetResponseMsg with some error handling
         /// </summary>
         /// <param name="eventMsg">The return message from the derived class</param>
-        protected ISpEventMessage OnGetResponseMsg(ISpEventMessage eventMsg) {
+        protected ISpEventMessage GetResponseMsg(ISpEventMessage eventMsg) {
             WrapErr.ChkParam(eventMsg, "eventMsg", 9999);
-            ISpEventMessage ret = this.msgFactory.GetResponse(eventMsg);
+            ISpEventMessage ret = this.MsgFactory.GetResponse(eventMsg);
             WrapErr.ChkVar(ret, 9999, "The call to overriden 'GetReponseMsg' returned a null event message");
             return ret;
         }
@@ -415,8 +419,7 @@ namespace SpStateMachine.States {
                 ISpStateTransition tr = this.GetOnEventTransition(eventMsg);
                 if (tr != null) {
                     if (tr.ReturnMessage == null) {
-                        //tr.ReturnMessage = this.OnGetResponseMsg(this.GetReponseMsg(eventMsg));
-                        tr.ReturnMessage = this.OnGetResponseMsg(eventMsg);
+                        tr.ReturnMessage = this.GetResponseMsg(eventMsg);
                     }
                     else {
                         // Transfer existing GUID to correlate with sent message
@@ -426,7 +429,7 @@ namespace SpStateMachine.States {
 
                     // TODO - This needs some more thought - Call to derived class to get the return message related to the incoming message
                     //tr.ReturnMessage = this.OnGetResponseMsg(this.GetReponseMsg(eventMsg));
-                    tr.ReturnMessage = this.OnGetResponseMsg(eventMsg);
+                    tr.ReturnMessage = this.GetResponseMsg(eventMsg);
                     return tr;
                 }
 
@@ -443,7 +446,7 @@ namespace SpStateMachine.States {
                 }
 
                 // If no transitions registered return SameState with default success message
-                return new SpStateTransition(SpStateTransitionType.SameState, null, msgFactory.GetDefaultResponse(eventMsg));
+                return new SpStateTransition(SpStateTransitionType.SameState, null, this.MsgFactory.GetDefaultResponse(eventMsg));
             });
         }
 

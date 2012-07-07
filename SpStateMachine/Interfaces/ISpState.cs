@@ -12,16 +12,9 @@ namespace SpStateMachine.Interfaces {
         #region Properties
 
         /// <summary>
-        /// Queries if OnEntry has already been invoked. It can only
-        /// be invoked once until the OnExit is called
-        /// </summary>
-        bool IsEntryExcecuted { get; }
-
-        /// <summary>
         /// The unique state identifier as an integer
         /// </summary>
         int Id { get; }
-
 
         /// <summary>
         /// Get the full id by combining nested int ids
@@ -38,8 +31,7 @@ namespace SpStateMachine.Interfaces {
         /// state being the leaf
         /// </summary>
         string FullName { get; }
-
-
+        
         /// <summary>
         /// Get the fully resolved state name in format parent.parent.state.substate with 
         /// all acestors and children until the farthest sub state being the leaf
