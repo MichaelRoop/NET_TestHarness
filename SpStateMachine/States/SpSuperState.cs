@@ -213,11 +213,7 @@ namespace SpStateMachine.States {
 
             this.currentState.OnExit();
             this.currentState = tr.NextState;
-
-            ISpEventMessage newMsg = this.MsgFactory.GetDefaultResponse(msg);
-            // TODO - Double confirm GUID transferal 
-            newMsg.Uid = msg.Uid;
-            return this.currentState.OnEntry(newMsg);
+            return this.currentState.OnEntry(this.MsgFactory.GetDefaultResponse(msg));
         }
 
 
@@ -289,9 +285,7 @@ namespace SpStateMachine.States {
                     this.currentState.FullName, this.FullName, this.GetCachedEventId(msg.EventId));
             });
 
-            this.InitialiseTransactionReturnMsg(tr, msg, () => {
-                return this.MsgFactory.GetResponse(msg, tr.ReturnMessage);
-            });
+            tr.ReturnMessage = this.MsgFactory.GetResponse(msg, tr.ReturnMessage);
             return tr;
         }
 
@@ -299,10 +293,9 @@ namespace SpStateMachine.States {
         private ISpStateTransition GetSuperStateOnEventTransition(ISpEventMessage msg) {
             ISpStateTransition tr = this.GetOnEventTransition(msg);
             if (tr != null) {
-                // No Data transferal with OnEvent transitions
-                this.InitialiseTransactionReturnMsg(tr, msg, () => { 
-                    return (tr.ReturnMessage == null) ? this.MsgFactory.GetResponse(msg) : this.MsgFactory.GetResponse(tr.ReturnMessage); 
-                });
+                tr.ReturnMessage = (tr.ReturnMessage == null) 
+                    ? this.MsgFactory.GetResponse(msg) 
+                    : this.MsgFactory.GetResponse(tr.ReturnMessage); 
             }
             return tr;
         }

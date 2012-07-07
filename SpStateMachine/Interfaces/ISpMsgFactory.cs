@@ -2,15 +2,15 @@
 namespace SpStateMachine.Interfaces {
 
     /// <summary>
-    /// Interface to a factory that will deliver message
-    /// responses passed on user criterial
+    /// Interface to a factory that will get message responses from a provider
+    /// and make sure that the transfer is safe the GUID is copied over to 
+    /// the response for message correlation
     /// </summary>
     /// <author>Michael Roop</author>
     public interface ISpMsgFactory {
         
         /// <summary>
-        /// This will return the default success response with only the GUID 
-        /// transfered from the incoming message to satisfy any need of msg 
+        /// Retrieves the default return message and initialises its correlating GUID 
         /// correlation
         /// </summary>
         /// <param name="msg">The message received by the state machine</param>
@@ -19,8 +19,7 @@ namespace SpStateMachine.Interfaces {
 
 
         /// <summary>
-        /// This will return the response with the GUID and payload
-        /// transfered from the incoming message
+        /// Retrieves the response message and initialises its correlating GUID 
         /// </summary>
         /// <param name="msg">The message received by the state machine</param>
         /// <returns>The default response message</returns>
@@ -28,9 +27,7 @@ namespace SpStateMachine.Interfaces {
 
 
         /// <summary>
-        /// This will return the response with the GUID and payload transfered 
-        /// from the incoming message but the message type and event type from
-        /// the registered return message if not null
+        /// Retrieves the response message and initialises its correlating GUID 
         /// </summary>
         /// <param name="msg">The message received by the state machine</param>
         /// <param name="registeredMsg">The return message stored in the registered transaction</param>

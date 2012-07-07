@@ -48,6 +48,7 @@
     <Compile Include="Converters\SpIntToIntConverter.cs" />
     <Compile Include="Core\BehaviorResponseEventType.cs" />
     <Compile Include="Core\SpEventPriority.cs" />
+    <Compile Include="Core\SpMsgFactory.cs" />
     <Compile Include="Core\SpStateMachineEngine.cs" />
     <Compile Include="Core\SpStateTransition.cs" />
     <Compile Include="Core\SpStateTransitionType.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="EventStores\SimpleDequeEventStore.cs" />
     <Compile Include="Interfaces\ISpIdConverter.cs" />
     <Compile Include="Interfaces\ISpMsgFactory.cs" />
+    <Compile Include="Interfaces\ISpMsgProvider.cs" />
     <Compile Include="Interfaces\ISpToEnum.cs" />
     <Compile Include="Interfaces\ISpToInt.cs" />
     <Compile Include="Interfaces\ISpBehaviorOnEvent.cs" />

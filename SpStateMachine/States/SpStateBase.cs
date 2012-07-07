@@ -366,22 +366,6 @@ namespace SpStateMachine.States {
 
         #endregion
 
-        /// <summary>
-        /// Run the call from the Msg Factory to get the transition return value and make sure that the GUID is transfered
-        /// from the original incoming message so the return can be correlated if necessary
-        /// </summary>
-        /// <param name="tr"></param>
-        /// <param name="originalMsg"></param>
-        /// <param name="getResponseMsgAction"></param>
-        protected void InitialiseTransactionReturnMsg(ISpStateTransition tr, ISpEventMessage originalMsg, Func<ISpEventMessage> getResponseMsgAction) {
-            WrapErr.ToErrorReportException(9999, () => {
-                tr.ReturnMessage = getResponseMsgAction.Invoke();
-                WrapErr.ChkVar(tr.ReturnMessage, 9999, "MsgFactory Returned a null message");
-                tr.ReturnMessage.Uid = originalMsg.Uid;
-            });
-        }
-
-
         #endregion
 
         #region Private Methods
@@ -401,10 +385,9 @@ namespace SpStateMachine.States {
                 // Query the OnEvent queue for a transition BEFORE calling state function (OnEntry, OnTick)
                 ISpStateTransition tr = this.GetOnEventTransition(msg);
                 if (tr != null) {
-                    // No message data transferal for OnEvent transitions
-                    this.InitialiseTransactionReturnMsg(tr, msg, () => {
-                        return (tr.ReturnMessage == null) ? this.MsgFactory.GetResponse(msg) : this.MsgFactory.GetResponse(tr.ReturnMessage);
-                    });
+                    tr.ReturnMessage = (tr.ReturnMessage == null) 
+                        ? this.MsgFactory.GetResponse(msg) 
+                        : this.MsgFactory.GetResponse(tr.ReturnMessage);
                     return tr;
                 }
 
@@ -416,10 +399,7 @@ namespace SpStateMachine.States {
 
                 // Get the transition object from the 'OnResult' queue
                 if ((tr = this.GetOnResultTransition(stateFunc.Invoke(msg))) != null) {
-                    // Clone the return message in the transition and transfer data from incoming msg if necessary
-                    this.InitialiseTransactionReturnMsg(tr, msg, () => {
-                        return this.MsgFactory.GetResponse(msg, tr.ReturnMessage);
-                    });
+                    tr.ReturnMessage = this.MsgFactory.GetResponse(msg, tr.ReturnMessage);
                     return tr;
                 }
 
