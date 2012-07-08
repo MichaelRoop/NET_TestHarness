@@ -19,7 +19,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         #region ISpMsgProvider Members
 
         public ISpEventMessage DefaultMsg(ISpEventMessage msg) {
-            return MySpTools.GetDefaultReturnMsg(msg);
+            return new MySimpleOkResponse(msg);
         }
 
         public ISpEventMessage Response(ISpEventMessage msg) {
