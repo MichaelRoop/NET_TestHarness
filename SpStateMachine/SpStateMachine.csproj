@@ -80,7 +80,6 @@
     <Compile Include="States\SpSuperState.cs" />
     <Compile Include="Converters\SpConverter.cs" />
     <Compile Include="Converters\SpEnumConverterExtensions.cs" />
-    <Compile Include="Transitions\SpSimpleMsgFactory.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

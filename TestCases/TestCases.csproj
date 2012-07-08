@@ -81,7 +81,6 @@
     <Compile Include="SpStateMachineTests\TestImplementations\MyMsgFactory.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyMsgType.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyReturnCode.cs" />
-    <Compile Include="SpStateMachineTests\TestImplementations\MySpTools.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyState.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyStateId.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyStateMachine.cs" />
