@@ -84,7 +84,18 @@ namespace LogUtils {
         /// <param name="atMethod">The method of origine</param>
         /// <param name="msg">The message to log</param>
         public static void Info(string atClass, string atMethod, string msg) {
-            Log.LogMsg(MsgLevel.Info, 0, atClass, atMethod, msg);
+                Log.LogMsg(MsgLevel.Info, 0, atClass, atMethod, msg);
+        }
+
+
+        /// <summary>
+        /// Log a high performance Info level message with no message formating invoked unless logged
+        /// </summary>
+        /// <param name="atClass">The class of origine</param>
+        /// <param name="atMethod">The method of origine</param>
+        /// <param name="msg">The message to log</param>
+        public static void Info(string atClass, string atMethod, Func<string> msgFunc) {
+            Log.LogMsg(MsgLevel.Info, 0, atClass, atMethod, msgFunc);
         }
 
 
@@ -119,6 +130,17 @@ namespace LogUtils {
         /// <param name="msg">The message to log</param>
         public static void Debug(string atClass, string atMethod, string msg) {
             Log.LogMsg(MsgLevel.Debug, 0, atClass, atMethod, msg);
+        }
+
+
+        /// <summary>
+        /// Log a high performance Debug level message with no message formating invoked unless logged
+        /// </summary>
+        /// <param name="atClass">The class of origine</param>
+        /// <param name="atMethod">The method of origine</param>
+        /// <param name="msg">The message to log</param>
+        public static void Debug(string atClass, string atMethod, Func<string> msgFunc) {
+            Log.LogMsg(MsgLevel.Debug, 0, atClass, atMethod, msgFunc);
         }
 
 
@@ -185,6 +207,50 @@ namespace LogUtils {
             Log.LogWarningAndUp(MsgLevel.Exception, code, msg, e);
         }
 
+        #region High Performance message format defered
+        
+        /// <summary>
+        /// Log a warning level message with defered message formating
+        /// </summary>
+        /// <param name="code">warning number code</param>
+        /// <param name="msgFunc">The message formater method to produce log string</param>
+        public static void Warning(int code, Func<string> msgFunc) {
+            Log.LogWarningAndUp(MsgLevel.Warning, code, msgFunc);
+        }
+
+
+        /// <summary>
+        /// Log an Error level message with defered message formating
+        /// </summary>
+        /// <param name="code">error number code</param>
+        /// <param name="msgFunc">The message formater method to produce log string</param>
+        public static void Error(int code, Func<string> msgFunc) {
+            Log.LogWarningAndUp(MsgLevel.Error, code, msgFunc);
+        }
+
+
+        /// <summary>
+        /// Log a Critical level message with defered message formating
+        /// </summary>
+        /// <param name="code">error number code</param>
+        /// <param name="msgFunc">The message formater method to produce log string</param>
+        public static void Critical(int code, Func<string> msgFunc) {
+            Log.LogWarningAndUp(MsgLevel.Critical, code, msgFunc);
+        }
+
+
+        /// <summary>
+        /// Log an exception level message with defered message formating
+        /// </summary>
+        /// <param name="code">Error code</param>
+        /// <param name="msgFunc">The message formater method to produce log string</param>
+        /// <param name="e">The exception to parse for information</param>
+        public static void Exception(int code, Func<string> msgFunc, Exception e) {
+            Log.LogWarningAndUp(MsgLevel.Exception, code, msgFunc, e);
+        }
+
+        #endregion
+
         #endregion
 
         #region LogMsg
@@ -201,6 +267,51 @@ namespace LogUtils {
             Log.LogMsg(level, code, atClass, atMethod, msg, null);
         }
 
+        #region High Performance message format defered
+
+        /// <summary>
+        /// Log the message using a function that defers execution of message formating unless at the 
+        /// correct level to log
+        /// </summary>
+        /// <param name="level">Message level</param>
+        /// <param name="code">Error code</param>
+        /// <param name="atClass">Class of origine</param>
+        /// <param name="atMethod">Method of origine</param>
+        /// <param name="msg">Message function</param>
+        public static void LogMsg(MsgLevel level, int code, string atClass, string atMethod, Func<string> msgFunc) {
+            Log.LogMsg(level, code, atClass, atMethod, msgFunc, null);
+        }
+
+
+        /// <summary>
+        /// Log the message using a function that defers execution of message formating unless at the 
+        /// correct level to log
+        /// </summary>
+        /// <param name="level">Message level</param>
+        /// <param name="code">Error code</param>
+        /// <param name="atClass">Class of origine</param>
+        /// <param name="atMethod">Method of origine</param>
+        /// <param name="msg">Message function</param>
+        /// <param name="e">Exception to log</param>
+        public static void LogMsg(MsgLevel level, int code, string atClass, string atMethod, Func<string> msgFunc, Exception e) {
+            // You must only invoke the formater function if the level is high enough to ensure maximum
+            // performance gains if the message is not high enough level to be logged
+            if (Log.IsVerboseEnough(level)) {
+                string msg = "";
+                try {
+                    msg = msgFunc.Invoke();
+                }
+                catch (Exception ex) {
+                    msg = String.Format(
+                        "Exception Thrown on invoking Msg Formater for Msg Number:{0} at {1}.{2} - {3}",
+                        code, atClass, atMethod, ex.Message);
+                    System.Diagnostics.Debug.WriteLine(msg);
+                }
+                Log.LogMsg(level, code, atClass, atMethod, msg, e);
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Log the message
@@ -213,7 +324,6 @@ namespace LogUtils {
         /// <param name="e">Exception to log</param>
         public static void LogMsg(MsgLevel level, int code, string atClass, string atMethod, string msg, Exception e) {
             Log.LogMsg(level, new ErrReport(code, atClass, atMethod, msg, e));
-            
         }
 
 
@@ -294,7 +404,49 @@ namespace LogUtils {
                 Log.LogMsg(level, code, mb.DeclaringType.Name, mb.Name, msg, e);
             }
         }
-        
+
+        #region High Performance message format defered
+
+        /// <summary>
+        /// Retrieves the class and method names by reflection. Used for messages from warning to 
+        /// Exception level with occur infrequently. The message is delivered by delegate for 
+        /// better performance when using formated error string.
+        /// </summary>
+        /// <param name="level">Log message level</param>
+        /// <param name="code">Error code</param>
+        /// <param name="msg">Error message</param>
+        private static void LogWarningAndUp(MsgLevel level, int code, Func<string> msgFunc) {
+            LogWarningAndUp(level, code, msgFunc, null);
+        }
+
+
+        /// <summary>
+        /// Retrieves the class and method names by reflection. Used for messages from warning to 
+        /// Exception level with occur infrequently. The message is delivered by delegate for better
+        /// performance when using formated error string.
+        /// </summary>
+        /// <param name="level">Log message level</param>
+        /// <param name="code">Error code</param>
+        /// <param name="msg">Error message</param>
+        /// <param name="e">The exception to parse for information</param>
+        private static void LogWarningAndUp(MsgLevel level, int code, Func<string> msgFunc, Exception e) {
+            // Do the verbosity check first to avoid the overhead of reflection if it is not being logged
+            if (Log.IsVerboseEnough(level)) {
+                string msg = "";
+                try {
+                    msg = msgFunc.Invoke();
+                }
+                catch (Exception ex) {
+                    msg = String.Format(
+                        "Exception Thrown on invoking Msg Formater for Msg Number:{0} - {1}", code, ex.Message);
+                    System.Diagnostics.Debug.WriteLine(msg);
+                }
+                MethodBase mb = StackFrameTools.FirstNonWrappedMethod(typeof(LogUtils.Log));
+                Log.LogMsg(level, code, mb.DeclaringType.Name, mb.Name, msg, e);
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Checks if the message level is equal or greater than the set verbosity

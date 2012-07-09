@@ -141,6 +141,23 @@ namespace TestCases.TestToolSet {
             Assert.AreEqual(msg, err.Msg, "Message Mismatch");
         }
 
+        /// <summary>
+        /// Set level message needs before being logged
+        /// </summary>
+        /// <param name="level">Required level</param>
+        public void SetVerbosity(MsgLevel level) {
+            Log.SetVerbosity(level);
+        }
+
+
+        /// <summary>
+        /// Set the threshold of messages needing to be logged before dump thread is woken
+        /// </summary>
+        /// <param name="numberOfMsgBeforeDumpToLog"></param>
+        public void SetLogThreshold(int numberOfMsgBeforeDumpToLog) {
+            Log.SetMsgNumberThreshold(numberOfMsgBeforeDumpToLog);
+        }
+
         #endregion
 
         #region Private Methods
