@@ -11,6 +11,7 @@ namespace SpStateMachine.Core {
     /// together to drive events and behavior
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public sealed class SpStateMachineEngine : IDisposable {
 
         #region Data

@@ -6,6 +6,7 @@ namespace SpStateMachine.Interfaces {
     /// Interface to define a listner for ISpMessages
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public interface ISpEventListner : IDisposable {
 
         #region Events

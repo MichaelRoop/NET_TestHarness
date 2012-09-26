@@ -9,6 +9,7 @@ namespace ChkUtils.ExceptionParsers {
     /// Base class for Exception parsers to error reporting
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public abstract class ExceptionParserBase : IExceptionParser {
 
         #region Data

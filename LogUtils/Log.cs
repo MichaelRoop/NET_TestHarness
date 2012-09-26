@@ -24,6 +24,7 @@ namespace LogUtils {
     /// out the values.
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public static class Log {
 
         #region Data

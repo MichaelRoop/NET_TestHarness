@@ -7,6 +7,7 @@ namespace SpStateMachine.Interfaces {
     /// copying over related data from input message to the response
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public interface ISpMsgProvider {
 
         /// <summary>

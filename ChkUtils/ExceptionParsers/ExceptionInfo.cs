@@ -6,6 +6,7 @@ namespace ChkUtils.ExceptionParsers {
     /// Central parser for displayable common exception iformation
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public class ExceptionInfo {
 
         #region Data

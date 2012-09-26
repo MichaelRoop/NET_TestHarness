@@ -7,6 +7,7 @@ namespace SpStateMachine.Interfaces {
     /// the response for message correlation
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public interface ISpMsgFactory {
         
         /// <summary>

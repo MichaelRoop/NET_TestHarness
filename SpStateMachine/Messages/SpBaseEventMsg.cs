@@ -15,6 +15,7 @@ namespace SpStateMachine.Messages {
     /// Extension methods to convert them to int.
     /// </remarks>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     [DataContract]
     public class SpBaseEventMsg : ISpEventMessage {
 

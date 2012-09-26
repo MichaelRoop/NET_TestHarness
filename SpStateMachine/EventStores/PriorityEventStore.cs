@@ -13,6 +13,8 @@ namespace SpStateMachine.EventStores {
     /// line. Using a queue for each priority to prevent sorting
     /// and maintain order of same priority events
     /// </summary>
+    /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public class PriorityEventStore : BaseEventStore {
 
         #region Data

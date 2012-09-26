@@ -20,6 +20,7 @@ namespace SpStateMachine.Messages {
     /// typeId to get at included payloads.
     /// </remarks>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public class SpBaseEventResponse : SpBaseEventMsg {
 
         /// <summary>

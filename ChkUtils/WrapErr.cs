@@ -20,6 +20,7 @@ namespace ChkUtils {
     /// Partial class implementation with catch Func to ErrReportException
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public static class WrapErr {
         
         #region Data

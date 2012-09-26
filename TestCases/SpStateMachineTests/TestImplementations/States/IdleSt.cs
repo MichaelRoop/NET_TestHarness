@@ -11,7 +11,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.States {
     public class IdleSt : MyState {
 
         private string className = "IdleState";
-        private int triggerCount = 0;
+//        private int triggerCount = 0;
 
 
         public IdleSt(ISpState parent, MyDataClass dataClass)

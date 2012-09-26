@@ -12,6 +12,7 @@ namespace SpStateMachine.EventStores {
     /// </summary>
     /// <typeparam name="T">The payload type of the event object</typeparam>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public class SimpleDequeEventStore : BaseEventStore { 
 
         #region Data

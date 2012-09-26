@@ -86,7 +86,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates.CascadeO
     public class Level2Idle : MyState {
 
         private string className = "Level2Idle";
-        private int triggerCount = 0;
+//        private int triggerCount = 0;
 
 
         public Level2Idle(ISpState parent, MyDataClass dataClass)

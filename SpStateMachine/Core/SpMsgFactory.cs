@@ -10,6 +10,7 @@ namespace SpStateMachine.Core {
     /// of GUIDs to the response to satisfy message correlation
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public sealed class SpMsgFactory : ISpMsgFactory {
 
         #region Data

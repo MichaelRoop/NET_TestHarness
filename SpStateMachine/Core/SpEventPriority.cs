@@ -8,6 +8,7 @@ namespace SpStateMachine.Core {
     /// <summary>
     /// Differnt priorities of Events
     /// </summary>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public enum SpEventPriority {
 
         /// <summary>Below normal priority level</summary>

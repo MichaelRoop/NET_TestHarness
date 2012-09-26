@@ -5,6 +5,7 @@ namespace ChkUtils.ExceptionFormating {
     /// Formater factory for the Exception stack trace information
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public static class ExceptionFormaterFactory {
 
         #region Data 

@@ -6,6 +6,11 @@ using ChkUtils.ErrObjects;
 
 namespace LogUtils {
 
+    /// <summary>
+    /// Used as a simple writer of messages to console
+    /// </summary>
+    /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public class ConsoleWriter {
 
         Action<MsgLevel, ErrReport> onMsgLogged = null;

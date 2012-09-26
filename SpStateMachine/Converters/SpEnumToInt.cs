@@ -8,6 +8,8 @@ namespace SpStateMachine.Converters {
     /// way you can pass the embedded Extension converters as an interface
     /// parameter
     /// </summary>
+    /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public class SpEnumToInt : ISpToInt {
 
         #region Data

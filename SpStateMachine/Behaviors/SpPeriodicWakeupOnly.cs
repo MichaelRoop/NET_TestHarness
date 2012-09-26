@@ -14,6 +14,7 @@ namespace SpStateMachine.Behaviours {
     /// Implementation of a behavior class that wakes only on periodic timer
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public sealed class SpPeriodicWakeupOnly : ISpBehaviorOnEvent {
 
         #region Data

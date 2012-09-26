@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Text;
-using ChkUtils.ExceptionParsers;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Text;
 using ChkUtils.ExceptionFormating;
+using ChkUtils.ExceptionParsers;
 
 namespace ChkUtils.ErrObjects {
 
@@ -11,6 +11,7 @@ namespace ChkUtils.ErrObjects {
     /// Object to hold error information
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     [DataContract]
     public class ErrReport {
 

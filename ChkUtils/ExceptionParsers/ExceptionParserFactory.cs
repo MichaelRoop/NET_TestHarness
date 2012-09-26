@@ -8,6 +8,7 @@ namespace ChkUtils.ExceptionParsers {
     /// Factory to deliver specific IExceptionParser objects according to exception type
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public static class ExceptionParserFactory {
 
         /// <summary>

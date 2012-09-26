@@ -13,6 +13,7 @@ namespace SpStateMachine.EventStores {
     /// default tick object for non sent event ticks
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public abstract class BaseEventStore : ISpEventStore {
         
         #region Data

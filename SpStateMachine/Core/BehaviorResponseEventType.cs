@@ -9,6 +9,7 @@ namespace SpStateMachine.Core {
     /// Strongly typed event types which the ISpBehavior has to handle
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public enum BehaviorResponseEventType {
 
         /// <summary>The Periodic Timer Fired</summary>

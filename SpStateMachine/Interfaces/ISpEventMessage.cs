@@ -10,6 +10,7 @@ namespace SpStateMachine.Interfaces {
     /// Interface for a message event type for the SpStateMachine architecture
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public interface ISpEventMessage {
 
         /// <summary>

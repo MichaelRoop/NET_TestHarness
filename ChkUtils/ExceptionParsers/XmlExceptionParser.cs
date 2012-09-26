@@ -11,6 +11,7 @@ namespace ChkUtils.ExceptionParsers {
     /// Parse out the particulars of an XmlException
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public class XmlExceptionParser : ExceptionParserBase {
         
         #region Constructors

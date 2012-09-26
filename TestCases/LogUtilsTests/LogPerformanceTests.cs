@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
+using LogUtils;
 using NUnit.Framework;
 using TestCases.TestToolSet;
-using LogUtils;
-using System.Diagnostics;
 
 namespace TestCases.LogUtilsTests {
 

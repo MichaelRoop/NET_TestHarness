@@ -8,6 +8,8 @@ namespace SpStateMachine.Converters {
     /// argument requirements while just being a passthrough
     /// parameter
     /// </summary>
+    /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public class SpIntToInt : ISpToInt {
 
         #region Data

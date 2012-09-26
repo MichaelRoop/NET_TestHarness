@@ -6,6 +6,7 @@ namespace SpStateMachine.Core {
     /// Contains the necessary information to execute a state transition
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public sealed class SpStateTransition : ISpStateTransition {
 
         #region Data 

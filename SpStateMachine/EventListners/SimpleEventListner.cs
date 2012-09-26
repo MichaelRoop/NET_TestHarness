@@ -13,6 +13,8 @@ namespace SpStateMachine.EventListners {
     /// state machine engine and a communications module like WCF as a bridge
     /// to push messages into the state machine and get back the responses
     /// </summary>
+    /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public sealed class SimpleEventListner : ISpEventListner {
 
         #region ISpEventListner Events

@@ -5,6 +5,7 @@ namespace LogUtils {
     /// Used to set the message level as well as the verbosity level to log
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public enum MsgLevel : int {
 
         /// <summary>

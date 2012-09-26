@@ -8,6 +8,7 @@ namespace ChkUtils.ErrObjects {
     /// to enable it to be caught and rethrown in the Wrap methods
     /// </summary>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public class ErrReportException : Exception {
 
         #region Data

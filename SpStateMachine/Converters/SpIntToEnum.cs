@@ -9,6 +9,7 @@ namespace SpStateMachine.Converters {
     /// </summary>
     /// <typeparam name="T">The type of Enum to convert</typeparam>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public class SpIntToEnum<T> : ISpToEnum<T> where T : struct {
 
         #region Data

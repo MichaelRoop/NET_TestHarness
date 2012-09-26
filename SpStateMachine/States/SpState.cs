@@ -8,6 +8,7 @@ namespace SpStateMachine.States {
     /// </summary>
     /// <typeparam name="T">Generic type that the state represents</typeparam>
     /// <author>Michael Roop</author>
+    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public class SpState<T> : SpStateBase<T> where T : class {
 
         #region ISpState Sealed Properties
