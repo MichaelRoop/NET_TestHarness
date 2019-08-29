@@ -29,9 +29,9 @@ namespace TestCases.SpStateMachineTests {
 
         #region Setup 
 
-        ConsoleWriter consoleWriter = new ConsoleWriter();
+        NUnitTraceWriter consoleWriter = new NUnitTraceWriter();
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void Setup() {
             Log.SetVerbosity(MsgLevel.Info);
             Log.SetMsgNumberThreshold(1);
@@ -41,7 +41,7 @@ namespace TestCases.SpStateMachineTests {
             this.consoleWriter.StartLogging();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void Teardown() {
             this.consoleWriter.StopLogging();
         }

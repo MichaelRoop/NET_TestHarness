@@ -18,7 +18,7 @@ namespace TestCases.TestToolSet {
 
         List<ErrReport> errors = new List<ErrReport>();
 
-        ConsoleWriter consoleWriter = new ConsoleWriter();
+        NUnitTraceWriter consoleWriter = new NUnitTraceWriter();
 
         LogingMsgEventDelegate myLogReadDelegate = null;
 

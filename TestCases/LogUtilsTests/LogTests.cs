@@ -16,7 +16,7 @@ namespace TestCases.LogUtilsTests {
 
         MsgLevel currentLevel = MsgLevel.Off;
         ErrReport currentReport = new ErrReport();
-        ConsoleWriter consoleWriter = new ConsoleWriter();
+        NUnitTraceWriter consoleWriter = new NUnitTraceWriter();
 
         #endregion
 
@@ -30,6 +30,18 @@ namespace TestCases.LogUtilsTests {
         void Log_OnLogMsgEvent(MsgLevel level, ErrReport errReport) {
             this.currentLevel = level;
             this.currentReport = errReport;
+        }
+
+        [OneTimeSetUp]
+        public void OneTime() {
+            System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.ConsoleTraceListener());
+            //For.NET core 2.0, you need to use:
+            //Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
+        }
+
+        [OneTimeTearDown]
+        public void TearDown() {
+            System.Diagnostics.Trace.Flush();
         }
 
 

@@ -1,19 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using System;
 using System.Collections;
 using System.Xml;
-using SpStateMachine.States;
-using SpStateMachine.Interfaces;
-using SpStateMachine.Messages;
-using SpStateMachine.Core;
-using SpStateMachine.EventListners;
-using SpStateMachine.EventStores;
-using SpStateMachine.PeriodicTimers;
-using System.Threading;
-using LogUtils;
 
 namespace TestCases {
 

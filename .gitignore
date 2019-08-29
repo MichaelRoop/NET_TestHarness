@@ -165,3 +165,9 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+.vs/TestHarness/v16/Server/sqlite3/db.lock
+.vs/TestHarness/v16/Server/sqlite3/storage.ide
+.vs/TestHarness/v16/Server/sqlite3/storage.ide-shm
+.vs/TestHarness/v16/Server/sqlite3/storage.ide-wal
+.vs/TestHarness/v16/TestStore/0/000-0000.testlog
+.vs/TestHarness/v16/TestStore/0/testlog.manifest
