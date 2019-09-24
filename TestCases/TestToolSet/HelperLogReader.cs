@@ -5,6 +5,7 @@ using ChkUtils.ErrObjects;
 using LogUtils;
 using NUnit.Framework;
 using System.Threading;
+using System.Diagnostics;
 
 namespace TestCases.TestToolSet {
 
@@ -85,7 +86,7 @@ namespace TestCases.TestToolSet {
         /// Clear existing errors
         /// </summary>
         public void Clear() {
-            Console.WriteLine("<Clearing Log List>");
+            Trace.WriteLine("<Clearing Log List>");
             this.errors.Clear();
         }
 
@@ -96,7 +97,7 @@ namespace TestCases.TestToolSet {
         /// </summary>
         /// <param name="code">The error code</param>
         public ErrReport Validate(int code) {
-            Console.WriteLine("<Validating>");
+            Trace.WriteLine(String.Format("<Validating> - Looking for err {0}", code));
 
             // Since the thread results are dumped out by a separate thread we may have to wait for 
             // the results we will wait for 20 of 25ms time slices for max of half second
@@ -106,8 +107,17 @@ namespace TestCases.TestToolSet {
                 if (err != null) {
                     break;
                 }
-                Thread.Sleep(20);
+                Thread.Sleep(100);
             }
+
+            if (err == null) {
+                Trace.WriteLine(String.Format("<Failed Validation> - err {0} - here is a list of existing errors", code));
+                foreach(var e in this.errors) {
+                    Trace.WriteLine(String.Format("     err {0}", e.Code));
+                }
+            }
+
+
             Assert.IsNotNull(err, String.Format("There was no error logged for code:{0}", code));
             return err;
         }

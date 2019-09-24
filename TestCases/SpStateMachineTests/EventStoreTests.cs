@@ -5,6 +5,7 @@ using SpStateMachine.Interfaces;
 using SpStateMachine.Messages;
 using TestCases.TestToolSet;
 using SpStateMachine.Converters;
+using LogUtils;
 
 namespace TestCases.SpStateMachineTests {
 
@@ -27,6 +28,7 @@ namespace TestCases.SpStateMachineTests {
         [TearDown]
         public void TestTeardown() {
             this.logReader.StopLogging();
+            System.Threading.Thread.Sleep(500);
             this.logReader.Clear();
         }
 

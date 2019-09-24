@@ -7,6 +7,7 @@ using LogUtils;
 using ChkUtils.ErrObjects;
 using System.Threading;
 
+
 namespace TestCases.LogUtilsTests {
 
     [TestFixture]
@@ -21,6 +22,17 @@ namespace TestCases.LogUtilsTests {
         #endregion
 
         #region Setup 
+
+        // This is how they write to console with the VS test platform
+        // https://xunit.net/docs/capturing-output
+        //private readonly ITestOutputHelper output;
+
+
+        //public MyTestClass(ITestOutputHelper output) {
+        //    this.output = output;
+        //}
+
+
 
         public LogTests() {
             Log.OnLogMsgEvent += new LogingMsgEventDelegate(Log_OnLogMsgEvent);
@@ -127,7 +139,7 @@ namespace TestCases.LogUtilsTests {
         [Test]
         public void Warning_Restricted() {
             Log.SetVerbosity(MsgLevel.Error);
-            Log.Warning(1233, "This is my message");
+            Log.Warning(1233, "This is my message SHOULD NOT SHOW");
             this.CheckLogValues(MsgLevel.Off, 0, "", "", "", "");
 
             Log.SetVerbosity(MsgLevel.Warning);
@@ -144,24 +156,48 @@ namespace TestCases.LogUtilsTests {
             this.Error_Valid();
         }
 
+
         [Test]
         public void Critical_Restricted() {
             Log.SetVerbosity(MsgLevel.Exception);
             Log.Critical(1233, "This is my message");
             this.CheckLogValues(MsgLevel.Off, 0, "", "", "", "");
 
+            // Few tests
+            // Does not show at all
+            //Console.WriteLine("Console.WriteLine");
+            //TestContext.WriteLine($"*** TestContext.WriteLine");
+            //TestContext.Write("TestContext.Write");
+            //TestContext.Out.WriteLine($"*** TestContext.Out.WriteLine");
+
+            // Only show when you 'Debug Selected Tests'
+            //System.Diagnostics.Debug.WriteLine("*** Debug.WriteLine");
+            //System.Diagnostics.Trace.WriteLine("*** Trace.WriteLine");
+
+            // Show in the Output window with [warning]
+            //TestContext.Error.WriteLine($"*** TestContext.Error.WriteLine");
+            // Does not show at all
+
+            // To make everything work we use the 'debug all tests, but have it in release configuration 
+            // to prevent the debugger from stopping the process on first error.  The new NUnit Output
+            // Writter uses the System.Diagnostics.Trace.WriteLine that will write to Debug output
+
+
             Log.SetVerbosity(MsgLevel.Critical);
             this.Critical_Valid();
+
+            Assert.IsTrue(false, "Just to make it fail");
+
         }
 
         [Test]
         public void Exception_Restricted() {
             try {
                 Log.SetVerbosity(MsgLevel.Off);
-                throw new Exception("Blah blah exception");
+                throw new Exception("Blah blah restricted exception");
             }
             catch (Exception e) {
-                Log.Exception(1000, "This is my exception error string", e);
+                Log.Exception(1000, "This is my restricted exception error stack", e);
                 this.CheckLogValues(MsgLevel.Off, 0, "", "", "", "");
             }
 

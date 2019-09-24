@@ -1,8 +1,5 @@
 ﻿using ChkUtils.ErrObjects;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace LogUtils {
 
@@ -55,10 +52,10 @@ namespace LogUtils {
 
         private void LogToConsole(MsgLevel level, ErrReport report) {
             if (report.StackTrace.Length > 0) {
-                System.Diagnostics.Trace.WriteLine(String.Format("{0}\t{1}\t{2}.{3} - {4}{5}{6}", report.Code, level.ShortName(), report.AtClass, report.AtMethod, report.Msg, Environment.NewLine, report.StackTrace));
+                System.Diagnostics.Trace.WriteLine(String.Format("{0:00000}\t{1}\t{2}.{3} - {4}{5}{6}", report.Code, level.ShortName(), report.AtClass, report.AtMethod, report.Msg, Environment.NewLine, report.StackTrace));
             }
             else {
-                System.Diagnostics.Trace.WriteLine(String.Format("{0}\t{1}\t{2}.{3} - {4}", report.Code, level.ShortName(), report.AtClass, report.AtMethod, report.Msg));
+                System.Diagnostics.Trace.WriteLine(String.Format("{0:00000}\t{1}\t{2}.{3} - {4}", report.Code, level.ShortName(), report.AtClass, report.AtMethod, report.Msg));
             }
         }
 

@@ -171,3 +171,5 @@ pip-log.txt
 .vs/TestHarness/v16/Server/sqlite3/storage.ide-wal
 .vs/TestHarness/v16/TestStore/0/000-0000.testlog
 .vs/TestHarness/v16/TestStore/0/testlog.manifest
+.vs/TestHarness/v16/TestStore/0/002-0000.testlog
+.vs/TestHarness/v16/TestStore/0/002-0001.testlog

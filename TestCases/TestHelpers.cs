@@ -83,7 +83,9 @@ namespace TestCases {
         #region Writing messages to console for debug
 
         public static void ErrToConsole(ErrReport e) {
-            Console.WriteLine("{0} {1}.{2} : {3}{4}{5}", e.Code, e.AtClass, e.AtMethod, e.Msg, Environment.NewLine, e.StackTrace);
+            //Console.WriteLine("{0} {1}.{2} : {3}{4}{5}", e.Code, e.AtClass, e.AtMethod, e.Msg, Environment.NewLine, e.StackTrace);
+            System.Diagnostics.Trace.WriteLine(String.Format("{0} {1}.{2} : {3}{4}{5}", e.Code, e.AtClass, e.AtMethod, e.Msg, Environment.NewLine, e.StackTrace));
+
         }
         
         #endregion
