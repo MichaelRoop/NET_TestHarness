@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace LogUtils {
+namespace LogUtils.Net {
 
     // TO-DO - Shutdown and restart to take care of thread creation and teardown
     // TO-DO - Method to set the wakeup time
@@ -475,7 +475,7 @@ namespace LogUtils {
                 if (Log.stackTools != null) {
                     try {
                         ErrorLocation location = Log.stackTools.FirstNonWrappedMethod(new Type[] {
-                            typeof(LogUtils.Log),
+                            typeof(LogUtils.Net.Log),
                             typeof(ChkUtils.Net.WrapErr),
                             typeof(ErrReport),
                             typeof(ClassLog),
@@ -534,7 +534,7 @@ namespace LogUtils {
                 if (Log.stackTools != null) {
                     try {
                         ErrorLocation location = Log.stackTools.FirstNonWrappedMethod(new Type[] {
-                            typeof(LogUtils.Log),
+                            typeof(LogUtils.Net.Log),
                             typeof(ChkUtils.Net.WrapErr),
                             typeof(ErrReport),
                         });

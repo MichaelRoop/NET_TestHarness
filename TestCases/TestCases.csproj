@@ -72,6 +72,10 @@
     <Compile Include="ChkUtilsTests\ToErrorReportFaultExceptionTests.cs" />
     <Compile Include="ChkUtilsTests\ToErrReportTests.cs" />
     <Compile Include="ChkUtilsTests\ValidatorTests.cs" />
+    <Compile Include="HelperLogReader\HelperLogReaderNet.cs" />
+    <Compile Include="LogUtilsTests.Net\LogPerformanceTests.cs" />
+    <Compile Include="LogUtilsTests.Net\LogTests.cs" />
+    <Compile Include="LogUtilsTests.Net\MsgLevelTests.cs" />
     <Compile Include="LogUtilsTests\LogPerformanceTests.cs" />
     <Compile Include="LogUtilsTests\LogTests.cs" />
     <Compile Include="LogUtilsTests\MsgLevelTests.cs" />
@@ -115,7 +119,7 @@
     <Compile Include="SpStateMachineTests\WinSimplePeriodicTimerTests.cs" />
     <Compile Include="TestHelpers.cs" />
     <Compile Include="TestHelperTests.cs" />
-    <Compile Include="TestToolSet\HelperLogReader.cs" />
+    <Compile Include="HelperLogReader\HelperLogReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ChkUtils.Net\ChkUtils.Net.csproj">
@@ -125,6 +129,10 @@
     <ProjectReference Include="..\ChkUtils\ChkUtils.csproj">
       <Project>{8af7dd7e-394e-4816-b738-0764e1e60dd8}</Project>
       <Name>ChkUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LogUtils.Net\LogUtils.Net.csproj">
+      <Project>{f5d8a3a1-ad3b-4029-b83e-35bc124f8cfe}</Project>
+      <Name>LogUtils.Net</Name>
     </ProjectReference>
     <ProjectReference Include="..\LogUtils\LogUtils.csproj">
       <Project>{cd5df2dd-aa37-41f7-a585-2f2a1f44a7f5}</Project>
