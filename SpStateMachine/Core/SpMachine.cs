@@ -4,13 +4,12 @@ using SpStateMachine.Interfaces;
 
 namespace SpStateMachine.Core {
     
-    /// <summary>
-    /// Base class for an ISpStateMachine that owns the wrapped object and disposes
-    /// it on Dispose
-    /// </summary>
-    /// <typeparam name="T">
-    /// Wraped object type constrained to a class with IDisposable Interface required
-    /// </typeparam>
+    /// <summary>Base class for an ISpStateMachine that owns, controls and disposes the wrapped object</summary>
+    /// <remarks>
+    /// The state machine allows only one state to be active at a time. Each state can act on the wrapped object
+    /// according to what is allowed in that state
+    /// </remarks>
+    /// <typeparam name="T">Wraped object type constrained to a class with IDisposable Interface required</typeparam>
     /// <author>Michael Roop</author>
     /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public class SpMachine<T> : ISpStateMachine where T : class, IDisposable {
@@ -97,6 +96,8 @@ namespace SpStateMachine.Core {
             //Log.Debug("SpMachine", "Tick", String.Format("isStarted:{0}", this.isStarted));
 
             if (!this.isStarted) {
+                // The OnEntry must be called directly from the state machine for the first state. Subsequent
+                // state transitions will insure that the OnEntry for the new state is called
                 this.isStarted = true;
                 tr = this.state.OnEntry(msg);
             }

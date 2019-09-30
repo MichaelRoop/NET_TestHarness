@@ -8,10 +8,8 @@ using SpStateMachine.Interfaces;
 
 namespace SpStateMachine.States {
 
-    /// <summary>
-    /// Base implementation of the ISpState interface
-    /// </summary>
-    /// <typeparam name="T">Generic type that the state represents</typeparam>
+    /// <summary>Base implementation of the ISpState interface</summary>
+    /// <typeparam name="T">Object type that the state represents</typeparam>
     /// <author>Michael Roop</author>
     /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public class SpStateBase<T> : ISpState where T : class {
@@ -21,20 +19,16 @@ namespace SpStateMachine.States {
         /// <summary>Holds data and method accessible to all states</summary>
         private T wrappedObject = default(T);
 
-        /// <summary>Tracks the current state of the state</summary>
+        /// <summary>Tracks the if current state OnEntry has been called</summary>
         private bool isEntered = false;
 
-        /// <summary>List that contains the state id chain build on construction</summary>
+        /// <summary>List that contains the state id chain built on construction</summary>
         List<int> idChain = new List<int>();
 
-        /// <summary>
-        /// List of transitions that are provoqued by incoming events directly
-        /// </summary>
+        /// <summary>List of transitions provoqued by incoming events directly</summary>
         private Dictionary<int, ISpStateTransition> onEventTransitions = new Dictionary<int, ISpStateTransition>();
 
-        /// <summary>
-        /// List of transitions that are provoqued by the results of state processing
-        /// </summary>
+        /// <summary>List of transitions provoqued by the results of state processing</summary>
         private Dictionary<int, ISpStateTransition> onResultTransitions = new Dictionary<int, ISpStateTransition>();
 
         /// <summary>state name without reference to ancestors</summary>
@@ -64,9 +58,7 @@ namespace SpStateMachine.States {
 
         #region Properties
 
-        /// <summary>
-        /// Returns the object which is represented by the state machine
-        /// </summary>
+        /// <summary>Returns object represented by the state machine</summary>
         public T This {
             get {
                 return this.wrappedObject;
@@ -74,9 +66,7 @@ namespace SpStateMachine.States {
         }
 
 
-        /// <summary>
-        /// The message factory
-        /// </summary>
+        /// <summary>The message factory</summary>
         protected ISpMsgFactory MsgFactory {
             get {
                 return this.msgFactory;
@@ -87,9 +77,7 @@ namespace SpStateMachine.States {
 
         #region ISpState Properties
         
-        /// <summary>
-        /// The unique state identifier
-        /// </summary>
+        /// <summary>The unique state identifier</summary>
         public int Id {
             get {
                 WrapErr.ChkTrue(this.idChain.Count > 0, 9999, "The state has no id");
@@ -97,9 +85,7 @@ namespace SpStateMachine.States {
             }
         }
 
-        /// <summary>
-        /// Get the full id by combining nested ids
-        /// </summary>
+        /// <summary>Get the full id by combining nested ids</summary>
         public List<int> IdChain {
             get {
                 return this.idChain;
@@ -107,9 +93,7 @@ namespace SpStateMachine.States {
         }
 
 
-        /// <summary>
-        /// The state name without reference to ancestors (i.e. parent.state)
-        /// </summary>
+        /// <summary>State name without reference to ancestors (i.e. parent.state)</summary>
         public string Name {
             get {
                 return this.name;
@@ -117,10 +101,7 @@ namespace SpStateMachine.States {
         }
 
 
-        /// <summary>
-        /// From Get the fully resolved state name in format
-        /// grandparent.parent.state
-        /// </summary>
+        /// <summary>Get the fully resolved state name in format grandparent.parent.state</summary>
         public string FullName {
             get {
                 return this.fullName;
@@ -129,9 +110,8 @@ namespace SpStateMachine.States {
 
 
         /// <summary>
-        /// Get the fully resolved state name in format parent.parent.state.substate with 
-        /// the all the acestors and children until the farthest leaf
-        /// state being the leaf
+        /// Get fully resolved state name in format parent.parent.state.substate with 
+        /// the all the acestors and children until the farthest leaf state being the leaf
         /// </summary>
         public virtual string CurrentStateName {
             get {
@@ -157,16 +137,12 @@ namespace SpStateMachine.States {
 
         #region Constructors
 
-        /// <summary>
-        /// Default constructor in private scope to prevent usage
-        /// </summary>
+        /// <summary>Default constructor in private scope to prevent usage</summary>
         private SpStateBase() {
         }
 
 
-        /// <summary>
-        /// Constructor for first level state
-        /// </summary>
+        /// <summary>Constructor for first level state</summary>
         /// <param name="msgFactory">Message Factory</param>
         /// <param name="idConverter">The integer id to string converter</param>
         /// <param name="id">Unique state id</param>
@@ -176,9 +152,7 @@ namespace SpStateMachine.States {
         }
 
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
+        /// <summary>Constructor</summary>
         /// <param name="parent">The parent state</param>
         /// <param name="msgFactory">Message Factory</param>
         /// <param name="idConverter">The integer id to string converter</param>

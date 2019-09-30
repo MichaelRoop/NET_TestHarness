@@ -111,11 +111,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ChkUtils\ChkUtils.csproj">
-      <Project>{8AF7DD7E-394E-4816-B738-0764E1E60DD8}</Project>
+      <Project>{8af7dd7e-394e-4816-b738-0764e1e60dd8}</Project>
       <Name>ChkUtils</Name>
     </ProjectReference>
     <ProjectReference Include="..\LogUtils\LogUtils.csproj">
-      <Project>{CD5DF2DD-AA37-41F7-A585-2F2A1F44A7F5}</Project>
+      <Project>{cd5df2dd-aa37-41f7-a585-2f2a1f44a7f5}</Project>
       <Name>LogUtils</Name>
     </ProjectReference>
     <ProjectReference Include="..\SpStateMachine\SpStateMachine.csproj">

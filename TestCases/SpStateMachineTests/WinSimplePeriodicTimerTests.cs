@@ -5,6 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using SpStateMachine.PeriodicTimers;
 using System.Threading;
+using System.Diagnostics;
 
 namespace TestCases.SpStateMachineTests {
 
@@ -84,7 +85,10 @@ namespace TestCases.SpStateMachineTests {
         public void OnWakeup_PulseCount() {
             int count = 0;
             this.timer.SetInterval(new TimeSpan(0, 0, 0, 0, 100));
-            this.timer.OnWakeup+=new Action(() => { count++; });
+            this.timer.OnWakeup+=new Action(() => { 
+                count++;
+                Trace.WriteLine(string.Format("Wakeup {0}", count));
+            });
             this.timer.Start();
             Thread.Sleep(1000);
             this.timer.Stop();

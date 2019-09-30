@@ -11,7 +11,7 @@ namespace SpStateMachine.States {
     /// Implementation of the SpSuperState which handles the virtuals left exposed 
     /// by the State Base and acts as a container of SpState objects as sub states
     /// </summary>
-    /// <typeparam name="T">Generic type that the state represents</typeparam>
+    /// <typeparam name="T">Object that the state represents</typeparam>
     /// <author>Michael Roop</author>
     /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     public class SpSuperState<T> : SpStateBase<T> where T : class {
