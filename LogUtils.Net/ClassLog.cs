@@ -1,7 +1,7 @@
-﻿using ChkUtils.ErrObjects;
+﻿using ChkUtils.Net.ErrObjects;
 using System;
 
-namespace LogUtils {
+namespace LogUtils.Net {
 
     /// <summary>Log wrapper to use in one class</summary>
     public class ClassLog {

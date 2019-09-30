@@ -1,13 +1,13 @@
-﻿using ChkUtils.ErrObjects;
-using ChkUtils.ExceptionFormating;
-using ChkUtils.ExceptionParsers;
-using ChkUtils.Interfaces;
+﻿using ChkUtils.Net.ErrObjects;
+using ChkUtils.Net.ExceptionFormating;
+using ChkUtils.Net.ExceptionParsers;
+using ChkUtils.Net.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace ChkUtils {
+namespace ChkUtils.Net {
 
 
     /// <summary>

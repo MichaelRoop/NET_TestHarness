@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using ChkUtils.Net.ExceptionParsers;
 using System.Text;
-using ChkUtils.ExceptionParsers;
 
-namespace ChkUtils.ExceptionFormating {
+namespace ChkUtils.Net.ExceptionFormating {
 
     /// <summary>
     /// Formats the output of the exception to string

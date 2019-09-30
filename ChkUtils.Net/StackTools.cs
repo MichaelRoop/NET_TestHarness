@@ -1,12 +1,12 @@
-﻿using ChkUtils.ErrObjects;
-using ChkUtils.Interfaces;
+﻿using ChkUtils.Net.ErrObjects;
+using ChkUtils.Net.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
-namespace ChkUtils {
+namespace ChkUtils.Net {
 
     /// <summary>Common Methods to work through an exception stack frame</summary>
     /// <author>Michael Roop</author>

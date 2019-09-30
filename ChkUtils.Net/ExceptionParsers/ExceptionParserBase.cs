@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Collections;
-using ChkUtils.Interfaces;
+using ChkUtils.Net.Interfaces;
 
-namespace ChkUtils.ExceptionParsers {
+namespace ChkUtils.Net.ExceptionParsers {
 
 
     /// <summary>

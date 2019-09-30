@@ -3,10 +3,10 @@ using System.Globalization;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
-using ChkUtils.ExceptionFormating;
-using ChkUtils.ExceptionParsers;
+using ChkUtils.Net.ExceptionFormating;
+using ChkUtils.Net.ExceptionParsers;
 
-namespace ChkUtils.ErrObjects {
+namespace ChkUtils.Net.ErrObjects {
     /// <summary>
     /// Object to hold error information
     /// </summary>

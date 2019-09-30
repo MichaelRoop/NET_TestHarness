@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ChkUtils {
+﻿namespace ChkUtils.Net {
 
     /// <summary>Cross platform object to store type and method location of error location</summary>
     public class ErrorLocation {

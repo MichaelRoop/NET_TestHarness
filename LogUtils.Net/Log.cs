@@ -1,10 +1,11 @@
-﻿using System;
+﻿using ChkUtils.Net;
+using ChkUtils.Net.ErrObjects;
+using ChkUtils.Net.Interfaces;
+using LogUtils.Net;
+using System;
 using System.Collections.Generic;
 using System.Threading;
-using ChkUtils;
-using ChkUtils.ErrObjects;
 using System.Threading.Tasks;
-using ChkUtils.Interfaces;
 
 namespace LogUtils {
 
@@ -475,7 +476,7 @@ namespace LogUtils {
                     try {
                         ErrorLocation location = Log.stackTools.FirstNonWrappedMethod(new Type[] {
                             typeof(LogUtils.Log),
-                            typeof(ChkUtils.WrapErr),
+                            typeof(ChkUtils.Net.WrapErr),
                             typeof(ErrReport),
                             typeof(ClassLog),
                         });
@@ -534,7 +535,7 @@ namespace LogUtils {
                     try {
                         ErrorLocation location = Log.stackTools.FirstNonWrappedMethod(new Type[] {
                             typeof(LogUtils.Log),
-                            typeof(ChkUtils.WrapErr),
+                            typeof(ChkUtils.Net.WrapErr),
                             typeof(ErrReport),
                         });
                         Log.LogMsg(level, code, location.ClassName, location.MethodName, msg, e);

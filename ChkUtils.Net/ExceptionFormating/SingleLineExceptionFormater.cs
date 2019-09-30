@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
-namespace ChkUtils.ExceptionFormating {
+namespace ChkUtils.Net.ExceptionFormating {
 
     /// <summary>
     /// Formats Exception information on one line

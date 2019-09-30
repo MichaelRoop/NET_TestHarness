@@ -1,10 +1,10 @@
-﻿using ChkUtils.ErrObjects;
-using LogUtils;
-using LogUtils.Interfaces;
+﻿using ChkUtils.Net.ErrObjects;
+using LogUtils.Net;
+using LogUtils.Net.Interfaces;
 using System;
 
 
-namespace LogUtils {
+namespace LogUtils.Net {
 
     /// <summary>Console writer specific to Windows</summary>
     public class OsConsoleWriter : I_OS_ConsoleWriter {

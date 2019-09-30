@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ChkUtils.ExceptionParsers {
+namespace ChkUtils.Net.ExceptionParsers {
 
     /// <summary>
     /// Central parser for displayable common exception iformation

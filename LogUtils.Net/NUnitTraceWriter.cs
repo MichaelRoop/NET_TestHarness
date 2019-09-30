@@ -1,7 +1,7 @@
-﻿using ChkUtils.ErrObjects;
+﻿using ChkUtils.Net.ErrObjects;
 using System;
 
-namespace LogUtils {
+namespace LogUtils.Net {
 
     /// <summary>Used as a writer to NUnit Output window in VS</summary>
     /// <author>Michael Roop</author>

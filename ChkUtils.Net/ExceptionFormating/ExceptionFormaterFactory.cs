@@ -1,5 +1,5 @@
 ﻿
-namespace ChkUtils.ExceptionFormating {
+namespace ChkUtils.Net.ExceptionFormating {
 
     /// <summary>
     /// Formater factory for the Exception stack trace information

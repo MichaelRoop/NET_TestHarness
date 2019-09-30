@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Xml;
 
-namespace ChkUtils.ExceptionParsers {
+namespace ChkUtils.Net.ExceptionParsers {
 
     /// <summary>
     /// Factory to deliver specific IExceptionParser objects according to exception type

@@ -1,9 +1,9 @@
-﻿using ChkUtils.ErrObjects;
+﻿using ChkUtils.Net.ErrObjects;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LogUtils.Interfaces {
+namespace LogUtils.Net.Interfaces {
 
     /// <summary>Abstract to OS specific way of writing to a console or other debut output</summary>
     public interface I_OS_ConsoleWriter {

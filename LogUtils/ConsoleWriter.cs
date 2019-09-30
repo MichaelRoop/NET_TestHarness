@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ChkUtils.ErrObjects;
 
-namespace LogUtils {
+namespace LogUtils.Net {
 
     /// <summary>
     /// Used as a simple writer of messages to console

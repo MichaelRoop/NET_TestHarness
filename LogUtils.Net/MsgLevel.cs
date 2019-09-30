@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-namespace LogUtils {
+namespace LogUtils.Net {
 
     /// <summary>
     /// Used to set the message level as well as the verbosity level to log

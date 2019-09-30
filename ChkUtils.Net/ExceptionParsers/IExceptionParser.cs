@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ChkUtils.ExceptionParsers {
+namespace ChkUtils.Net.ExceptionParsers {
 
     /// <summary>
     /// Interface for an execption parser that can be specialised to parse

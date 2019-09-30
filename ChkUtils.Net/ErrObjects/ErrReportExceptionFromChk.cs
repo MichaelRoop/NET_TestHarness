@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ChkUtils.ErrObjects {
+namespace ChkUtils.Net.ErrObjects {
 
     /// <summary>Used internally in the WrapErr class to throw exceptions from Chk methods to preserve stack</summary>
     public class ErrReportExceptionFromChk : ErrReportException {
