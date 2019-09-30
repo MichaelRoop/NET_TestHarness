@@ -1,5 +1,6 @@
 ﻿using ChkUtils.Net;
 using ChkUtils.Net.ErrObjects;
+using ChkUtils.Net.Interfaces;
 using LogUtils.Net;
 using NUnit.Framework;
 using System;
@@ -20,10 +21,19 @@ namespace TestCases.LogUtilsTests.Net {
 
         #region Setup 
 
-        //[SetUp]
-        //public void TestSetup() {
-        //    ChkUtils.Net.WrapErr.SetStackTools(new StackTools());
-        //}
+        [SetUp]
+        public void TestSetup() {
+            IStackTools s = new StackTools();
+            ChkUtils.Net.WrapErr.SetStackTools(s);
+            Log.SetStackTools(s);
+            Log.OnLogMsgEvent += new LogingMsgEventDelegate(Log_OnLogMsgEvent);
+        }
+
+        [TearDown]
+        public void Teardown() {
+            Log.OnLogMsgEvent -= new LogingMsgEventDelegate(Log_OnLogMsgEvent);
+        }
+
 
 
         // This is how they write to console with the VS test platform
@@ -37,14 +47,18 @@ namespace TestCases.LogUtilsTests.Net {
 
 
 
-        public LogTests() {
-            Log.OnLogMsgEvent += new LogingMsgEventDelegate(Log_OnLogMsgEvent);
+        //public LogTests() {
+        //    Log.OnLogMsgEvent += new LogingMsgEventDelegate(Log_OnLogMsgEvent);
 
-        }
+        //}
 
         void Log_OnLogMsgEvent(MsgLevel level, ErrReport errReport) {
             this.currentLevel = level;
             this.currentReport = errReport;
+
+            System.Diagnostics.Trace.WriteLine("************");
+            System.Diagnostics.Trace.WriteLine(String.Format("Level {0} C {1} M {2}", level, errReport.AtClass, errReport.AtMethod));
+
         }
 
         [OneTimeSetUp]
@@ -52,10 +66,6 @@ namespace TestCases.LogUtilsTests.Net {
             System.Diagnostics.Trace.Listeners.Add(new System.Diagnostics.ConsoleTraceListener());
             //For.NET core 2.0, you need to use:
             //Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
-
-            ChkUtils.Net.WrapErr.SetStackTools(new StackTools());
-
-
         }
 
         [OneTimeTearDown]
@@ -193,7 +203,7 @@ namespace TestCases.LogUtilsTests.Net {
             Log.SetVerbosity(MsgLevel.Critical);
             this.Critical_Valid();
 
-            Assert.IsTrue(false, "Just to make it fail");
+            //Assert.IsTrue(false, "Just to make it fail");
 
         }
 

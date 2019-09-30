@@ -72,7 +72,7 @@
     <Compile Include="ChkUtilsTests\ToErrorReportFaultExceptionTests.cs" />
     <Compile Include="ChkUtilsTests\ToErrReportTests.cs" />
     <Compile Include="ChkUtilsTests\ValidatorTests.cs" />
-    <Compile Include="HelperLogReader\HelperLogReaderNet.cs" />
+    <Compile Include="TestToolSet\HelperLogReaderNet.cs" />
     <Compile Include="LogUtilsTests.Net\LogPerformanceTests.cs" />
     <Compile Include="LogUtilsTests.Net\LogTests.cs" />
     <Compile Include="LogUtilsTests.Net\MsgLevelTests.cs" />
@@ -119,7 +119,7 @@
     <Compile Include="SpStateMachineTests\WinSimplePeriodicTimerTests.cs" />
     <Compile Include="TestHelpers.cs" />
     <Compile Include="TestHelperTests.cs" />
-    <Compile Include="HelperLogReader\HelperLogReader.cs" />
+    <Compile Include="TestToolSet\HelperLogReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ChkUtils.Net\ChkUtils.Net.csproj">
