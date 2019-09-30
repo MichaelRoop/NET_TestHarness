@@ -55,6 +55,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChkUtilsTests.Net\ChkUtilsTestHelpers.cs" />
+    <Compile Include="ChkUtilsTests.Net\ExceptionParserFactoryTests.cs" />
+    <Compile Include="ChkUtilsTests.Net\ExceptionParserTests.cs" />
+    <Compile Include="ChkUtilsTests.Net\SafeActionTests.cs" />
+    <Compile Include="ChkUtilsTests.Net\StackFrameToolsTests.cs" />
+    <Compile Include="ChkUtilsTests.Net\ToErrorReportExceptionTests.cs" />
+    <Compile Include="ChkUtilsTests.Net\ToErrReportTests.cs" />
+    <Compile Include="ChkUtilsTests.Net\ValidatorTests.cs" />
     <Compile Include="ChkUtilsTests\ChkUtilsTestHelpers.cs" />
     <Compile Include="ChkUtilsTests\ExceptionParserFactoryTests.cs" />
     <Compile Include="ChkUtilsTests\ExceptionParserTests.cs" />
@@ -110,6 +118,10 @@
     <Compile Include="TestToolSet\HelperLogReader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ChkUtils.Net\ChkUtils.Net.csproj">
+      <Project>{0b214b89-c1d6-42bd-bb1a-f6f42de5a240}</Project>
+      <Name>ChkUtils.Net</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ChkUtils\ChkUtils.csproj">
       <Project>{8af7dd7e-394e-4816-b738-0764e1e60dd8}</Project>
       <Name>ChkUtils</Name>
@@ -126,6 +138,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -87,7 +87,48 @@ namespace TestCases {
             System.Diagnostics.Trace.WriteLine(String.Format("{0} {1}.{2} : {3}{4}{5}", e.Code, e.AtClass, e.AtMethod, e.Msg, Environment.NewLine, e.StackTrace));
 
         }
-        
+
+        #endregion
+
+        #region ErrReport and stack trace compare for .NET Standard
+
+        public static void ValidateErrReport(ChkUtils.Net.ErrObjects.ErrReport err, int code, string atClass, string atMethod, string msg) {
+            ValidateErrReport(err, code, atClass, atMethod, msg, new List<string>());
+        }
+
+        public static void ValidateErrReport(ChkUtils.Net.ErrObjects.ErrReport err, int code, string atClass, string atMethod, string msg, params string[] stackText) {
+            ValidateErrReport(err, code, atClass, atMethod, msg, stackText.ToList());
+        }
+
+        public static void ValidateErrReport(ChkUtils.Net.ErrObjects.ErrReport err, int code, string atClass, string atMethod, string msg, List<string> stackText) {
+            TestHelpers.ErrToConsole(err);
+            Assert.AreEqual(code, err.Code);
+            Assert.AreEqual(atClass, err.AtClass);
+            Assert.AreEqual(atMethod, err.AtMethod);
+            Assert.AreEqual(msg, err.Msg);
+            ValidateErrReportStack(err, stackText);
+        }
+
+
+        public static void ValidateErrReportStack(ChkUtils.Net.ErrObjects.ErrReport err, params string[] msgs) {
+            ValidateErrReportStack(err, msgs.ToList());
+        }
+
+        public static void ValidateErrReportStack(ChkUtils.Net.ErrObjects.ErrReport err, List<string> msgs) {
+            msgs.ForEach(
+                item => Assert.IsTrue(err.StackTrace.Contains(item.ToString()), String.Format("ErrReport in Stack Does not contain:{0}", item.ToString())));
+        }
+
+        #endregion
+
+        #region Writing messages to console for debug
+
+        public static void ErrToConsole(ChkUtils.Net.ErrObjects.ErrReport e) {
+            //Console.WriteLine("{0} {1}.{2} : {3}{4}{5}", e.Code, e.AtClass, e.AtMethod, e.Msg, Environment.NewLine, e.StackTrace);
+            System.Diagnostics.Trace.WriteLine(String.Format("{0} {1}.{2} : {3}{4}{5}", e.Code, e.AtClass, e.AtMethod, e.Msg, Environment.NewLine, e.StackTrace));
+
+        }
+
         #endregion
 
         #region Stack Trace Formating Helpers
