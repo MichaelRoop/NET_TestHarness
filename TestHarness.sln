@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29324.140
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHarness", "TestHarness.csproj", "{BDDF8E8F-4E14-42C4-A259-ACD132A2073D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCases", "TestCases\TestCases.csproj", "{59BCCB62-AA13-4029-8958-AD174D316703}"
@@ -10,6 +12,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpStateMachine", "SpStateMachine\SpStateMachine.csproj", "{7DD2FEF1-CAC1-46AC-8CF6-A27ECEB43A6F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogUtils", "LogUtils\LogUtils.csproj", "{CD5DF2DD-AA37-41F7-A585-2F2A1F44A7F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogUtils.Net", "LogUtils.Net\LogUtils.Net.csproj", "{F5D8A3A1-AD3B-4029-B83E-35BC124F8CFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChkUtils.Net", "ChkUtils.Net\ChkUtils.Net.csproj", "{0B214B89-C1D6-42BD-BB1A-F6F42DE5A240}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,8 +43,19 @@ Global
 		{CD5DF2DD-AA37-41F7-A585-2F2A1F44A7F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD5DF2DD-AA37-41F7-A585-2F2A1F44A7F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD5DF2DD-AA37-41F7-A585-2F2A1F44A7F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5D8A3A1-AD3B-4029-B83E-35BC124F8CFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5D8A3A1-AD3B-4029-B83E-35BC124F8CFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5D8A3A1-AD3B-4029-B83E-35BC124F8CFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5D8A3A1-AD3B-4029-B83E-35BC124F8CFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B214B89-C1D6-42BD-BB1A-F6F42DE5A240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B214B89-C1D6-42BD-BB1A-F6F42DE5A240}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B214B89-C1D6-42BD-BB1A-F6F42DE5A240}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B214B89-C1D6-42BD-BB1A-F6F42DE5A240}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {24476A1B-40B0-4517-87A7-F3635C8C4DAC}
 	EndGlobalSection
 EndGlobal
