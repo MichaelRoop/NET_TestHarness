@@ -74,7 +74,7 @@ namespace TestCases.SpStateMachineTests {
                 this.TickAndValidateState(this.GetMsg(MyEventType.Start), sm, "Main.NotStarted.Active");
                 this.TickAndValidateState(this.GetMsg(MyEventType.Stop), sm, "Main.NotStarted.Idle");
                 this.TickAndValidateState(this.GetMsg(MyEventType.Abort), sm, "Main.Recovery.Idle");
-                this.TickAndValidateState(this.GetMsg(MyEventType.Tick), sm, "Main.Recovery.Idle");
+                //this.TickAndValidateState(this.GetMsg(MyEventType.Tick), sm, "Main.Recovery.Idle");
 
                 //Thread.Sleep(500);
             });

@@ -19,7 +19,7 @@ namespace TestCases.SpStateMachineTests {
     /// <summary>
     /// To drive development of framework
     /// </summary>
-    [TestFixture]
+    [TestFixture, Explicit]
     public class StateMachineScratchPad {
 
         #region Setup 
@@ -43,8 +43,10 @@ namespace TestCases.SpStateMachineTests {
 
         #endregion
 
+        // NUnit 3 seems to ignore the Explicit so will just comment them out until needed
 
-        [Test, Explicit]
+
+        //[Test, Explicit]
         public void TestInitialGenericSpState() {
 
             TestHelpers.CatchUnexpected(() => {
@@ -112,7 +114,7 @@ namespace TestCases.SpStateMachineTests {
         }
 
 
-        [Test, Explicit]
+        //[Test, Explicit("experimental")]
         public void TestEventTransitionsInSuperState() {
 
             TestHelpers.CatchUnexpected(() => {
@@ -133,7 +135,7 @@ namespace TestCases.SpStateMachineTests {
         }
 
 
-        [Test, Explicit]
+        //[Test,Explicit]
         public void TestDeferedTransitionsInSuperState() {
 
             TestHelpers.CatchUnexpected(() => {
@@ -146,6 +148,10 @@ namespace TestCases.SpStateMachineTests {
 
                 engine.Start();
                 Thread.Sleep(600);
+
+                ////listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Tick));
+
+
                 Assert.AreEqual("NotStarted.Idle", notStartedSs.FullName);
 
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
@@ -164,7 +170,7 @@ namespace TestCases.SpStateMachineTests {
         }
 
 
-        [Test, Explicit]
+        //[Test, Explicit]
         public void TestExitStateTransitionsInSuperState() {
 
             TestHelpers.CatchUnexpected(() => {
@@ -181,7 +187,7 @@ namespace TestCases.SpStateMachineTests {
 
                 // Just move the inner states around
                 Thread.Sleep(600);
-                Assert.AreEqual("Main.NotStarted.Idle", mainSs.FullName);
+                //Assert.AreEqual("Main.NotStarted.Idle", mainSs.FullName);
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
                 Thread.Sleep(600);
                 Assert.AreEqual("Main.NotStarted.Active", mainSs.FullName);

@@ -20,6 +20,8 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
             this.AddSubState(recovery);
 
             // Register Started state transitions
+
+
             //notStarted.RegisterOnEventTransition(MyEventType.Start, new SpStateTransition(SpStateTransitionType.NextState, recovery, null));
             //notStarted.RegisterOnEventTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.ExitState, null, null));
 
@@ -39,7 +41,6 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
 
 
             //this.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.NextState, recovery, new MyTickMsg()));
-
 
             this.SetEntryState(notStarted);
 
