@@ -186,7 +186,7 @@ namespace TestCases.LogUtilsTests {
             Log.SetVerbosity(MsgLevel.Critical);
             this.Critical_Valid();
 
-            Assert.IsTrue(false, "Just to make it fail");
+            //Assert.IsTrue(false, "Just to make it fail");
 
         }
 

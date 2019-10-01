@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SpStateMachine.PeriodicTimers;
-using System.Threading;
+using System;
 using System.Diagnostics;
+using System.Threading;
+using TestCases.TestToolSet.Net;
 
 namespace TestCases.SpStateMachineTests {
 
@@ -15,6 +13,7 @@ namespace TestCases.SpStateMachineTests {
         #region Setup
 
         WinSimpleTimer timer = null;
+        HelperLogReaderNet logReader = new HelperLogReaderNet();
 
         [SetUp]
         public void SetupTests() {
@@ -23,6 +22,13 @@ namespace TestCases.SpStateMachineTests {
                 this.timer = null;
             }
             this.timer = new WinSimpleTimer();
+            this.logReader.StartLogging();
+        }
+
+        [TearDown]
+        public void TestTeardown() {
+            this.logReader.StopLogging();
+            this.logReader.Clear();
         }
 
         #endregion
@@ -31,21 +37,21 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _0_SetInterval_OK() {
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 this.timer.SetInterval(new TimeSpan(0, 0, 1));
             });
         }
 
         [Test]
         public void _50000_SetInterval_ZeroTimespan() {
-            TestHelpers.CatchExpected(50000, "WinSimpleTimer", "SetInterval", "The interval cannot be 0 milliseconds total", () => {
+            TestHelpersNet.CatchExpected(50000, "WinSimpleTimer", "SetInterval", "The interval cannot be 0 milliseconds total", () => {
                 this.timer.SetInterval(new TimeSpan());
             });
         }
 
         [Test]
         public void _50002_SetInterval_Disposed() {
-            TestHelpers.CatchExpected(50002, "WinSimpleTimer", "SetInterval", "Attempting to use Disposed Object", () => {
+            TestHelpersNet.CatchExpected(50002, "WinSimpleTimer", "SetInterval", "Attempting to use Disposed Object", () => {
                 this.timer.Dispose();
                 this.timer.SetInterval(new TimeSpan());
             });
@@ -106,7 +112,7 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _0_Start_Multi() {
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 this.timer.Start();
                 this.timer.Start();
                 this.timer.Start();
@@ -116,7 +122,7 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _50003_Start_Disposed() {
-            TestHelpers.CatchExpected(50003, "WinSimpleTimer", "Start", "Attempting to use Disposed Object", () => {
+            TestHelpersNet.CatchExpected(50003, "WinSimpleTimer", "Start", "Attempting to use Disposed Object", () => {
                 this.timer.Dispose();
                 this.timer.Start();
             });
@@ -128,7 +134,7 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _0_Stop_Multi() {
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 this.timer.Stop();
                 this.timer.Stop();
                 this.timer.Stop();
@@ -137,7 +143,7 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _50005_Start_Disposed() {
-            TestHelpers.CatchExpected(50005, "WinSimpleTimer", "Stop", "Attempting to use Disposed Object", () => {
+            TestHelpersNet.CatchExpected(50005, "WinSimpleTimer", "Stop", "Attempting to use Disposed Object", () => {
                 this.timer.Dispose();
                 this.timer.Stop();
             });

@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Rhino.Mocks;
-using SpStateMachine.Interfaces;
 using SpStateMachine.Core;
-using LogUtils;
-using ChkUtils;
-using ChkUtils.ErrObjects;
-using TestCases.TestToolSet;
+using SpStateMachine.Interfaces;
+using System;
 using System.Threading;
+using TestCases.TestToolSet.Net;
 
 namespace TestCases.SpStateMachineTests {
 
@@ -19,7 +13,7 @@ namespace TestCases.SpStateMachineTests {
 
         #region Data
 
-        HelperLogReader logReader = new HelperLogReader();
+        HelperLogReaderNet logReader = new HelperLogReaderNet();
 
         #endregion
 
@@ -50,7 +44,7 @@ namespace TestCases.SpStateMachineTests {
             ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
             ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
 
-            TestHelpers.CatchExpected(50056, "SpStateMachineEngine", "Start", "Attempting to use Disposed Object", () => {
+            TestHelpersNet.CatchExpected(50056, "SpStateMachineEngine", "Start", "Attempting to use Disposed Object", () => {
                 SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, sm, tm);
                 Console.WriteLine("Test: Disposing");
                 engine.Dispose();
@@ -74,7 +68,7 @@ namespace TestCases.SpStateMachineTests {
             ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
             ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
 
-            TestHelpers.CatchExpected(50057, "SpStateMachineEngine", "Stop", "Attempting to use Disposed Object", () => {
+            TestHelpersNet.CatchExpected(50057, "SpStateMachineEngine", "Stop", "Attempting to use Disposed Object", () => {
                 SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, sm, tm);
                 Console.WriteLine("Test: Disposing");
                 engine.Dispose();
@@ -98,7 +92,7 @@ namespace TestCases.SpStateMachineTests {
             ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
             ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
 
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, sm, tm);
                 Console.WriteLine("Test: Disposing");
                 engine.Dispose();
@@ -127,7 +121,7 @@ namespace TestCases.SpStateMachineTests {
             ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
             ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
 
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, sm, tm);
                 Console.WriteLine("Test: Disposing");
                 engine.Dispose();
@@ -147,7 +141,7 @@ namespace TestCases.SpStateMachineTests {
             ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
             ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
 
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, sm, tm);
                 engine.Dispose();
             });
@@ -165,7 +159,7 @@ namespace TestCases.SpStateMachineTests {
             ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
             ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
 
-            TestHelpers.CatchExpected(50050, "SpStateMachineEngine", ".ctor", "Null msgListner Argument", () => {
+            TestHelpersNet.CatchExpected(50050, "SpStateMachineEngine", ".ctor", "Null msgListner Argument", () => {
                 SpStateMachineEngine engine = new SpStateMachineEngine(null, st, be, sm, tm);
                 engine.Dispose();
             });
@@ -181,7 +175,7 @@ namespace TestCases.SpStateMachineTests {
             ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
             ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
 
-            TestHelpers.CatchExpected(50051, "SpStateMachineEngine", ".ctor", "Null msgStore Argument", () => {
+            TestHelpersNet.CatchExpected(50051, "SpStateMachineEngine", ".ctor", "Null msgStore Argument", () => {
                 SpStateMachineEngine engine = new SpStateMachineEngine(listner, null, be, sm, tm);
                 engine.Dispose();
             });
@@ -195,7 +189,7 @@ namespace TestCases.SpStateMachineTests {
             ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
             ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
 
-            TestHelpers.CatchExpected(50052, "SpStateMachineEngine", ".ctor", "Null eventBehavior Argument", () => {
+            TestHelpersNet.CatchExpected(50052, "SpStateMachineEngine", ".ctor", "Null eventBehavior Argument", () => {
                 SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, null, sm, tm);
                 engine.Dispose();
             });
@@ -209,7 +203,7 @@ namespace TestCases.SpStateMachineTests {
             ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
             ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
 
-            TestHelpers.CatchExpected(50053, "SpStateMachineEngine", ".ctor", "Null stateMachine Argument", () => {
+            TestHelpersNet.CatchExpected(50053, "SpStateMachineEngine", ".ctor", "Null stateMachine Argument", () => {
                 SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, null, tm);
                 engine.Dispose();
             });
@@ -223,7 +217,7 @@ namespace TestCases.SpStateMachineTests {
             ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
             ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
 
-            TestHelpers.CatchExpected(50054, "SpStateMachineEngine", ".ctor", "Null timer Argument", () => {
+            TestHelpersNet.CatchExpected(50054, "SpStateMachineEngine", ".ctor", "Null timer Argument", () => {
                 SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, sm, null);
                 engine.Dispose();
             });
@@ -246,14 +240,14 @@ namespace TestCases.SpStateMachineTests {
             ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
             ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
 
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, sm, tm);
                 Console.WriteLine("Test: Disposing");
                 engine.Dispose();
                 Thread.Sleep(500); // Nothing stopping the thead internaly with mocks
             });
 
-            this.logReader.Validate(50058, "SpStateMachineEngine", "DriverThread", "Unexpected Error");
+            this.logReader.Validate(50058, "SpStateMachineEngine", "DriverThread", "Behavior WaitOn Exception");
 
 
         }
@@ -272,7 +266,7 @@ namespace TestCases.SpStateMachineTests {
         //    ISpStateMachine sm = MockRepository.GenerateMock<ISpStateMachine>();
         //    ISpPeriodicTimer tm = MockRepository.GenerateMock<ISpPeriodicTimer>();
 
-        //    TestHelpers.CatchExpected(50054, "SpStateMachineEngine", ".ctor", "Null msgListner Argument", () => {
+        //    TestHelpersNet.CatchExpected(50054, "SpStateMachineEngine", ".ctor", "Null msgListner Argument", () => {
         //        SpStateMachineEngine engine = new SpStateMachineEngine(listner, st, be, sm, tm);
         //        engine.Dispose();
         //    });

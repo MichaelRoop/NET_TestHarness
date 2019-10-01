@@ -72,6 +72,7 @@
     <Compile Include="ChkUtilsTests\ToErrorReportFaultExceptionTests.cs" />
     <Compile Include="ChkUtilsTests\ToErrReportTests.cs" />
     <Compile Include="ChkUtilsTests\ValidatorTests.cs" />
+    <Compile Include="TestHelpersNet.cs" />
     <Compile Include="TestToolSet\HelperLogReaderNet.cs" />
     <Compile Include="LogUtilsTests.Net\LogPerformanceTests.cs" />
     <Compile Include="LogUtilsTests.Net\LogTests.cs" />
@@ -138,9 +139,9 @@
       <Project>{cd5df2dd-aa37-41f7-a585-2f2a1f44a7f5}</Project>
       <Name>LogUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SpStateMachine\SpStateMachine.csproj">
-      <Project>{7DD2FEF1-CAC1-46AC-8CF6-A27ECEB43A6F}</Project>
-      <Name>SpStateMachine</Name>
+    <ProjectReference Include="..\SpStateMachine.Net\SpStateMachine.Net.csproj">
+      <Project>{78785248-0a5d-4d86-a2fa-113387537735}</Project>
+      <Name>SpStateMachine.Net</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

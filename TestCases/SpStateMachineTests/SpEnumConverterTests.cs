@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using TestCases.TestToolSet;
+using TestCases.TestToolSet.Net;
 using SpStateMachine.Converters;
 
 namespace TestCases.SpStateMachineTests {
@@ -29,7 +29,7 @@ namespace TestCases.SpStateMachineTests {
 
         #region Data
 
-        HelperLogReader logReader = new HelperLogReader();
+        HelperLogReaderNet logReader = new HelperLogReaderNet();
 
         #endregion
 
@@ -53,7 +53,7 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _0_ToInt_Extension_Good() {
             int val = 99;
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 val = TestEnum.Whoopee.ToInt();
             });
             Assert.AreEqual(2, val, "Did not return right number for TestEnum.Whoopee");
@@ -62,7 +62,7 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _0_ToInt_Direct_Good() {
             int val = 99;
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 val = SpEnumConverterExtensions.ToInt(TestEnum.Gnarly);
             });
             Assert.AreEqual(0, val, "Did not return right number for TestEnum.Gnarly");
@@ -72,7 +72,7 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _0_ToInt_ConverterClass_Good() {
             int val = 99;
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 val = SpConverter.EnumToInt(TestEnum.Gnarly);
             });
             Assert.AreEqual(0, val, "Did not return right number for TestEnum.Gnarly");
@@ -85,14 +85,14 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _9999_ToEnum_DirectCall_UsingNonEnum() {
-            TestHelpers.CatchExpected(9999, "SpEnumConverterExtensions", "ToEnum", "Enum Conversion Failed Attempting to Convert to Type 'Int32' with Value '10'", () => {
+            TestHelpersNet.CatchExpected(9999, "SpEnumConverterExtensions", "ToEnum", "Enum Conversion Failed Attempting to Convert to Type 'Int32' with Value '10'", () => {
                 SpEnumConverterExtensions.ToEnum<int>(10);
             });
         }
         
         [Test]
         public void _9999_ToEnum_Extension_UsingNonEnum() {
-            TestHelpers.CatchExpected(9999, "SpEnumConverterExtensions", "ToEnum", "Enum Conversion Failed Attempting to Convert to Type 'Int32' with Value '10'", () => {
+            TestHelpersNet.CatchExpected(9999, "SpEnumConverterExtensions", "ToEnum", "Enum Conversion Failed Attempting to Convert to Type 'Int32' with Value '10'", () => {
                 int id = 10;
                 id.ToEnum<int>();
             });
@@ -101,7 +101,7 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _9999_ToEnum_DirectCall_OutOfRange() {
-            TestHelpers.CatchExpected(9999, "SpEnumConverterExtensions", "ToEnum", "Enum Conversion Out of Range Attempting to Convert to Type 'TestEnum' with Value '15'", () => {
+            TestHelpersNet.CatchExpected(9999, "SpEnumConverterExtensions", "ToEnum", "Enum Conversion Out of Range Attempting to Convert to Type 'TestEnum' with Value '15'", () => {
                 SpEnumConverterExtensions.ToEnum<TestEnum>(15);
             });
         }
@@ -109,7 +109,7 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _9999_ToEnum_Extension_OutOfRange() {
-            TestHelpers.CatchExpected(9999, "SpEnumConverterExtensions", "ToEnum", "Enum Conversion Out of Range Attempting to Convert to Type 'TestEnum' with Value '35'", () => {
+            TestHelpersNet.CatchExpected(9999, "SpEnumConverterExtensions", "ToEnum", "Enum Conversion Out of Range Attempting to Convert to Type 'TestEnum' with Value '35'", () => {
                 int id = 35;
                 id.ToEnum<TestEnum>();
             });
@@ -118,7 +118,7 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _0_ToEnum_Extension_Good() {
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 int id = 2;
                 id.ToEnum<TestEnum>();
             });
@@ -135,7 +135,7 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _9999_SpIntToEnum_OutOfRange() {
-            TestHelpers.CatchExpected(9999, "SpEnumConverterExtensions", "ToEnum", "Enum Conversion Out of Range Attempting to Convert to Type 'GrouchTestEnum' with Value '39'", () => {
+            TestHelpersNet.CatchExpected(9999, "SpEnumConverterExtensions", "ToEnum", "Enum Conversion Out of Range Attempting to Convert to Type 'GrouchTestEnum' with Value '39'", () => {
                 new SpIntToEnum<GrouchTestEnum>(39).ToEnum();
             });
         }

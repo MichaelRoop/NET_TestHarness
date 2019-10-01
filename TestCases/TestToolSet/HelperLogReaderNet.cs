@@ -1,5 +1,6 @@
 ﻿using ChkUtils.Net;
 using ChkUtils.Net.ErrObjects;
+using ChkUtils.Net.Interfaces;
 using LogUtils.Net;
 using NUnit.Framework;
 using System;
@@ -56,6 +57,10 @@ namespace TestCases.TestToolSet.Net {
 
             // Stream the errors caught by WrapErr to the Log
             WrapErr.InitialiseOnExceptionLogDelegate(Log.LogExceptionDelegate);
+
+            IStackTools s = new StackTools();
+            Log.SetStackTools(s);
+            WrapErr.SetStackTools(s);
         }
 
         #endregion

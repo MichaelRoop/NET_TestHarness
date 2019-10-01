@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using TestCases.TestToolSet;
+﻿using NUnit.Framework;
+using SpStateMachine.Converters;
 using SpStateMachine.Interfaces;
 using SpStateMachine.Messages;
-using SpStateMachine.Converters;
+using TestCases.TestToolSet.Net;
 
 namespace TestCases.SpStateMachineTests {
 
@@ -15,7 +11,7 @@ namespace TestCases.SpStateMachineTests {
 
         #region Data
 
-        HelperLogReader logReader = new HelperLogReader();
+        HelperLogReaderNet logReader = new HelperLogReaderNet();
 
         #endregion
 
@@ -36,7 +32,7 @@ namespace TestCases.SpStateMachineTests {
         
         [Test]
         public void _0_SpBaseResponseCopyOverGuid() {
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 ISpEventMessage msg = new SpBaseEventMsg(new SpIntToInt(25), new SpIntToInt(100));
                 ISpEventMessage response = new SpBaseEventResponse(new SpIntToInt(33), msg, new SpIntToInt(0), "");
                 Assert.AreEqual(msg.Uid, response.Uid, "Guid mismatch between message and response");

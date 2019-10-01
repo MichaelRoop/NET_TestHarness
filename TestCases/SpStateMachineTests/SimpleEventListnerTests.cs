@@ -1,20 +1,20 @@
-﻿using System;
-using System.Threading;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using SpStateMachine.Converters;
 using SpStateMachine.EventListners;
 using SpStateMachine.Interfaces;
 using SpStateMachine.Messages;
-using TestCases.TestToolSet;
-using SpStateMachine.Converters;
+using System;
+using System.Threading;
+using TestCases.TestToolSet.Net;
 
 namespace TestCases.SpStateMachineTests {
 
     [TestFixture]
     public class SimpleEventListnerTests {
-        
+
         #region Data
 
-        HelperLogReader logReader = new HelperLogReader();
+        HelperLogReaderNet logReader = new HelperLogReaderNet();
         private ISpEventListner listner = null;
 
         #endregion
@@ -41,7 +41,7 @@ namespace TestCases.SpStateMachineTests {
             
         [Test]
         public void _50032_PostMessage_Disposed() {
-            TestHelpers.CatchExpected(50032, "SimpleEventListner", "PostMessage", "Attempting to use Disposed Object", () => {
+            TestHelpersNet.CatchExpected(50032, "SimpleEventListner", "PostMessage", "Attempting to use Disposed Object", () => {
                 this.listner.Dispose();
                 this.listner.PostMessage(new SpBaseEventMsg(new SpIntToInt(25), new SpIntToInt(100)));
             });
@@ -53,7 +53,7 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _50033_PostResponse_Disposed() {
-            TestHelpers.CatchExpected(50033, "SimpleEventListner", "PostResponse", "Attempting to use Disposed Object", () => {
+            TestHelpersNet.CatchExpected(50033, "SimpleEventListner", "PostResponse", "Attempting to use Disposed Object", () => {
                 this.listner.Dispose();
                 this.listner.PostResponse(new SpBaseEventMsg(new SpIntToInt(25), new SpIntToInt(100)));
             });
@@ -69,7 +69,7 @@ namespace TestCases.SpStateMachineTests {
             bool received = false;
             ISpEventMessage msgCopy = null;
 
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 this.listner.MsgReceived += new Action<ISpEventMessage>((msg) => {
                     Console.WriteLine("Woke up on msg received");
                     received = true;
@@ -99,7 +99,7 @@ namespace TestCases.SpStateMachineTests {
             bool received = false;
             ISpEventMessage msgCopy = null;
 
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 this.listner.ResponseReceived += new Action<ISpEventMessage>((msg) => {
                     Console.WriteLine("Woke up on response received");
                     received = true;
@@ -123,7 +123,7 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _50031_RaiseEvent_ResponseNoSubscribers() {
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 this.listner.PostResponse(new SpBaseEventResponse(new SpIntToInt(2), new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(1)), new SpIntToInt(0), ""));
             });
             this.logReader.Validate(50031, "SimpleEventListner", "RaiseEvent", "No subscribers to 'Response' message");
@@ -132,7 +132,7 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _50031_MessageReceived_NoSubscribers() {
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 this.listner.PostMessage(new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(1)));
             });
             this.logReader.Validate(50031, "SimpleEventListner", "RaiseEvent", "No subscribers to 'Message' message");
@@ -142,7 +142,7 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _50030_RaiseEvent_CatchUserResponseDelegateException() {
 
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 this.listner.ResponseReceived += new Action<ISpEventMessage>((msg) => {
                     Console.WriteLine("** Response Received triggered **");
                     throw new Exception("User Exception in delegate");
@@ -156,7 +156,7 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _50030_RaiseEvent_CatchUserMessageDelegateException() {
 
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 this.listner.MsgReceived += new Action<ISpEventMessage>((msg) => {
                     Console.WriteLine("** Message Received triggered **");
                     throw new Exception("User Exception in delegate");

@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using LogUtils;
 using NUnit.Framework;
-using TestCases.TestToolSet;
-using TestCases.SpStateMachineTests.TestImplementations;
-using TestCases.SpStateMachineTests.TestImplementations.SuperStates;
 using SpStateMachine.Interfaces;
-using SpStateMachine.Messages;
-using SpStateMachine.Converters;
-using TestCases.SpStateMachineTests.TestImplementations.Messages;
-using TestCases.SpStateMachineTests.TestImplementations.SuperStates.CascadeOnExit;
+using System;
 using System.Threading;
-using LogUtils;
+using TestCases.SpStateMachineTests.TestImplementations;
+using TestCases.SpStateMachineTests.TestImplementations.Messages;
+using TestCases.SpStateMachineTests.TestImplementations.SuperStates;
+using TestCases.SpStateMachineTests.TestImplementations.SuperStates.CascadeOnExit;
+using TestCases.TestToolSet.Net;
 
 namespace TestCases.SpStateMachineTests {
 
@@ -21,7 +16,7 @@ namespace TestCases.SpStateMachineTests {
 
         #region Data
 
-        HelperLogReader logReader = new HelperLogReader();
+        HelperLogReaderNet logReader = new HelperLogReaderNet();
 
         #endregion
 
@@ -45,7 +40,7 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void TestDeferedTransitionsInSuperState() {
 
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
 
                 // Setting flip count will cause back and fourth between active and idle
                 MyDataClass dataClass = new MyDataClass();
@@ -66,7 +61,7 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void TestExitStateTransitionsInSuperState() {
 
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
 
                 // Setting flip count will cause back and fourth between active and idle
                 MyDataClass dataClass = new MyDataClass();
@@ -89,10 +84,10 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void TestExitStateCascadeInSuperState() {
 
-            //TestHelpers.CatchUnexpected(() => {
+            //TestHelpersNet.CatchUnexpected(() => {
 
-                // Setting flip count will cause back and fourth between active and idle
-                MyDataClass dataClass = new MyDataClass();
+            // Setting flip count will cause back and fourth between active and idle
+            MyDataClass dataClass = new MyDataClass();
                 MySuperState mainSs = new LevelMainSs(dataClass);
                 ISpStateMachine sm = new MyStateMachine(dataClass, mainSs);
 
@@ -151,7 +146,7 @@ namespace TestCases.SpStateMachineTests {
 
         private ISpEventMessage Tick(ISpEventMessage msg, ISpStateMachine sm) {
             ISpEventMessage ret = null;
-            TestHelpers.CatchUnexpected(() => {
+            TestHelpersNet.CatchUnexpected(() => {
                 ret = sm.Tick(msg);
             });
             return ret;

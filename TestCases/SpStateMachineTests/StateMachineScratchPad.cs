@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using ChkUtils.Net;
+using LogUtils.Net;
 using NUnit.Framework;
-using LogUtils;
-using SpStateMachine.States;
-using SpStateMachine.Interfaces;
-using SpStateMachine.EventListners;
-using SpStateMachine.Messages;
-using SpStateMachine.Core;
-using SpStateMachine.EventStores;
-using SpStateMachine.PeriodicTimers;
-using System.Threading;
 using SpStateMachine.Behaviours;
-using ChkUtils;
+using SpStateMachine.Converters;
+using SpStateMachine.Core;
+using SpStateMachine.EventListners;
+using SpStateMachine.EventStores;
+using SpStateMachine.Interfaces;
+using SpStateMachine.PeriodicTimers;
+using System;
+using System.Threading;
 using TestCases.SpStateMachineTests.TestImplementations;
 using TestCases.SpStateMachineTests.TestImplementations.Messages;
 using TestCases.SpStateMachineTests.TestImplementations.SuperStates;
-using SpStateMachine.Converters;
 
 namespace TestCases.SpStateMachineTests {
 
