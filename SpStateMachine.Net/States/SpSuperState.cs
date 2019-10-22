@@ -13,7 +13,7 @@ namespace SpStateMachine.States {
     /// </summary>
     /// <typeparam name="T">Object that the state represents</typeparam>
     /// <author>Michael Roop</author>
-    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
+    /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
     public class SpSuperState<T> : SpStateBase<T> where T : class {
 
         #region Data 
@@ -35,19 +35,18 @@ namespace SpStateMachine.States {
         #region ISpState Properties
 
         /// <summary>
-        /// Get the fully resolved state name in format parent.parent.state.substate with 
-        /// the all the acestors and children until the farthest leaf
-        /// state being the leaf
+        /// Fully resolved state name in format parent.parent.state.substate.substate with 
+        /// all acestors and children until the farthest sub state being the leaf
         /// </summary>
         public sealed override string CurrentStateName {
             get {
-                // TODO - need to thread protect access to current thread var
-                if (this.currentState != null) {
-                    return this.currentState.CurrentStateName;
+                lock (this) {
+                    if (this.currentState != null) {
+                        return this.currentState.CurrentStateName;
+                    }
+                    // In this case the current super state is the leaf
+                    return this.FullName;
                 }
-
-                // In this case the current super state is the leaf
-                return this.FullName;
             }
         }
         
@@ -55,9 +54,7 @@ namespace SpStateMachine.States {
 
         #region Constructors
 
-        /// <summary>
-        /// Constructor for first level state
-        /// </summary>
+        /// <summary>Constructor for first level state</summary>
         /// <param name="msgFactory">Message Factory</param>
         /// <param name="idConverter">The integer id to string converter</param>
         /// <param name="id">Unique state id</param>
@@ -67,9 +64,7 @@ namespace SpStateMachine.States {
         }
 
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
+        /// <summary>Constructor</summary>
         /// <param name="parent">The parent state</param>
         /// <param name="msgFactory">Message Factory</param>
         /// <param name="idConverter">The integer id to string converter</param>

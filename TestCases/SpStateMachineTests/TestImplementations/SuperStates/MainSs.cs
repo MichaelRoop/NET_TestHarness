@@ -5,19 +5,27 @@ using System.Text;
 using SpStateMachine.Core;
 using SpStateMachine.Converters;
 using TestCases.SpStateMachineTests.TestImplementations.Messages;
+using LogUtils.Net;
 
 namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
 
     public class MainSs : MySuperState {
 
+        #region Data
+
+        MySuperState notStarted = null;
+        MySuperState recovery = null;
+
+        #endregion
+
         public MainSs(MyDataClass dataClass)
             : base(MyStateID.Main, dataClass) {
 
-            MySuperState notStarted = new NotStartedSs(this, dataClass);
-            MySuperState recovery = new RecoverySs(this, dataClass);
-
-            this.AddSubState(notStarted);
-            this.AddSubState(recovery);
+            // Create and add the sub-states of this super state
+            this.notStarted = new NotStartedSs(this, dataClass);
+            this.recovery = new RecoverySs(this, dataClass);
+            this.AddSubState(this.notStarted);
+            this.AddSubState(this.recovery);
 
             // Register Started state transitions
 
@@ -27,10 +35,13 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
 
 
             // Register OnResult so that the Superstate can handle its state's ExitState transitions
-//            notStarted.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.NextState, recovery, null));
+            //            notStarted.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.NextState, recovery, null));
 
-            // REGISTER A PROPER RETURN MSG
-            notStarted.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.NextState, recovery, new MyTickMsg()));
+            // Register a transition based on on internal processing
+            notStarted.RegisterOnResultTransition(
+                new SpEnumToInt(MyEventType.Abort), 
+                new SpStateTransition(SpStateTransitionType.NextState, 
+                this.recovery, new MyTickMsg()));
 
             //// Register active state transitions 
             //active.RegisterOnEventTransition(MyEventType.Stop, new SpStateTransition(SpStateTransitionType.NextState, idle, null));
@@ -42,7 +53,8 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
 
             //this.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.NextState, recovery, new MyTickMsg()));
 
-            this.SetEntryState(notStarted);
+            // Set the entry state as the not Started SS
+            this.SetEntryState(this.notStarted);
 
         }
     }

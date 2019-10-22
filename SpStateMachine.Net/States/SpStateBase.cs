@@ -11,7 +11,7 @@ namespace SpStateMachine.States {
     /// <summary>Base implementation of the ISpState interface</summary>
     /// <typeparam name="T">Object type that the state represents</typeparam>
     /// <author>Michael Roop</author>
-    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
+    /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
     public class SpStateBase<T> : ISpState where T : class {
 
         #region Data
@@ -52,7 +52,7 @@ namespace SpStateMachine.States {
         /// <summary>Convert the id integers to implementation level string equivalents</summary>
         private ISpIdConverter idConverter = null;
 
-        private readonly string className = "SpStateBase";
+        private ClassLog log = new ClassLog("SpStateBase");
 
         #endregion
 
@@ -65,7 +65,6 @@ namespace SpStateMachine.States {
             }
         }
 
-
         /// <summary>The message factory</summary>
         protected ISpMsgFactory MsgFactory {
             get {
@@ -76,8 +75,8 @@ namespace SpStateMachine.States {
         #endregion
 
         #region ISpState Properties
-        
-        /// <summary>The unique state identifier</summary>
+
+        /// <summary>The unique integer state identifier</summary>
         public int Id {
             get {
                 WrapErr.ChkTrue(this.idChain.Count > 0, 9999, "The state has no id");
@@ -92,26 +91,26 @@ namespace SpStateMachine.States {
             }
         }
 
-
-        /// <summary>State name without reference to ancestors (i.e. parent.state)</summary>
+        /// <summary>This state object name with no reference to ancestors or children</summary>
         public string Name {
             get {
                 return this.name;
             }
         }
 
-
-        /// <summary>Get the fully resolved state name in format grandparent.parent.state</summary>
+        /// <summary>
+        /// Resolved state name in format parent.parent.state with this state object
+        /// being the leaf. No reference to any children in the chain
+        /// </summary>
         public string FullName {
             get {
                 return this.fullName;
             }
         }
 
-
         /// <summary>
-        /// Get fully resolved state name in format parent.parent.state.substate with 
-        /// the all the acestors and children until the farthest leaf state being the leaf
+        /// Fully resolved state name in format parent.parent.state.substate.substate with 
+        /// all acestors and children until the farthest sub state being the leaf
         /// </summary>
         public virtual string CurrentStateName {
             get {
@@ -173,13 +172,12 @@ namespace SpStateMachine.States {
 
         #region Virtual
 
-        /// <summary>
-        /// Excecuted once when the state becomes the current state
-        /// </summary>
+        /// <summary>Excecuted once when the state becomes the current state/// </summary>
+        /// <remarks>Only override in super state</remarks>        
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
         public virtual ISpStateTransition OnEntry(ISpEventMessage msg) {
-            Log.Info(this.className, "OnEntry", String.Format("'{0}' State {1} - Event", this.FullName, this.GetCachedEventId(msg.EventId)));
+            this.log.Info("OnEntry", String.Format("'{0}' State {1} - Event", this.FullName, this.GetCachedEventId(msg.EventId)));
             WrapErr.ChkFalse(this.IsEntryExcecuted, 50201, "OnEntry Cannot be Executed More Than Once Until OnExit is Called");
             return WrapErr.ToErrorReportException(9999, () => {
                 return this.GetTransition(true, this.ExecOnEntry, msg);
@@ -187,9 +185,7 @@ namespace SpStateMachine.States {
         }
 
 
-        /// <summary>
-        /// Called on every other period after the first
-        /// </summary>
+        /// <summary>Called on every other period after entry</summary>
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
         public virtual ISpStateTransition OnTick(ISpEventMessage msg) {
@@ -210,7 +206,7 @@ namespace SpStateMachine.States {
         /// Always invoked on object exit
         /// </summary>
         public void OnExit() {
-            Log.Info(this.className, "OnExit", String.Format("'{0}' State", this.FullName));
+            this.log.Info("OnExit", String.Format("'{0}' State", this.FullName));
             // TODO - check that OnEntry has happened ??
             WrapErr.ToErrorReportException(9999, () => {
                 // Only execute ExceOnExit code if the state had been entered

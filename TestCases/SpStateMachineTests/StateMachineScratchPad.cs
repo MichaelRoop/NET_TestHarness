@@ -46,7 +46,7 @@ namespace TestCases.SpStateMachineTests {
         // NUnit 3 seems to ignore the Explicit so will just comment them out until needed
 
 
-        //[Test, Explicit]
+        [Test, Explicit]
         public void TestInitialGenericSpState() {
 
             TestHelpers.CatchUnexpected(() => {
@@ -135,7 +135,7 @@ namespace TestCases.SpStateMachineTests {
         }
 
 
-        //[Test,Explicit]
+        [Test,Explicit]
         public void TestDeferedTransitionsInSuperState() {
 
             TestHelpers.CatchUnexpected(() => {
@@ -152,15 +152,15 @@ namespace TestCases.SpStateMachineTests {
                 ////listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Tick));
 
 
-                Assert.AreEqual("NotStarted.Idle", notStartedSs.FullName);
+                Assert.AreEqual("NotStarted.Idle", notStartedSs.CurrentStateName);
 
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
                 Thread.Sleep(700);
-                Assert.AreEqual("NotStarted.Active", notStartedSs.FullName);
+                Assert.AreEqual("NotStarted.Active", notStartedSs.CurrentStateName);
 
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Abort));
                 Thread.Sleep(700);
-                Assert.AreEqual("NotStarted.Idle", notStartedSs.FullName);
+                Assert.AreEqual("NotStarted.Idle", notStartedSs.CurrentStateName);
 
                 Thread.Sleep(200);
                 engine.Stop();
@@ -170,7 +170,7 @@ namespace TestCases.SpStateMachineTests {
         }
 
 
-        //[Test, Explicit]
+        [Test, Explicit]
         public void TestExitStateTransitionsInSuperState() {
 
             TestHelpers.CatchUnexpected(() => {
@@ -190,25 +190,26 @@ namespace TestCases.SpStateMachineTests {
                 //Assert.AreEqual("Main.NotStarted.Idle", mainSs.FullName);
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
                 Thread.Sleep(600);
-                Assert.AreEqual("Main.NotStarted.Active", mainSs.FullName);
+
+                Assert.AreEqual("Main.NotStarted.Active", mainSs.CurrentStateName);
 
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
                 Thread.Sleep(600);
-                Assert.AreEqual("Main.NotStarted.Idle", mainSs.FullName);
+                Assert.AreEqual("Main.NotStarted.Idle", mainSs.CurrentStateName);
                 
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
                 Thread.Sleep(600);
-                Assert.AreEqual("Main.NotStarted.Active", mainSs.FullName);
+                Assert.AreEqual("Main.NotStarted.Active", mainSs.CurrentStateName);
 
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
                 Thread.Sleep(800);
-                Assert.AreEqual("Main.NotStarted.Idle", mainSs.FullName);
+                Assert.AreEqual("Main.NotStarted.Idle", mainSs.CurrentStateName);
 
                 // Should be back to Main.NotStarted.Idle by now - it has a ExitState transition registered to that state
                 Console.WriteLine("Sending the Abort event to provoke a ExitState transition");
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Abort));
                 Thread.Sleep(800);
-                Assert.AreEqual("Main.Recovery.Idle", mainSs.FullName);
+                Assert.AreEqual("Main.Recovery.Idle", mainSs.CurrentStateName);
 
 
                 engine.Stop();
