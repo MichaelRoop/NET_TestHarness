@@ -2,11 +2,9 @@
 
 namespace SpStateMachine.Interfaces {
 
-    /// <summary>
-    /// Interface to define a listner for ISpMessages
-    /// </summary>
+    /// <summary>Interface to define a listner for ISpMessages</summary>
     /// <author>Michael Roop</author>
-    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
+    /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
     public interface ISpEventListner : IDisposable {
 
         #region Events
@@ -29,16 +27,12 @@ namespace SpStateMachine.Interfaces {
 
         #region Methods
 
-        /// <summary>
-        /// Post an ISpMessage to those listening
-        /// </summary>
+        /// <summary>Post an ISpMessage to those listeningsummary>
         /// <param name="msg">The message to post</param>
         void PostMessage(ISpEventMessage msg);
 
 
-        /// <summary>
-        /// Post an ISpMessage response to an ISpMessage
-        /// </summary>
+        /// <summary>Post an ISpMessage response to an ISpMessage</summary>
         /// <param name="msg">The reponse to post</param>
         void PostResponse(ISpEventMessage msg);
 

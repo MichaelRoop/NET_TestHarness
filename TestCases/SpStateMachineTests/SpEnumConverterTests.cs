@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using TestCases.TestToolSet.Net;
+﻿using NUnit.Framework;
 using SpStateMachine.Converters;
+using TestCases.TestToolSet.Net;
 
 namespace TestCases.SpStateMachineTests {
 

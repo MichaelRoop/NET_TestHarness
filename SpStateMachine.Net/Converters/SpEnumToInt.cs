@@ -14,25 +14,19 @@ namespace SpStateMachine.Converters {
 
         #region Data
 
-        /// <summary>The enum passed in on construction
-        /// 
-        /// </summary>
+        /// <summary>The enum passed in on construction</summary>
         private Enum val;
 
         #endregion
 
         #region Constructors
 
-        /// <summary>
-        /// Default constructor in private scope to prevent usage
-        /// </summary>
+        /// <summary>Default constructor in private scope to prevent usage</summary>
         private SpEnumToInt() { 
         }
         
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
+        /// <summary>Constructor</summary>
         /// <param name="val">The Enum to convert</param>
         public SpEnumToInt(Enum val) {
             this.val = val;
@@ -42,10 +36,8 @@ namespace SpStateMachine.Converters {
 
         #region ISpToInt Members
 
-        /// <summary>
-        /// Convert the held Enum to Int
-        /// </summary>
-        /// <returns></returns>
+        /// <summary>Convert the held Enum to Int</summary>
+        /// <returns>integer value of the enum id</returns>
         public int ToInt() {
             return SpConverter.EnumToInt(this.val);
         }
