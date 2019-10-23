@@ -82,8 +82,9 @@ namespace SpStateMachine.States {
         /// Add a state to the list of sub states
         /// </summary>
         /// <param name="state"></param>
-        public void AddSubState(ISpState state) {
+        public ISpState AddSubState(ISpState state) {
             this.substates.Add(state);
+            return state;
         }
 
 

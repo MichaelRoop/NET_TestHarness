@@ -80,6 +80,29 @@ namespace SpStateMachine.Core {
 
         #endregion
 
+        #region Static Helpers
+
+        public static SpStateTransition ToNext(ISpState nextState) {
+            return new SpStateTransition(
+                SpStateTransitionType.NextState, nextState, null);
+        }
+
+
+        public static SpStateTransition ToNext(ISpState nextState, ISpEventMessage returnMsg) {
+            return new SpStateTransition(
+                SpStateTransitionType.NextState, nextState, returnMsg);
+        }
+
+        public static SpStateTransition ToExit() {
+            return new SpStateTransition(SpStateTransitionType.ExitState, null, null);
+        }
+
+        public static SpStateTransition ToDefered() {
+            return new SpStateTransition(SpStateTransitionType.Defered, null, null);
+        }
+        
+        #endregion
+
         #region Constructors 
 
         /// <summary>

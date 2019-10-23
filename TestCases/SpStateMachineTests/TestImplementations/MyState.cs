@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SpStateMachine.States;
-using SpStateMachine.Interfaces;
-using LogUtils;
-using System.Threading;
-using SpStateMachine.Messages;
-using TestCases.SpStateMachineTests.TestImplementations.Messages;
-using ChkUtils;
+﻿using LogUtils;
 using SpStateMachine.Converters;
+using SpStateMachine.Core;
+using SpStateMachine.Interfaces;
+using SpStateMachine.States;
+using System;
+using System.Threading;
 
 namespace TestCases.SpStateMachineTests.TestImplementations {
 
@@ -55,5 +50,42 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         }
 
         #endregion
+
+        public void ToNextOnEvent(MyEventType ev, ISpState newState) {
+            this.RegisterOnEventTransition(
+                new SpEnumToInt(ev), SpStateTransition.ToNext(newState));
+        }
+
+        public void ToNextOnEvent(MyEventType ev, ISpState newState, ISpEventMessage returnMsg) {
+            this.RegisterOnEventTransition(
+                new SpEnumToInt(ev), SpStateTransition.ToNext(newState, returnMsg));
+        }
+
+        public void ToExitOnEvent(MyEventType ev) {
+            this.RegisterOnEventTransition(
+                new SpEnumToInt(ev), SpStateTransition.ToExit());
+        }
+
+        public void ToDeferedOnEvent(MyEventType ev) {
+            this.RegisterOnEventTransition(
+                new SpEnumToInt(ev), SpStateTransition.ToDefered());
+        }
+
+
+        public void ToNextOnResult(MyEventType ev, ISpState newState) {
+            this.RegisterOnResultTransition(
+                new SpEnumToInt(ev), SpStateTransition.ToNext(newState));
+        }
+
+        public void ToNextOnResult(MyEventType ev, ISpState newState, ISpEventMessage returnMsg) {
+            this.RegisterOnResultTransition(
+                new SpEnumToInt(ev),
+                SpStateTransition.ToNext(newState, returnMsg));
+        }
+
+
+
+
+
     }
 }

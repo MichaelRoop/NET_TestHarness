@@ -12,59 +12,35 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
 
     public class NotStartedSs : MySuperState {
 
+        #region Data
+
+        MyState StateIdle = null;
+        MyState StateActive = null;
+
+        #endregion
+
         public NotStartedSs(ISpState parent, MyDataClass dataClass)
             : base(parent, MyStateID.NotStarted, dataClass) {
 
-            MyState idle = new IdleSt(this, dataClass);
-            MyState active = new ActiveSt(this, dataClass);
+            // Setup sub-states
+            this.StateIdle = (MyState)this.AddSubState(new IdleSt(this, dataClass));
+            this.StateActive = (MyState)this.AddSubState(new ActiveSt(this, dataClass));
 
-            this.AddSubState(idle);
-            this.AddSubState(active);
+            // Idle State event and results transitions
+            this.StateIdle.ToNextOnEvent(MyEventType.Start, this.StateActive);
+            this.StateIdle.ToExitOnEvent(MyEventType.Abort);
+            this.StateIdle.ToNextOnResult(MyEventType.Start, this.StateActive);
 
-            // Register Idle state transitions
-            idle.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Start), new SpStateTransition(SpStateTransitionType.NextState, active, null));
-            idle.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.ExitState, null, null));
-            //idle.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.ExitState, null, new MyTickMsg()));
+            // Active State event and results transitions
+            this.StateActive.ToNextOnEvent(MyEventType.Stop, this.StateIdle, new MyTickMsg());
+            this.StateActive.ToDeferedOnEvent(MyEventType.Abort);
+            this.StateActive.ToNextOnResult(MyEventType.Stop, this.StateIdle, new MyTickMsg());
 
+            // Super state transitions
+            this.ToNextOnResult(MyEventType.Stop, this.StateIdle);
 
-            // results
-            idle.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Start), new SpStateTransition(SpStateTransitionType.NextState, active, null));
-            //idle.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.ExitState, null, new MyTickMsg()));
-
-
-            // Register active state transitions
-            //active.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition(SpStateTransitionType.NextState, idle, null));
-            active.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition(SpStateTransitionType.NextState, idle, new MyTickMsg()));
-
-
-            //active.RegisterOnEventTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.ExitState, null, null));
-            active.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.Defered, null, null));
-
-
-//            active.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition(SpStateTransitionType.NextState, idle, null));
-            active.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition(SpStateTransitionType.NextState, idle, new MyTickMsg()));
-
-
-
-            // Register my defered
-            // If I get an abort handed to me by a state I will push the internal transition to idle
-
-
-            // TODO - use this to provoque a check error
-            //this.RegisterOnResultTransition(MyEventType.Abort, new SpStateTransition(SpStateTransitionType.NextState, idle, null));
-
-
-            this.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition(SpStateTransitionType.NextState, idle, null));
-
-
-            this.SetEntryState(idle);
-
+            this.SetEntryState(StateIdle);
         }
-
-
-
-
-
 
     }
 }

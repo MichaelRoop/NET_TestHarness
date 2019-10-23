@@ -8,6 +8,7 @@ using TestCases.SpStateMachineTests.TestImplementations.Messages;
 using ChkUtils;
 using LogUtils;
 using SpStateMachine.Converters;
+using SpStateMachine.Core;
 
 namespace TestCases.SpStateMachineTests.TestImplementations {
 
@@ -86,5 +87,16 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         }
 
         #endregion
+
+        #region State transition helpers
+
+        protected void ToNextOnResult(MyEventType ev, MyState newState) {
+            this.RegisterOnResultTransition(
+                new SpEnumToInt(ev), SpStateTransition.ToNext(newState));
+        }
+
+        #endregion
+
+
     }
 }
