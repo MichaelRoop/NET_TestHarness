@@ -205,9 +205,7 @@ namespace SpStateMachine.States {
 
         #region Closed
 
-        /// <summary>
-        /// Always invoked on object exit
-        /// </summary>
+        /// <summary>Always invoked on object exit        /// </summary>
         public void OnExit() {
             this.log.Info("OnExit", String.Format("'{0}' State", this.FullName));
             // TODO - check that OnEntry has happened ??
@@ -225,63 +223,75 @@ namespace SpStateMachine.States {
             () => { this.isEntered = false; });
         }
 
+        #region Transition registration methods for methods on receiving an event
 
-        /// <summary>
-        /// Register a state transition from incoming event. 
-        /// </summary>
-        /// <param name="eventId">The id converter of the incoming event</param>
+        /// <summary>Register a state transition from incoming event</summary>
+        /// <param name="eventId">The event id</param>
         /// <param name="transition">The transition object</param>
-        public void RegisterOnEventTransition(ISpToInt eventId, ISpStateTransition<TEvent> transition) {
-            SpTools.RegisterTransition("OnEvent", eventId, transition, this.onEventTransitions);
-        }
-
-
-        /// <summary>
-        /// Register a state transition from the result of state processing.
-        /// </summary>
-        /// <param name="eventId">The id converter of the event as the result of state processing</param>
-        /// <param name="transition">The transition object</param>
-        public void RegisterOnResultTransition(ISpToInt eventId, ISpStateTransition<TEvent> transition) {
-            SpTools.RegisterTransition("OnResult", eventId, transition, this.onResultTransitions);
-        }
-
-
-        // Direct with enums
-
         public void RegisterOnEventTransition(TEvent eventId, ISpStateTransition<TEvent> transition) {
             SpTools.RegisterTransition("OnEvent", eventId, transition, this.onEventTransitions);
         }
 
-        public void RegisterOnResultTransition(TEvent responseId, ISpStateTransition<TEvent> transition) {
-            SpTools.RegisterTransition("OnResult", responseId, transition, this.onResultTransitions);
-        }
 
-        ///////////////////////////////////////////////////////////////////////////////////////////
-        // TODO - add register shortcuts in interface and implement here
-        // TODO - check if any overrides required for super state
+        /// <summary>Register transition to next state on event</summary>
+        /// <param name="ev">The event</param>
+        /// <param name="newState">The target state for transition</param>
         public void ToNextOnEvent(TEvent ev, ISpState<TEvent> newState) {
             this.RegisterOnEventTransition(ev, SpStateTransition<TEvent>.ToNext(newState));
         }
 
+
+        /// <summary>Register transition to next state on event</summary>
+        /// <param name="ev">The event</param>
+        /// <param name="newState">The target state for transition</param>
+        /// <param name="returnMsg">The message to return on transition</param>
         public void ToNextOnEvent(TEvent ev, ISpState<TEvent> newState, ISpEventMessage returnMsg) {
             this.RegisterOnEventTransition(ev, SpStateTransition<TEvent>.ToNext(newState, returnMsg));
         }
 
+
+        /// <summary>Register exit transition on event</summary>
+        /// <param name="ev">The event</param>
         public void ToExitOnEvent(TEvent ev) {
             this.RegisterOnEventTransition(ev, SpStateTransition<TEvent>.ToExit());
         }
 
+
+        /// <summary>Register defered action on event</summary>
+        /// <param name="ev">The event</param>
         public void ToDeferedOnEvent(TEvent ev) {
             this.RegisterOnEventTransition(ev, SpStateTransition<TEvent>.ToDefered());
         }
 
+        #endregion
+
+        #region Transition registration methods for methods after internal processing
+
+        /// <summary>Register state transition from the result of state processing</summary>
+        /// <param name="responseId">The result id the state returns as the result of processing</param>
+        /// <param name="transition">The transition object</param>
+        public void RegisterOnResultTransition(TEvent responseId, ISpStateTransition<TEvent> transition) {
+            SpTools.RegisterTransition("OnResult", responseId, transition, this.onResultTransitions);
+        }
+
+
+        /// <summary>Register transition to next state on processing results</summary>
+        /// <param name="ev">The event</param>
+        /// <param name="newState">The target state for transition</param>
         public void ToNextOnResult(TEvent ev, ISpState<TEvent> newState) {
             this.RegisterOnResultTransition(ev, SpStateTransition<TEvent>.ToNext(newState));
         }
 
+
+        /// <summary>Register transition to next state on processing results</summary>
+        /// <param name="ev">The event</param>
+        /// <param name="newState">The target state for transition</param>
+        /// <param name="returnMsg">The message to return on transition</param>
         public void ToNextOnResult(TEvent ev, ISpState<TEvent> newState, ISpEventMessage returnMsg) {
             this.RegisterOnResultTransition(ev, SpStateTransition<TEvent>.ToNext(newState, returnMsg));
         }
+
+        #endregion
 
         #endregion
 
@@ -321,9 +331,7 @@ namespace SpStateMachine.States {
 
         #region Protected Methods
 
-        /// <summary>
-        /// Wrapper to retrieve OnEvent Transition Object
-        /// </summary>
+        /// <summary>Wrapper to retrieve OnEvent Transition Object</summary>
         /// <param name="eventMsg">The incomming event message</param>
         /// <returns>The transition if present, otherwise null</returns>
         protected ISpStateTransition<TEvent> GetOnEventTransition(ISpEventMessage eventMsg) {
@@ -331,9 +339,7 @@ namespace SpStateMachine.States {
         }
 
 
-        /// <summary>
-        /// Wrapper to retrieve OnResult Transition Object
-        /// </summary>
+        /// <summary>Wrapper to retrieve OnResult Transition Object</summary>
         /// <param name="eventMsg">The incomming event message</param>
         /// <returns>The transition if present, otherwise null</returns>
         protected ISpStateTransition<TEvent> GetOnResultTransition(ISpEventMessage eventMsg) {
@@ -421,9 +427,7 @@ namespace SpStateMachine.States {
         }
 
 
-        /// <summary>
-        /// Get the transition object from the store or null if not found
-        /// </summary>
+        /// <summary>Get the transition object from the store or null if not found</summary>
         /// <param name="store">The store to search</param>
         /// <param name="eventMsg">The message to insert in the transition object</param>
         /// <returns>The transition object from the store or null if not found</returns>
@@ -438,9 +442,7 @@ namespace SpStateMachine.States {
         }
 
 
-        /// <summary>
-        /// Factor out the reporting of state transitions for clarity
-        /// </summary>
+        /// <summary>Factor out the reporting of state transitions for clarity</summary>
         /// <param name="tr">The transition object</param>
         /// <param name="eventMsg">The event message which pushed this transition</param>
         private void LogTransition(ISpStateTransition<TEvent> tr, ISpEventMessage eventMsg) {
@@ -479,13 +481,7 @@ namespace SpStateMachine.States {
             });
         }
 
-
-
-
-
-        /// <summary>
-        /// Builds the fully resolved name by iterating through the  the name based on the 
-        /// </summary>
+        /// <summary>Builds fully resolved name by iterating through names based on Ids</summary>
         private void BuildName() {
             WrapErr.ToErrorReportException(9999, () => {
                 StringBuilder sb = new StringBuilder(75);

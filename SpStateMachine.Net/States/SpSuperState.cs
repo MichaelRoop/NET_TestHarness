@@ -12,6 +12,9 @@ namespace SpStateMachine.States {
     /// by the State Base and acts as a container of SpState objects as sub states
     /// </summary>
     /// <typeparam name="T">Object that the state represents</typeparam>
+    /// <typeparam name="TEvent">Event id (TEvent)</typeparam>
+    /// <typeparam name="TState">State id (TState)</typeparam>
+    /// <typeparam name="TMsg">Message id</typeparam>
     /// <author>Michael Roop</author>
     /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
     public class SpSuperState<T,TEvent,TState,TMsg> : SpStateBase<T,TEvent,TState,TMsg> where T : class where TEvent : struct where TState : struct where TMsg : struct {
@@ -23,7 +26,6 @@ namespace SpStateMachine.States {
 
         /// <summary>The sub state that is the starting state of this super state</summary>
         ISpState<TEvent> entryState = null;
-
 
         /// <summary>List of this state's substates</summary>
         List<ISpState<TEvent>> substates = new List<ISpState<TEvent>>();
@@ -76,10 +78,8 @@ namespace SpStateMachine.States {
 
         #region Public Methods
 
-        /// <summary>
-        /// Add a state to the list of sub states
-        /// </summary>
-        /// <param name="state"></param>
+        /// <summary>Add a state to the list of sub states</summary>
+        /// <param name="state">The state to add</param>
         public ISpState<TEvent> AddSubState(ISpState<TEvent> state) {
             this.substates.Add(state);
             return state;

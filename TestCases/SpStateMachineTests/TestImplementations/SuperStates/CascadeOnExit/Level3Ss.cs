@@ -28,23 +28,27 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates.CascadeO
             this.AddSubState(active);
 
             // Register Idle state transitions
-            idle.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Start), new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, active, null));
+            //idle.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Start), new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, active, null));
+            idle.RegisterOnEventTransition(MyEventType.Start, new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, active, null));
             //idle.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.ExitState, null, null));
 
             // results - this idle class just returns whatever msg we send in. So send Start and it will return it as its return value and provok this transition
-            idle.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Start), new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, active, null));
+            //idle.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Start), new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, active, null));
+            idle.RegisterOnResultTransition(MyEventType.Start, new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, active, null));
 
 
             // Register active state transitions
-            active.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, idle, null));
+            //active.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, idle, null));
+            active.RegisterOnEventTransition(MyEventType.Stop, new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, idle, null));
             //active.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.ExitState, null, null));
 
             // results - this class just returns whatever msg we send in. So send Stop and it will return it as its return value and provok this transition
-            active.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, idle, null));
-            active.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition<MyEventType>(SpStateTransitionType.ExitState, null, null));
+            //active.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, idle, null));
+            //active.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition<MyEventType>(SpStateTransitionType.ExitState, null, null));
+            active.RegisterOnResultTransition(MyEventType.Stop, new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, idle, null));
+            active.RegisterOnResultTransition(MyEventType.Abort, new SpStateTransition<MyEventType>(SpStateTransitionType.ExitState, null, null));
 
             this.SetEntryState(idle);
-
         }
 
     }

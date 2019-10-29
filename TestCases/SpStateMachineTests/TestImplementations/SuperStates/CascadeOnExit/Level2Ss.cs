@@ -31,7 +31,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates.CascadeO
             // Register as the result event from previous state comming from abort to it
             //level3Ss.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.ExitState, null, null));
 
-            level3Ss.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition<MyEventType>(SpStateTransitionType.ExitState, null, new MyTickMsg()));
+            level3Ss.RegisterOnResultTransition(MyEventType.Abort, new SpStateTransition<MyEventType>(SpStateTransitionType.ExitState, null, new MyTickMsg()));
 
 
             //// Register active state transitions
