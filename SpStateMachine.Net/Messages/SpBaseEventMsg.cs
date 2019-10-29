@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using ChkUtils.Net;
 using SpStateMachine.Core;
 using SpStateMachine.Interfaces;
 
@@ -17,7 +18,9 @@ namespace SpStateMachine.Messages {
     /// <author>Michael Roop</author>
     /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
     [DataContract]
-    public class SpBaseEventMsg : ISpEventMessage {
+    public class SpBaseEventMsg<TMsgType,TMsgId> : ISpEventMessage 
+        where TMsgType : struct 
+        where TMsgId : struct {
 
         #region Data
 
@@ -145,25 +148,48 @@ namespace SpStateMachine.Messages {
         private SpBaseEventMsg() {
         }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="typeId">The type id to cast to derived for payload retrieval</param>
-        /// <param name="eventId">The event identifier</param>
-        /// <param name="priority">The priority of the message</param>
-        public SpBaseEventMsg(ISpToInt typeId, ISpToInt eventId, SpEventPriority priority) {
-            this.typeId = typeId.ToInt();
-            this.eventId = eventId.ToInt();
-            this.priority = priority;
-        }
-        
+
         /// <summary>
         /// Constructor for Normal Priority messages
         /// </summary>
-        /// <param name="typeId">The type id to cast to derived for payload retrieval</param>
-        /// <param name="eventId">The event identifier</param>
-        public SpBaseEventMsg(ISpToInt typeId, ISpToInt eventId)
-            : this(typeId, eventId, SpEventPriority.Normal) {
+        /// <param name="_type">The type id to cast to derived for payload retrieval</param>
+        /// <param name="id">The event identifier</param>
+        public SpBaseEventMsg(TMsgType _type, int id) {
+            WrapErr.ChkTrue(typeof(TMsgType).IsEnum, 9999, () => string.Format("Event type {0} must be Enum", _type.GetType().Name));
+            WrapErr.ChkTrue(typeof(TMsgType).GetEnumUnderlyingType() == typeof(int), 9999,
+                () => string.Format("Event type enum {0} must be derived from int", id.GetType().Name));
+
+            this.typeId = Convert.ToInt32(_type);
+            this.eventId = id;
+            this.priority = SpEventPriority.Normal;
+        }
+
+
+
+        /// <summary>Constructor</summary>
+        /// <param name="_type">Type of message</param>
+        /// <param name="id">Message identifier</param>
+        /// <param name="priority">Message priority</param>
+        public SpBaseEventMsg(TMsgType _type, TMsgId id, SpEventPriority priority) {
+            WrapErr.ChkTrue(typeof(TMsgType).IsEnum, 9999, () => string.Format("Event type {0} must be Enum", _type.GetType().Name));
+            WrapErr.ChkTrue(typeof(TMsgType).GetEnumUnderlyingType() == typeof(int), 9999,
+                () => string.Format("Event type enum {0} must be derived from int", id.GetType().Name));
+
+            WrapErr.ChkTrue(typeof(TMsgId).IsEnum, 9999, () => string.Format("Event id {0} must be Enum", id.GetType().Name));
+            WrapErr.ChkTrue(typeof(TMsgId).GetEnumUnderlyingType() == typeof(int), 9999,
+                () => string.Format("Event id enum {0} must be derived from int", id.GetType().Name));
+
+            this.typeId = Convert.ToInt32(_type);
+            this.eventId = Convert.ToInt32(id);
+            this.priority = priority;
+        }
+
+
+        /// <summary>Constructor</summary>
+        /// <param name="_type">Type of message</param>
+        /// <param name="id">Message identifier</param>
+        public SpBaseEventMsg(TMsgType _type, TMsgId id)
+            : this(_type, id, SpEventPriority.Normal) {
         }
 
         #endregion

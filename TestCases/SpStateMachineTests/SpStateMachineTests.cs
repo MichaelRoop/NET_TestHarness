@@ -1,11 +1,10 @@
 ﻿using NUnit.Framework;
 using Rhino.Mocks;
-using SpStateMachine.Converters;
 using SpStateMachine.Core;
 using SpStateMachine.Interfaces;
-using SpStateMachine.Messages;
 using System;
 using TestCases.SpStateMachineTests.TestImplementations;
+using TestCases.SpStateMachineTests.TestImplementations.Messages;
 using TestCases.TestToolSet.Net;
 
 namespace TestCases.SpStateMachineTests {
@@ -135,13 +134,13 @@ namespace TestCases.SpStateMachineTests {
             IDisposable wo = MockRepository.GenerateMock<IDisposable>();
             st.Expect((o) => o.OnEntry(null)).IgnoreArguments().Return(
                 new SpStateTransition<MyEventType>(
-                    SpStateTransitionType.SameState, null, new SpBaseEventMsg(new SpIntToInt(3), new SpIntToInt(3))));
+                    SpStateTransitionType.SameState, null, new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start)));
+
             TestHelpersNet.CatchUnexpected(() => {
                 ISpStateMachine sm = new SpMachine<IDisposable,MyEventType>(wo, st);
-                sm.Tick(new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(1)));
+                sm.Tick(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Tick));
             });
         }
-
 
 
         [Test]
@@ -152,7 +151,7 @@ namespace TestCases.SpStateMachineTests {
             st.Expect((o) => o.OnEntry(null)).IgnoreArguments().Return(null);
             TestHelpersNet.CatchExpected(50177, "SpMachine`2", "Tick", "The State 'Main.FirstState.Init' OnEntry Returned a Null Transition", () => {
                 ISpStateMachine sm = new SpMachine<IDisposable,MyEventType>(wo, st);
-                sm.Tick(new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(1)));
+                sm.Tick(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Tick));
             });
         }
 
@@ -175,14 +174,12 @@ namespace TestCases.SpStateMachineTests {
             TestHelpersNet.CatchExpected(50176, "SpMachine`2", "Tick", "Attempting to use Disposed Object", () => {
                 ISpStateMachine sm = new SpMachine<IDisposable,MyEventType>(wo, st);
                 sm.Dispose();
-                sm.Tick(new SpBaseEventMsg(new SpIntToInt(1), new SpIntToInt(1)));
+                sm.Tick(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Tick));
             });
         }
-
 
         #endregion
 
     }
-
 
 }

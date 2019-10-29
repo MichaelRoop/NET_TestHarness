@@ -39,27 +39,13 @@ namespace SpStateMachine.Core {
 
 
         /// <summary>
-        /// Register a state transition for an event
+        /// 
         /// </summary>
-        /// <param name="eventId">The id converter of the event type</param>
-        /// <param name="transition">The transition object</param>
-        public static void RegisterTransition<T>(string type, ISpToInt eventId, ISpStateTransition<T> transition, Dictionary<int, ISpStateTransition<T>> store) where T : struct {
-            WrapErr.ChkParam(eventId, "eventId", 51004);
-            WrapErr.ChkParam(transition, "transition", 51005);
-            WrapErr.ChkParam(store, "store", 51006);
-
-            // Wrap the id converter separately
-            int tmp = WrapErr.ToErrorReportException(51007,
-                () => { return String.Format("Error on Event Id Converter for '{0}' Event Type", type); },
-                () => { return eventId.ToInt(); });
-
-            // Duplicate transitions on same Event is a no no.
-            WrapErr.ChkFalse(store.Keys.Contains(tmp), 51008, 
-                () => { return String.Format("Already Contain a '{0}' Transition for Id:{1}", type, tmp); });
-            store.Add(tmp, transition);
-        }
-
-
+        /// <typeparam name="T">Event id type</typeparam>
+        /// <param name="type">string of transition type</param>
+        /// <param name="eventId">The event message id</param>
+        /// <param name="transition">Transition object</param>
+        /// <param name="store">Transition store</param>
         public static void RegisterTransition<T>(string type, T eventId, ISpStateTransition<T> transition, Dictionary<int, ISpStateTransition<T>> store) where T : struct {
             //WrapErr.ChkParam(eventId, "eventId", 51004);
             WrapErr.ChkParam(transition, "transition", 51005);

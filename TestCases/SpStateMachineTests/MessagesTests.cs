@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
-using SpStateMachine.Converters;
 using SpStateMachine.Interfaces;
-using SpStateMachine.Messages;
+using TestCases.SpStateMachineTests.TestImplementations;
+using TestCases.SpStateMachineTests.TestImplementations.Messages;
 using TestCases.TestToolSet.Net;
 
 namespace TestCases.SpStateMachineTests {
@@ -33,8 +33,8 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _0_SpBaseResponseCopyOverGuid() {
             TestHelpersNet.CatchUnexpected(() => {
-                ISpEventMessage msg = new SpBaseEventMsg(new SpIntToInt(25), new SpIntToInt(100));
-                ISpEventMessage response = new SpBaseEventResponse(new SpIntToInt(33), msg, new SpIntToInt(0), "");
+                ISpEventMessage msg = new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Tick);
+                ISpEventMessage response = new MyBaseResponse(MyMsgType.SimpleMsg, msg, MyReturnCode.Success, "");
                 Assert.AreEqual(msg.Uid, response.Uid, "Guid mismatch between message and response");
             });
         }

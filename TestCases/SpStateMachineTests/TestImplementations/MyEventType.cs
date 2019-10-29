@@ -21,6 +21,12 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
         ExitAborted,
 
+        StartGas,
+        StopGas,
+        OpenWater,
+        CloseWater,
+        StartHeater,
+        StopHeater,
 
         // -- reponses
 
