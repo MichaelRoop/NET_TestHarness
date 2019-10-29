@@ -122,21 +122,21 @@ namespace TestCases.SpStateMachineTests {
 
         #endregion
 
-        #region SpIntToEnum class wrapper
+        //#region SpIntToEnum class wrapper
 
-        [Test]
-        public void _0_SpIntToEnum_FromConstructionParam() {
-            Assert.AreEqual(GrouchTestEnum.Groucho, new SpIntToEnum<GrouchTestEnum>(2).ToEnum());
-        }
+        //[Test]
+        //public void _0_SpIntToEnum_FromConstructionParam() {
+        //    Assert.AreEqual(GrouchTestEnum.Groucho, new SpIntToEnum<GrouchTestEnum>(2).ToEnum());
+        //}
 
-        [Test]
-        public void _9999_SpIntToEnum_OutOfRange() {
-            TestHelpersNet.CatchExpected(9999, "SpEnumConverterExtensions", "ToEnum", "Enum Conversion Out of Range Attempting to Convert to Type 'GrouchTestEnum' with Value '39'", () => {
-                new SpIntToEnum<GrouchTestEnum>(39).ToEnum();
-            });
-        }
+        //[Test]
+        //public void _9999_SpIntToEnum_OutOfRange() {
+        //    TestHelpersNet.CatchExpected(9999, "SpEnumConverterExtensions", "ToEnum", "Enum Conversion Out of Range Attempting to Convert to Type 'GrouchTestEnum' with Value '39'", () => {
+        //        new SpIntToEnum<GrouchTestEnum>(39).ToEnum();
+        //    });
+        //}
 
-        #endregion
+        //#endregion
 
 
     }

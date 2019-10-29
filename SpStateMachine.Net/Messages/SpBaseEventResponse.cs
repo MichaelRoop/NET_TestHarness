@@ -59,13 +59,13 @@ namespace SpStateMachine.Messages {
         //}
 
 
-        public SpBaseEventResponse(TMsgType _type, TMsgId id, SpEventPriority priority, ISpEventMessage msg, ISpToInt returnCode, string returnStatus)
-            : base(_type, id, priority) {
-            // Transfer the message guid to the response for correlation
-            this.Uid = msg.Uid;
-            this.ReturnCode = returnCode.ToInt();
-            this.ReturnStatus = ReturnStatus;
-        }
+        //public SpBaseEventResponse(TMsgType _type, TMsgId id, SpEventPriority priority, ISpEventMessage msg, ISpToInt returnCode, string returnStatus)
+        //    : base(_type, id, priority) {
+        //    // Transfer the message guid to the response for correlation
+        //    this.Uid = msg.Uid;
+        //    this.ReturnCode = returnCode.ToInt();
+        //    this.ReturnStatus = ReturnStatus;
+        //}
 
 
 
