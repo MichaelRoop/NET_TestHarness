@@ -9,7 +9,7 @@ namespace SpStateMachine.States {
     /// <typeparam name="T">Generic type that the state represents</typeparam>
     /// <author>Michael Roop</author>
     /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
-    public class SpState<T> : SpStateBase<T> where T : class {
+    public class SpState<T,T2> : SpStateBase<T,T2> where T : class where T2 : struct {
 
         #region ISpState Sealed Properties
 
@@ -48,7 +48,7 @@ namespace SpStateMachine.States {
         /// <param name="idConverter">The integer id to string converter</param>
         /// <param name="id">Unique state id converter</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpState(ISpState parent, ISpMsgFactory msgFactory, ISpIdConverter idConverter, ISpToInt id, T wrappedObject) 
+        public SpState(ISpState<T2> parent, ISpMsgFactory msgFactory, ISpIdConverter idConverter, ISpToInt id, T wrappedObject) 
             : base (parent, msgFactory, idConverter, id, wrappedObject) {
         }
 
@@ -61,7 +61,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
-        public sealed override ISpStateTransition OnEntry(ISpEventMessage msg) {
+        public sealed override ISpStateTransition<T2> OnEntry(ISpEventMessage msg) {
             return base.OnEntry(msg);
         }
 
@@ -71,13 +71,9 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
-        public sealed override ISpStateTransition OnTick(ISpEventMessage msg) {
+        public sealed override ISpStateTransition<T2> OnTick(ISpEventMessage msg) {
             return base.OnTick(msg);
         }
-
-        #region Sealed Methods
-
-        #endregion
 
         #endregion
 

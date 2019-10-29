@@ -12,12 +12,12 @@ namespace SpStateMachine.Core {
     /// <typeparam name="T">Wraped object type constrained to a class with IDisposable Interface required</typeparam>
     /// <author>Michael Roop</author>
     /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
-    public class SpMachine<T> : ISpStateMachine where T : class, IDisposable {
+    public class SpMachine<T,T2> : ISpStateMachine where T : class, IDisposable where T2 : struct {
 
         #region Data
 
         /// <summary>The main state for the State Machine</summary>
-        ISpState state = null;
+        ISpState<T2> state = null;
 
         /// <summary>The object that the State Machine represents</summary>
         T wrappedObject = null;
@@ -60,7 +60,7 @@ namespace SpStateMachine.Core {
         /// can use a single state implementation if you only want the wrapped object to be 
         /// driven by periodic timer and have access to the messaging architecture
         /// </remarks>
-        public SpMachine(T wrappedObject, ISpState state) {
+        public SpMachine(T wrappedObject, ISpState<T2> state) {
             WrapErr.ChkParam(wrappedObject, "wrappedObject", 50170);
             WrapErr.ChkParam(state, "state", 50171);
             this.wrappedObject = wrappedObject;
@@ -90,7 +90,7 @@ namespace SpStateMachine.Core {
             WrapErr.ChkParam(msg, "msg", 50172);
 
             // First tick to drive it from entry to regular
-            ISpStateTransition tr = null;
+            ISpStateTransition<T2> tr = null;
             bool tmpIsStarted = this.isStarted;
 
             //Log.Debug("SpMachine", "Tick", String.Format("isStarted:{0}", this.isStarted));

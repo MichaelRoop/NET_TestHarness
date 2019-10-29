@@ -12,7 +12,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates.CascadeO
 
     public class Level2Ss : MySuperState {
 
-        public Level2Ss(ISpState parent, MyDataClass dataClass)
+        public Level2Ss(ISpState<MyEventType> parent, MyDataClass dataClass)
             : base(parent, MyStateID.Level2, dataClass) {
 
             MySuperState level3Ss = new Level3Ss(this, dataClass);
@@ -31,7 +31,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates.CascadeO
             // Register as the result event from previous state comming from abort to it
             //level3Ss.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.ExitState, null, null));
 
-            level3Ss.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.ExitState, null, new MyTickMsg()));
+            level3Ss.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition<MyEventType>(SpStateTransitionType.ExitState, null, new MyTickMsg()));
 
 
             //// Register active state transitions

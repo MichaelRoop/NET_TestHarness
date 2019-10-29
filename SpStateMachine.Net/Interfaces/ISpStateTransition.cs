@@ -6,7 +6,7 @@ namespace SpStateMachine.Interfaces {
     /// <summary>Information required to execute a state transition</summary>
     /// <author>Michael Roop</author>
     /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
-    public interface ISpStateTransition : ICloneable {
+    public interface ISpStateTransition<T> : ICloneable where T : struct {
 
 
         /// <summary>Type of transition to execute</summary>
@@ -14,7 +14,7 @@ namespace SpStateMachine.Interfaces {
 
 
         /// <summary>Registered next state for NextState transitions</summary>
-        ISpState NextState { get; set; }
+        ISpState<T> NextState { get; set; }
 
 
         /// <summary>Response message to return to caller</summary>

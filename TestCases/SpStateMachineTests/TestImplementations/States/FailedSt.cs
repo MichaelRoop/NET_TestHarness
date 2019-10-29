@@ -11,7 +11,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.States {
 
         private string className = "FailedSt";
 
-        public FailedSt(ISpState parent, MyDataClass dataClass)
+        public FailedSt(ISpState<MyEventType> parent, MyDataClass dataClass)
             : base(parent, MyStateID.Idle, dataClass) {
         }
 

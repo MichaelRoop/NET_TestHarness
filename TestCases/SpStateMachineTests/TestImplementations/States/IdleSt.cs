@@ -14,7 +14,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.States {
 //        private int triggerCount = 0;
 
 
-        public IdleSt(ISpState parent, MyDataClass dataClass)
+        public IdleSt(ISpState<MyEventType> parent, MyDataClass dataClass)
             : base(parent, MyStateID.Idle, dataClass) {
         }
 

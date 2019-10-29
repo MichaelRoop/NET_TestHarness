@@ -14,12 +14,12 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
 
         #region Data
 
-        MyState StateIdle = null;
-        MyState StateActive = null;
+        ISpState<MyEventType> StateIdle = null;
+        ISpState<MyEventType> StateActive = null;
 
         #endregion
 
-        public NotStartedSs(ISpState parent, MyDataClass dataClass)
+        public NotStartedSs(ISpState<MyEventType> parent, MyDataClass dataClass)
             : base(parent, MyStateID.NotStarted, dataClass) {
 
             // Setup sub-states

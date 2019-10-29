@@ -1,6 +1,5 @@
 ﻿using LogUtils;
 using SpStateMachine.Converters;
-using SpStateMachine.Core;
 using SpStateMachine.Interfaces;
 using SpStateMachine.States;
 using System;
@@ -8,11 +7,8 @@ using System.Threading;
 
 namespace TestCases.SpStateMachineTests.TestImplementations {
 
-    /// <summary>
-    /// Derived class to attach an object that the state machine represents
-    /// </summary>
-    /// <remarks>Note usage of enum to enforce strong typing at implementation level</remarks>
-    public class MyState : SpState<MyDataClass> {
+    /// <summary>Derived class to attach an object that the state machine represents</summary>
+    public class MyState : SpState<MyDataClass,MyEventType> {
 
         #region Constructors
 
@@ -22,7 +18,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
             : base(MyMsgFactory.Instance, MyIdConverter.Instance, new SpEnumToInt(id), dataClass) {
         }
 
-        public MyState(ISpState parent, MyStateID id, MyDataClass dataClass)
+        public MyState(ISpState<MyEventType> parent, MyStateID id, MyDataClass dataClass)
             : base(parent, MyMsgFactory.Instance, MyIdConverter.Instance, new SpEnumToInt(id), dataClass) {
         }
 
@@ -50,42 +46,6 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         }
 
         #endregion
-
-        public void ToNextOnEvent(MyEventType ev, ISpState newState) {
-            this.RegisterOnEventTransition(
-                new SpEnumToInt(ev), SpStateTransition.ToNext(newState));
-        }
-
-        public void ToNextOnEvent(MyEventType ev, ISpState newState, ISpEventMessage returnMsg) {
-            this.RegisterOnEventTransition(
-                new SpEnumToInt(ev), SpStateTransition.ToNext(newState, returnMsg));
-        }
-
-        public void ToExitOnEvent(MyEventType ev) {
-            this.RegisterOnEventTransition(
-                new SpEnumToInt(ev), SpStateTransition.ToExit());
-        }
-
-        public void ToDeferedOnEvent(MyEventType ev) {
-            this.RegisterOnEventTransition(
-                new SpEnumToInt(ev), SpStateTransition.ToDefered());
-        }
-
-
-        public void ToNextOnResult(MyEventType ev, ISpState newState) {
-            this.RegisterOnResultTransition(
-                new SpEnumToInt(ev), SpStateTransition.ToNext(newState));
-        }
-
-        public void ToNextOnResult(MyEventType ev, ISpState newState, ISpEventMessage returnMsg) {
-            this.RegisterOnResultTransition(
-                new SpEnumToInt(ev),
-                SpStateTransition.ToNext(newState, returnMsg));
-        }
-
-
-
-
 
     }
 }

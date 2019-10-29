@@ -12,7 +12,7 @@ using SpStateMachine.Core;
 
 namespace TestCases.SpStateMachineTests.TestImplementations {
 
-    public class MySuperState : SpSuperState<MyDataClass> {
+    public class MySuperState : SpSuperState<MyDataClass,MyEventType> {
 
         #region Data
 
@@ -27,7 +27,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
             : base(MyMsgFactory.Instance, MyIdConverter.Instance, new SpEnumToInt(id), dataClass) {
         }
 
-        public MySuperState(ISpState parent, MyStateID id, MyDataClass dataClass)
+        public MySuperState(ISpState<MyEventType> parent, MyStateID id, MyDataClass dataClass)
             : base(parent, MyMsgFactory.Instance, MyIdConverter.Instance, new SpEnumToInt(id), dataClass) {
         }
 
@@ -92,7 +92,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
         protected void ToNextOnResult(MyEventType ev, MyState newState) {
             this.RegisterOnResultTransition(
-                new SpEnumToInt(ev), SpStateTransition.ToNext(newState));
+                new SpEnumToInt(ev), SpStateTransition<MyEventType>.ToNext(newState));
         }
 
         #endregion

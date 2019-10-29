@@ -27,7 +27,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates.CascadeO
             // Register OnResult so that the Superstate can handle its state's ExitState transitions
 //            level2.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.NextState, recovery, null));
 
-            level2.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.NextState, recovery, new MyTickMsg()));
+            level2.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, recovery, new MyTickMsg()));
 
 
             //// Register active state transitions

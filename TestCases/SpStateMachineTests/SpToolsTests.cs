@@ -7,6 +7,7 @@ using SpStateMachine.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TestCases.SpStateMachineTests.TestImplementations;
 using TestCases.TestToolSet.Net;
 
 namespace TestCases.SpStateMachineTests {
@@ -115,10 +116,10 @@ namespace TestCases.SpStateMachineTests {
         private ISpEventMessage validMsg = new SpBaseEventMsg(new SpIntToInt(2), new SpIntToInt(41));
         private ISpEventMessage validMsg2 = new SpBaseEventMsg(new SpIntToInt(3), new SpIntToInt(42));
 
-        private ISpStateTransition validTransition = 
-            new SpStateTransition(SpStateTransitionType.SameState, null, new SpBaseEventMsg(new SpIntToInt(22), new SpIntToInt(34)));
-        private ISpStateTransition validTransition2 = 
-            new SpStateTransition(SpStateTransitionType.Defered, null, new SpBaseEventMsg(new SpIntToInt(33), new SpIntToInt(98)));
+        private ISpStateTransition<MyEventType> validTransition = 
+            new SpStateTransition<MyEventType>(SpStateTransitionType.SameState, null, new SpBaseEventMsg(new SpIntToInt(22), new SpIntToInt(34)));
+        private ISpStateTransition<MyEventType> validTransition2 = 
+            new SpStateTransition<MyEventType>(SpStateTransitionType.Defered, null, new SpBaseEventMsg(new SpIntToInt(33), new SpIntToInt(98)));
 
         #endregion
 
@@ -127,7 +128,7 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _0_RegisterTransition_Recoverable() {
-            Dictionary<int,ISpStateTransition> store = new Dictionary<int, ISpStateTransition>();
+            Dictionary<int,ISpStateTransition<MyEventType>> store = new Dictionary<int, ISpStateTransition<MyEventType>>();
             TestHelpersNet.CatchUnexpected(() => {
                 SpTools.RegisterTransition("OnResult", new SpIntToInt(91), this.validTransition, store);
                 SpTools.RegisterTransition("OnResult", new SpIntToInt(29), this.validTransition2, store);
@@ -139,14 +140,14 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _51004_RegisterTransition_NullEventIdConverter() {
             TestHelpersNet.CatchExpected(51004, this.className, "RegisterTransition", "Null eventId Argument", () => {
-                SpTools.RegisterTransition("OnResult", null, this.validTransition, new Dictionary<int,ISpStateTransition>());
+                SpTools.RegisterTransition("OnResult", null, this.validTransition, new Dictionary<int,ISpStateTransition<MyEventType>>());
             });
         }
 
         [Test]
         public void _51005_RegisterTransition_NullTransition() {
             TestHelpersNet.CatchExpected(51005, this.className, "RegisterTransition", "Null transition Argument", () => {
-                SpTools.RegisterTransition("OnResult", new SpIntToInt(2), null, new Dictionary<int,ISpStateTransition>());
+                SpTools.RegisterTransition("OnResult", new SpIntToInt(2), null, new Dictionary<int,ISpStateTransition<MyEventType>>());
             });
         }
 
@@ -163,7 +164,7 @@ namespace TestCases.SpStateMachineTests {
             ISpToInt toInt = MockRepository.GenerateMock<ISpToInt>();
             toInt.Expect((o) => o.ToInt()).Throw(new Exception("Woof Exception"));
 
-            Dictionary<int,ISpStateTransition> store = new Dictionary<int,ISpStateTransition>();
+            Dictionary<int,ISpStateTransition<MyEventType>> store = new Dictionary<int,ISpStateTransition<MyEventType>>();
             TestHelpersNet.CatchExpected(51007, this.className, "RegisterTransition", "Error on Event Id Converter for 'OnResult' Event Type", () => {
                 SpTools.RegisterTransition("OnResult", toInt, this.validTransition, store);
             });
@@ -172,7 +173,7 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _51008_RegisterTransition_AlreadyRegistered() {
-            Dictionary<int,ISpStateTransition> store = new Dictionary<int,ISpStateTransition>();
+            Dictionary<int,ISpStateTransition<MyEventType>> store = new Dictionary<int,ISpStateTransition<MyEventType>>();
             store.Add(22, this.validTransition);
 
             TestHelpersNet.CatchExpected(51008, this.className, "RegisterTransition", "Already Contain a 'OnResult' Transition for Id:22", () => {
@@ -188,26 +189,26 @@ namespace TestCases.SpStateMachineTests {
 
         [Test]
         public void _0_GetTransitionCloneFromStore_Ok() {
-            Dictionary<int,ISpStateTransition> store = new Dictionary<int, ISpStateTransition>();
+            Dictionary<int,ISpStateTransition<MyEventType>> store = new Dictionary<int, ISpStateTransition<MyEventType>>();
             TestHelpersNet.CatchUnexpected(() => {
                 SpTools.RegisterTransition("OnResult", new SpIntToInt(this.validMsg.EventId), this.validTransition, store);
                 SpTools.RegisterTransition("OnResult", new SpIntToInt(this.validMsg2.EventId), this.validTransition2, store);
             });
 
-            ISpStateTransition t = SpTools.GetTransitionCloneFromStore(store, this.validMsg2);
+            ISpStateTransition<MyEventType> t = SpTools.GetTransitionCloneFromStore(store, this.validMsg2);
             Assert.AreEqual(t.NextState, this.validTransition2.NextState);
 //            Assert.AreEqual(t.ReturnMessage.EventId, this.validMsg2.EventId);
         }
 
         [Test]
         public void _0_GetTransitionCloneFromStore_CloneIsGood() {
-            Dictionary<int,ISpStateTransition> store = new Dictionary<int, ISpStateTransition>();
+            Dictionary<int,ISpStateTransition<MyEventType>> store = new Dictionary<int, ISpStateTransition<MyEventType>>();
             TestHelpersNet.CatchUnexpected(() => {
                 SpTools.RegisterTransition("OnResult", new SpIntToInt(this.validMsg.EventId), this.validTransition, store);
                 SpTools.RegisterTransition("OnResult", new SpIntToInt(this.validMsg2.EventId), this.validTransition2, store);
             });
 
-            ISpStateTransition t = SpTools.GetTransitionCloneFromStore(store, this.validMsg2);
+            ISpStateTransition<MyEventType> t = SpTools.GetTransitionCloneFromStore(store, this.validMsg2);
             Assert.AreEqual(t.TransitionType, this.validTransition2.TransitionType);
 
             // TODO - determine what is transfered
@@ -224,14 +225,14 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _51009_GetTransitionCloneFromStore_NullEventIdConverter() {
             TestHelpersNet.CatchExpected(51009, this.className, "GetTransitionCloneFromStore", "Null store Argument", () => {
-                SpTools.GetTransitionCloneFromStore(null, this.validMsg);
+                SpTools.GetTransitionCloneFromStore<MyEventType>(null, this.validMsg);
             });
         }
 
         [Test]
         public void _51010_GetTransitionCloneFromStore_NullEventMsg() {
             TestHelpersNet.CatchExpected(51010, this.className, "GetTransitionCloneFromStore", "Null eventMsg Argument", () => {
-                Dictionary<int,ISpStateTransition> store = new Dictionary<int, ISpStateTransition>();
+                Dictionary<int,ISpStateTransition<MyEventType>> store = new Dictionary<int, ISpStateTransition<MyEventType>>();
                 SpTools.RegisterTransition("OnResult", new SpIntToInt(22), this.validTransition, store);
                 SpTools.GetTransitionCloneFromStore(store, null);
             });
@@ -241,10 +242,10 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _51011_GetTransitionCloneFromStore_ErrorOnClone() {
             TestHelpersNet.CatchExpected(51011, this.className, "GetTransitionCloneFromStore", "Clone Exception", () => {
-                ISpStateTransition tr = MockRepository.GenerateMock<ISpStateTransition>();
+                ISpStateTransition<MyEventType> tr = MockRepository.GenerateMock<ISpStateTransition<MyEventType>>();
                 tr.Expect(o => o.Clone()).Throw(new Exception("Clone Exception"));
 
-                Dictionary<int,ISpStateTransition> store = new Dictionary<int, ISpStateTransition>();
+                Dictionary<int,ISpStateTransition<MyEventType>> store = new Dictionary<int, ISpStateTransition<MyEventType>>();
                 SpTools.RegisterTransition("OnResult", new SpIntToInt(this.validMsg.EventId), tr, store);
                 SpTools.RegisterTransition("OnResult", new SpIntToInt(23), this.validTransition, store);
 

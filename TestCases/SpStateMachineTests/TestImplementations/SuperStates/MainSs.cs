@@ -6,6 +6,7 @@ using SpStateMachine.Core;
 using SpStateMachine.Converters;
 using TestCases.SpStateMachineTests.TestImplementations.Messages;
 using LogUtils.Net;
+using SpStateMachine.Interfaces;
 
 namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
 
@@ -13,8 +14,8 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
 
         #region Data
 
-        MySuperState notStarted = null;
-        MySuperState recovery = null;
+        ISpState<MyEventType> notStarted = null;
+        ISpState<MyEventType> recovery = null;
 
         #endregion
 
@@ -38,10 +39,18 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
             //            notStarted.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.NextState, recovery, null));
 
             // Register a transition based on on internal processing
-            notStarted.RegisterOnResultTransition(
-                new SpEnumToInt(MyEventType.Abort), 
-                new SpStateTransition(SpStateTransitionType.NextState, 
-                this.recovery, new MyTickMsg()));
+            //notStarted.RegisterOnResultTransition(
+            //    new SpEnumToInt(MyEventType.Abort), 
+            //    new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, 
+            //    this.recovery, new MyTickMsg()));
+
+            //notStarted.RegisterOnResultTransition(
+            //    MyEventType.Abort,
+            //    new SpStateTransition<MyEventType>(SpStateTransitionType.NextState,
+            //    this.recovery, new MyTickMsg()));
+
+            notStarted.ToNextOnResult(MyEventType.Abort, this.recovery, new MyTickMsg());
+
 
             //// Register active state transitions 
             //active.RegisterOnEventTransition(MyEventType.Stop, new SpStateTransition(SpStateTransitionType.NextState, idle, null));

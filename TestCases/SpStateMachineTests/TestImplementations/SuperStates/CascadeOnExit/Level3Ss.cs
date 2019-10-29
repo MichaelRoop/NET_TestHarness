@@ -18,7 +18,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates.CascadeO
 
     public class Level3Ss : MySuperState {
 
-        public Level3Ss(ISpState parent, MyDataClass dataClass)
+        public Level3Ss(ISpState<MyEventType> parent, MyDataClass dataClass)
             : base(parent, MyStateID.Level3, dataClass) {
 
             MyState idle = new IdleSt(this, dataClass);
@@ -28,20 +28,20 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates.CascadeO
             this.AddSubState(active);
 
             // Register Idle state transitions
-            idle.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Start), new SpStateTransition(SpStateTransitionType.NextState, active, null));
+            idle.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Start), new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, active, null));
             //idle.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.ExitState, null, null));
 
             // results - this idle class just returns whatever msg we send in. So send Start and it will return it as its return value and provok this transition
-            idle.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Start), new SpStateTransition(SpStateTransitionType.NextState, active, null));
+            idle.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Start), new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, active, null));
 
 
             // Register active state transitions
-            active.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition(SpStateTransitionType.NextState, idle, null));
+            active.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, idle, null));
             //active.RegisterOnEventTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.ExitState, null, null));
 
             // results - this class just returns whatever msg we send in. So send Stop and it will return it as its return value and provok this transition
-            active.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition(SpStateTransitionType.NextState, idle, null));
-            active.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition(SpStateTransitionType.ExitState, null, null));
+            active.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Stop), new SpStateTransition<MyEventType>(SpStateTransitionType.NextState, idle, null));
+            active.RegisterOnResultTransition(new SpEnumToInt(MyEventType.Abort), new SpStateTransition<MyEventType>(SpStateTransitionType.ExitState, null, null));
 
             this.SetEntryState(idle);
 
@@ -89,7 +89,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates.CascadeO
 //        private int triggerCount = 0;
 
 
-        public Level2Idle(ISpState parent, MyDataClass dataClass)
+        public Level2Idle(ISpState<MyEventType> parent, MyDataClass dataClass)
             : base(parent, MyStateID.Idle, dataClass) {
         }
 
