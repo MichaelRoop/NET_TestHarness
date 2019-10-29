@@ -9,7 +9,7 @@ namespace SpStateMachine.Converters {
     /// </summary>
     /// <author>Michael Roop</author>
     /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
-    public class SpIntToIntConverter : ISpIdConverter {
+    public class SpIntToIntConverter : ISpIdConverter<int,int,int> {
 
         #region Static Singleton Support
 

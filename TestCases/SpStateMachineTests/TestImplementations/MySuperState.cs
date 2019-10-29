@@ -6,18 +6,18 @@ using TestCases.SpStateMachineTests.TestImplementations.Messages;
 
 namespace TestCases.SpStateMachineTests.TestImplementations {
 
-    public class MySuperState : SpSuperState<MyDataClass,MyEventType,MyStateID> {
+    public class MySuperState : SpSuperState<MyDataClass,MyEventType,MyStateID,MyMsgType> {
 
         #region Constructors
 
         // Note: Singletons are test shortcuts. Should pass in Interfaces via DI
 
         public MySuperState(MyStateID id, MyDataClass dataClass)
-            : base(MyMsgFactory.Instance, MyIdConverter.Instance, id, dataClass) {
+            : base(MyMsgFactory.Instance, id, dataClass) {
         }
 
         public MySuperState(ISpState<MyEventType> parent, MyStateID id, MyDataClass dataClass)
-            : base(parent, MyMsgFactory.Instance, MyIdConverter.Instance, id, dataClass) {
+            : base(parent, MyMsgFactory.Instance, id, dataClass) {
         }
 
         #endregion

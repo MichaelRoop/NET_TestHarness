@@ -6,29 +6,23 @@ namespace SpStateMachine.Interfaces {
     /// </summary>
     /// <author>Michael Roop</author>
     /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
-    public interface ISpIdConverter {
+    public interface ISpIdConverter<TState,TEvent,TMsg> where TState : struct where TEvent :struct where TMsg : struct {
 
-        /// <summary>
-        /// Convert the type id to string
-        /// </summary>
+        /// <summary>Convert State id to string via enum</summary>
         /// <param name="id">The id to convert to string</param>
-        /// <returns></returns>
+        /// <returns>String value id converted back to enum</returns>
         string StateId(int id);
 
 
-        /// <summary>
-        /// Convert the event id to string
-        /// </summary>
+        /// <summary>Convert event id to string</summary>
         /// <param name="id">The id to convert to string</param>
-        /// <returns></returns>
+        /// <returns>String value id converted back to enum</returns>
         string EventId(int id);
 
 
-        /// <summary>
-        /// Convert the message id to string
-        /// </summary>
+        /// <summary>Convert the message id to string</summary>
         /// <param name="id">The message id to convert to string</param>
-        /// <returns></returns>
+        /// <returns>String value id converted back to enum</returns>
         string MsgTypeId(int id);
 
     }
