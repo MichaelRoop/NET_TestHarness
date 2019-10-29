@@ -14,7 +14,7 @@ namespace SpStateMachine.States {
     /// <typeparam name="T">Object that the state represents</typeparam>
     /// <author>Michael Roop</author>
     /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
-    public class SpSuperState<T,T2> : SpStateBase<T,T2> where T : class where T2 : struct {
+    public class SpSuperState<T,T2,T3> : SpStateBase<T,T2,T3> where T : class where T2 : struct where T3 : struct {
 
         #region Data 
 
@@ -59,7 +59,7 @@ namespace SpStateMachine.States {
         /// <param name="idConverter">The integer id to string converter</param>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpSuperState(ISpMsgFactory msgFactory, ISpIdConverter idConverter, ISpToInt id, T wrappedObject)
+        public SpSuperState(ISpMsgFactory msgFactory, ISpIdConverter idConverter, T3 id, T wrappedObject)
             : base(msgFactory, idConverter, id, wrappedObject) {
         }
 
@@ -70,7 +70,7 @@ namespace SpStateMachine.States {
         /// <param name="idConverter">The integer id to string converter</param>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpSuperState(ISpState<T2> parent, ISpMsgFactory msgFactory, ISpIdConverter idConverter, ISpToInt id, T wrappedObject)
+        public SpSuperState(ISpState<T2> parent, ISpMsgFactory msgFactory, ISpIdConverter idConverter, T3 id, T wrappedObject)
             : base(parent, msgFactory, idConverter, id, wrappedObject) {
         }
 

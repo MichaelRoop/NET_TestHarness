@@ -2,14 +2,11 @@
 
 namespace SpStateMachine.States {
 
-    /// <summary>
-    /// Implementation of the SpState which handles the virtuals left exposed 
-    /// by the State Base
-    /// </summary>
+    /// <summary>Implementation of SpState handles virtuals left exposed by the State Base</summary>
     /// <typeparam name="T">Generic type that the state represents</typeparam>
     /// <author>Michael Roop</author>
     /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
-    public class SpState<T,T2> : SpStateBase<T,T2> where T : class where T2 : struct {
+    public class SpState<T,T2,T3> : SpStateBase<T,T2,T3> where T : class where T2 : struct where T3 : struct {
 
         #region ISpState Sealed Properties
 
@@ -35,7 +32,7 @@ namespace SpStateMachine.States {
         /// <param name="idConverter">The integer id to string converter</param>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpState(ISpMsgFactory msgFactory, ISpIdConverter idConverter, ISpToInt id, T wrappedObject)
+        public SpState(ISpMsgFactory msgFactory, ISpIdConverter idConverter, T3 id, T wrappedObject)
             : base(msgFactory, idConverter, id, wrappedObject) {
         }
 
@@ -48,7 +45,7 @@ namespace SpStateMachine.States {
         /// <param name="idConverter">The integer id to string converter</param>
         /// <param name="id">Unique state id converter</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpState(ISpState<T2> parent, ISpMsgFactory msgFactory, ISpIdConverter idConverter, ISpToInt id, T wrappedObject) 
+        public SpState(ISpState<T2> parent, ISpMsgFactory msgFactory, ISpIdConverter idConverter, T3 id, T wrappedObject) 
             : base (parent, msgFactory, idConverter, id, wrappedObject) {
         }
 

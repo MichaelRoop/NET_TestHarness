@@ -1,34 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SpStateMachine.States;
-using SpStateMachine.Interfaces;
-using TestCases.SpStateMachineTests.TestImplementations.Messages;
-using ChkUtils;
-using LogUtils;
+﻿using LogUtils;
 using SpStateMachine.Converters;
-using SpStateMachine.Core;
+using SpStateMachine.Interfaces;
+using SpStateMachine.States;
+using TestCases.SpStateMachineTests.TestImplementations.Messages;
 
 namespace TestCases.SpStateMachineTests.TestImplementations {
 
-    public class MySuperState : SpSuperState<MyDataClass,MyEventType> {
-
-        #region Data
-
-
-        #endregion
+    public class MySuperState : SpSuperState<MyDataClass,MyEventType,MyStateID> {
 
         #region Constructors
 
-        // Singletons are test shortcuts. Should use Interface for DI
+        // Note: Singletons are test shortcuts. Should pass in Interfaces via DI
 
         public MySuperState(MyStateID id, MyDataClass dataClass)
-            : base(MyMsgFactory.Instance, MyIdConverter.Instance, new SpEnumToInt(id), dataClass) {
+            : base(MyMsgFactory.Instance, MyIdConverter.Instance, id, dataClass) {
         }
 
         public MySuperState(ISpState<MyEventType> parent, MyStateID id, MyDataClass dataClass)
-            : base(parent, MyMsgFactory.Instance, MyIdConverter.Instance, new SpEnumToInt(id), dataClass) {
+            : base(parent, MyMsgFactory.Instance, MyIdConverter.Instance, id, dataClass) {
         }
 
         #endregion
@@ -87,16 +76,6 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         }
 
         #endregion
-
-        #region State transition helpers
-
-        protected void ToNextOnResult(MyEventType ev, MyState newState) {
-            this.RegisterOnResultTransition(
-                new SpEnumToInt(ev), SpStateTransition<MyEventType>.ToNext(newState));
-        }
-
-        #endregion
-
 
     }
 }

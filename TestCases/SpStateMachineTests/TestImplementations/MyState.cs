@@ -1,5 +1,4 @@
 ﻿using LogUtils;
-using SpStateMachine.Converters;
 using SpStateMachine.Interfaces;
 using SpStateMachine.States;
 using System;
@@ -7,24 +6,35 @@ using System.Threading;
 
 namespace TestCases.SpStateMachineTests.TestImplementations {
 
-    /// <summary>Derived class to attach an object that the state machine represents</summary>
-    public class MyState : SpState<MyDataClass,MyEventType> {
+    /// <summary>
+    /// Derived test state class to resolve generic parameters which represent the State Machine common 
+    /// data class, the event type enum, and the state id enum 
+    /// </summary>
+    public class MyState : SpState<MyDataClass,MyEventType,MyStateID> {
 
         #region Constructors
 
-        // Use MsgFactory and MyIdConverter Singletons rather than interface for test shortcut
+        // Note: Singletons are test shortcuts. Should pass in Interfaces via DI
 
+        /// <summary>Constructor</summary>
+        /// <param name="id">The identifier for the state instance</param>
+        /// <param name="dataClass">
+        /// Object represented by state machine containing common data and methods
+        /// </param>
         public MyState(MyStateID id, MyDataClass dataClass)
-            : base(MyMsgFactory.Instance, MyIdConverter.Instance, new SpEnumToInt(id), dataClass) {
+            : base(MyMsgFactory.Instance, MyIdConverter.Instance, id, dataClass) {
         }
 
+
         public MyState(ISpState<MyEventType> parent, MyStateID id, MyDataClass dataClass)
-            : base(parent, MyMsgFactory.Instance, MyIdConverter.Instance, new SpEnumToInt(id), dataClass) {
+            : base(parent, MyMsgFactory.Instance, MyIdConverter.Instance, id, dataClass) {
         }
 
         #endregion
 
         #region Overrides
+
+        // Overrides only for sending out logs and values for tests
 
         protected override ISpEventMessage ExecOnEntry(ISpEventMessage msg) {
             Log.Info("MyState", "ExecOnEntry", String.Format("Raised {0}", msg.EventId));

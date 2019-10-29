@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ChkUtils.Net;
 using LogUtils.Net;
+using SpStateMachine.Converters;
 using SpStateMachine.Core;
 using SpStateMachine.Interfaces;
 
@@ -12,7 +13,7 @@ namespace SpStateMachine.States {
     /// <typeparam name="T">Object type that the state represents</typeparam>
     /// <author>Michael Roop</author>
     /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
-    public class SpStateBase<T,T2> : ISpState<T2> where T : class where T2: struct {
+    public class SpStateBase<T,T2,T3> : ISpState<T2> where T : class where T2: struct where T3 : struct {
 
         #region Data
 
@@ -146,7 +147,7 @@ namespace SpStateMachine.States {
         /// <param name="idConverter">The integer id to string converter</param>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpStateBase(ISpMsgFactory msgFactory, ISpIdConverter idConverter, ISpToInt id, T wrappedObject)
+        public SpStateBase(ISpMsgFactory msgFactory, ISpIdConverter idConverter, T3 id, T wrappedObject)
             : this(null, msgFactory, idConverter, id, wrappedObject) {
         }
 
@@ -157,12 +158,12 @@ namespace SpStateMachine.States {
         /// <param name="idConverter">The integer id to string converter</param>
         /// <param name="id">Unique state id converter</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpStateBase(ISpState<T2> parent, ISpMsgFactory msgFactory, ISpIdConverter idConverter, ISpToInt id, T wrappedObject) {
+        public SpStateBase(ISpState<T2> parent, ISpMsgFactory msgFactory, ISpIdConverter idConverter, T3 id, T wrappedObject) {
             WrapErr.ChkParam(msgFactory, "msgFactory", 9999);
             WrapErr.ChkParam(wrappedObject, "wrappedObject", 50200);
             this.msgFactory = msgFactory;
             this.idConverter = idConverter;
-            this.InitStateIds(parent, id.ToInt());
+            this.InitStateIds(parent, id);
             this.wrappedObject = wrappedObject;
         }
 
@@ -454,24 +455,30 @@ namespace SpStateMachine.States {
         }
 
 
-        /// <summary>
-        /// Initialise the state id chain from ancestors to this state 
-        /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="id"></param>
-        private void InitStateIds(ISpState<T2> parent, int id) {
+        /// <summary>Initialise the state id chain from ancestors to this state</summary>
+        /// <param name="parent">The parent state</param>
+        /// <param name="id">The enum state id</param>
+        private void InitStateIds(ISpState<T2> parent, T3 id) {
             // Add any ancestor state ids to the chain
             WrapErr.ToErrorReportException(50207, () => {
+                WrapErr.ChkTrue(typeof(T3).IsEnum, 9999, () => string.Format("State type {0} must be Enum", id.GetType().Name));
+                WrapErr.ChkTrue(typeof(T3).GetEnumUnderlyingType() == typeof(Int32), 9999,
+                    () => string.Format("State type enum {0} must be derived from int", id.GetType().Name));
+                int tmp = Convert.ToInt32(id);
+
                 if (parent != null) {
                     WrapErr.ChkVar(parent.IdChain, 50206, "The Parent has a Null Id Chain");
                     this.idChain.Clear();
                     parent.IdChain.ForEach((item) => this.idChain.Add(item));
                 }
                 // This state id is the leaf
-                this.idChain.Add(id);
+                this.idChain.Add(tmp);
                 this.BuildName();
             });
         }
+
+
+
 
 
         /// <summary>
