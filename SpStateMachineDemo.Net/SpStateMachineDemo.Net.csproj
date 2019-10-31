@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="DemoMachine\IO\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChkUtils.Net\ChkUtils.Net.csproj" />
+    <ProjectReference Include="..\LogUtils.Net\LogUtils.Net.csproj" />
+    <ProjectReference Include="..\SpStateMachine.Net\SpStateMachine.Net.csproj" />
+  </ItemGroup>
+
+</Project>
