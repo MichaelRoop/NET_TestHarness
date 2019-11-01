@@ -1,9 +1,7 @@
 ﻿using SpStateMachine.Core;
 using SpStateMachine.Interfaces;
 using SpStateMachineDemo.Net.Core;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SpStateMachineDemo.Net.DemoMachine.IO;
 
 namespace SpStateMachineDemo.Net.DI {
     public class DummyDI {
@@ -11,6 +9,8 @@ namespace SpStateMachineDemo.Net.DI {
         #region static singleton instances
 
         private static ISpMsgFactory msgFactoryInstance = null;
+        private static IDemoInputs<InputId> inputsInstance = null;
+        private static IDemoOutputs<OutputId> outputsInstance = null;
 
         #endregion
 
@@ -26,9 +26,27 @@ namespace SpStateMachineDemo.Net.DI {
         }
 
 
+        public static IDemoOutputs<OutputId> OutputsInstance {
+            get {
+                if (outputsInstance == null) {
+                    outputsInstance = new DemoOutputs();
+                }
+                return outputsInstance;
+            }
+        }
+
+
+        public static IDemoInputs<InputId> InputsInstance {
+            get {
+                if (inputsInstance == null) {
+                    inputsInstance = new DemoInputs(OutputsInstance);
+                }
+                return inputsInstance;
+            }
+        }
+
 
         #endregion
-
 
     }
 }

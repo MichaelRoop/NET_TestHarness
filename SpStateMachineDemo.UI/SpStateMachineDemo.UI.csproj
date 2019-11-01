@@ -105,5 +105,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SpStateMachineDemo.Net\SpStateMachineDemo.Net.csproj">
+      <Project>{4D2EE4F2-9C65-4221-8FF2-4683714EC17D}</Project>
+      <Name>SpStateMachineDemo.Net</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
