@@ -44,15 +44,15 @@ namespace SpStateMachineDemo.UI {
 
         #region Fake a hardware output change to exercise state machine
 
-        private void btnOxygen_Click(object sender, RoutedEventArgs e) {
+        private void btnOxygenOut_Click(object sender, RoutedEventArgs e) {
             this.ToggleOutput(OutputId.GasOxygen);
         }
 
-        private void btnNitrogen_Click(object sender, RoutedEventArgs e) {
+        private void btnNitrogenOut_Click(object sender, RoutedEventArgs e) {
             this.ToggleOutput(OutputId.GasNitrogen);
         }
 
-        private void btnHeat_Click(object sender, RoutedEventArgs e) {
+        private void btnHeatOut_Click(object sender, RoutedEventArgs e) {
             this.ToggleOutput(OutputId.Heater);
         }
 
@@ -65,6 +65,10 @@ namespace SpStateMachineDemo.UI {
         private void ToggleOutput(OutputId id) {
             this.outputs.SetState(id, this.outputs.GetState(id) == IOState.On ? IOState.Off : IOState.On);
         }
+
+        #endregion
+
+        #region Fake a hardware input change to exercise state machine
 
         private void btnOxygenIn_Click(object sender, RoutedEventArgs e) {
             this.ToggleInput(InputId.GasOxygen);
@@ -82,7 +86,6 @@ namespace SpStateMachineDemo.UI {
         private void ToggleInput(InputId id) {
             this.inputs.SetState(id, this.inputs.GetState(id) == IOState.On ? IOState.Off : IOState.On);
         }
-
 
         #endregion
 
@@ -147,13 +150,13 @@ namespace SpStateMachineDemo.UI {
                 OutputChangeArgs args = (OutputChangeArgs)e;
                 switch (args.Id) {
                     case OutputId.GasNitrogen:
-                        this.SetOutputCtrl(this.gasNitrogen, args.State);
+                        this.SetOutputCtrl(this.gasNitrogenOut, args.State);
                         break;
                     case OutputId.GasOxygen:
-                        this.SetOutputCtrl(this.gasOxygen, args.State);
+                        this.SetOutputCtrl(this.gasOxygenOut, args.State);
                         break;
                     case OutputId.Heater:
-                        this.SetOutputCtrl(this.heater, args.State);
+                        this.SetOutputCtrl(this.heaterOut, args.State);
                         break;
                 }
             });
