@@ -10,7 +10,6 @@ namespace SpStateMachineDemo.UI.Controls {
         public enum State {
             On,
             Off,
-            Undefined
         }
 
 
@@ -24,7 +23,9 @@ namespace SpStateMachineDemo.UI.Controls {
 
         public UC_Output() {
             InitializeComponent();
+            // Only funnel the selected scope DataContext to avoid overriding all
             this.layoutRoot.DataContext = this;
+            this.SetState(State.Off);
         }
 
 
@@ -35,10 +36,6 @@ namespace SpStateMachineDemo.UI.Controls {
                     this.IsOn = true;
                     break;
                 case UC_Output.State.Off:
-                    this.rectBlock.Fill = new SolidColorBrush(Colors.LightCoral);
-                    this.IsOn = false;
-                    break;
-                case UC_Output.State.Undefined:
                     this.rectBlock.Fill = new SolidColorBrush(Colors.LightGray);
                     this.IsOn = false;
                     break;
