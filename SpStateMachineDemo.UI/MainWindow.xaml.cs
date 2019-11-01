@@ -26,13 +26,16 @@ namespace SpStateMachineDemo.UI {
 
         public MainWindow() {
             InitializeComponent();
-            this.machineWrapper.Init();
-
-            this.machineWrapper.OutputStateChange += this.Outputs_StateChange;
-            this.machineWrapper.InputStateChange += this.Inputs_StateChange;
         }
 
         #region Windows events
+
+        private void Window_ContentRendered(object sender, EventArgs e) {
+            this.machineWrapper.OutputStateChange += this.Outputs_StateChange;
+            this.machineWrapper.InputStateChange += this.Inputs_StateChange;
+            this.machineWrapper.Init();
+        }
+
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
             // We could intercept this until done
@@ -96,17 +99,7 @@ namespace SpStateMachineDemo.UI {
         private void Inputs_StateChange(object sender, EventArgs e) {
             this.Dispatcher.Invoke(() => {
                 InputChangeArgs args = (InputChangeArgs)e;
-                switch (args.Id) {
-                    case InputId.GasNitrogen:
-                        this.SetIOCtrl(this.gasNitrogenIn, args.State);
-                        break;
-                    case InputId.GasOxygen:
-                        this.SetIOCtrl(this.gasOxygenIn, args.State);
-                        break;
-                    case InputId.Heater:
-                        this.SetIOCtrl(this.heaterIn, args.State);
-                        break;
-                }
+                this.GetCtrl(args.Id).Set(args.State);
             });
         }
 
@@ -117,30 +110,53 @@ namespace SpStateMachineDemo.UI {
         private void Outputs_StateChange(object sender, EventArgs e) {
             this.Dispatcher.Invoke(() => {
                 OutputChangeArgs args = (OutputChangeArgs)e;
-                switch (args.Id) {
-                    case OutputId.GasNitrogen:
-                        this.SetIOCtrl(this.gasNitrogenOut, args.State);
-                        break;
-                    case OutputId.GasOxygen:
-                        this.SetIOCtrl(this.gasOxygenOut, args.State);
-                        break;
-                    case OutputId.Heater:
-                        this.SetIOCtrl(this.heaterOut, args.State);
-                        break;
-                }
+                this.GetCtrl(args.Id).Set(args.State);
             });
         }
 
 
-        private void SetIOCtrl(UC_Output ctrl, IOState state) {
-            ctrl.SetState(state == IOState.On ? UC_Output.State.On : UC_Output.State.Off);
+        /// <summary>Get the IO visual for an IO output</summary>
+        /// <param name="id">The state machine output id</param>
+        /// <returns>The corresponding visual object</returns>
+        UC_Output GetCtrl(OutputId id) {
+            switch (id) {
+                case OutputId.GasNitrogen:  return this.gasNitrogenOut;
+                case OutputId.GasOxygen:    return this.gasOxygenOut;
+                case OutputId.Heater:       return this.heaterOut;
+                default:                    return this.gasNitrogenOut;
+            }
         }
 
-        private UC_Output.State Translate(IOState state) {
-            return state == IOState.On ? UC_Output.State.On : UC_Output.State.Off;
+
+        /// <summary>Get the IO visual for an IO input</summary>
+        /// <param name="id">The state machine input id</param>
+        /// <returns>The corresponding visual object</returns>
+        UC_Output GetCtrl(InputId id) {
+            switch (id) {
+                case InputId.GasNitrogen: return this.gasNitrogenIn;
+                case InputId.GasOxygen: return this.gasOxygenIn;
+                case InputId.Heater: return this.heaterIn;
+                default: return this.gasNitrogenIn;
+            }
         }
 
         #endregion
 
     }
+
+    #region Extensions
+
+    /// <summary>Extensions to join the IO objects with the UI controls</summary>
+    public static class IOCtrlExtensions {
+
+        /// <summary>Set the visual state of the IO control from the state machine state</summary>
+        /// <param name="ctrl">The visual control</param>
+        /// <param name="state">The state to change</param>
+        public static void Set(this UC_Output ctrl, IOState state) {
+            ctrl.SetState(state == IOState.On ? UC_Output.State.On : UC_Output.State.Off);
+        }
+    }
+
+    #endregion
+
 }

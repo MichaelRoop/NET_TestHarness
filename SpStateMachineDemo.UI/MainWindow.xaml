@@ -7,11 +7,13 @@
         xmlns:local="clr-namespace:SpStateMachineDemo.UI"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" 
-        Closing="Window_Closing"
+        Closing="Window_Closing" ContentRendered="Window_ContentRendered"
         >
     <Grid>
 
+        <!-- Input/Outputs -->
         <DockPanel HorizontalAlignment="Left">
+            <!-- IO inputs display and manipulators -->
             <StackPanel Margin="10" VerticalAlignment="Top" >
                 <Border BorderBrush="Black" BorderThickness="2" CornerRadius="12">
                     <StackPanel>
@@ -40,7 +42,7 @@
                     </StackPanel>
                 </Border>
             </StackPanel>
-        
+            <!-- IO outputs display and manipulators -->
             <StackPanel Margin="10" VerticalAlignment="Top" HorizontalAlignment="Center" >
                 <Border BorderBrush="Black" BorderThickness="2" CornerRadius="12">
                     <StackPanel>
@@ -70,9 +72,8 @@
                 </Border>
             </StackPanel>
         </DockPanel>
-        
-        
-        
+
+        <!-- User event buttons -->
         <DockPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20" >
             <Button Content="Exit" x:Name="btnExit" Style="{StaticResource RoundedButton}" Click="btnExit_Click"/>
             <Button Content="Start" x:Name="btnStart" Style="{StaticResource RoundedButton}" Click="btnStart_Click"/>
