@@ -43,19 +43,31 @@ namespace SpStateMachineDemo.UI {
         #region Fake a hardware output change to exercise state machine
 
         private void btnOxygen_Click(object sender, RoutedEventArgs e) {
-            this.ToggleInput(InputId.GasOxygen);
+            this.ToggleOutput(OutputId.GasOxygen);
         }
 
         private void btnNitrogen_Click(object sender, RoutedEventArgs e) {
-            this.ToggleInput(InputId.GasNitrogen);
+            this.ToggleOutput(OutputId.GasNitrogen);
+            //this.ToggleInput(InputId.GasNitrogen);
         }
 
         private void btnHeat_Click(object sender, RoutedEventArgs e) {
-            this.ToggleInput(InputId.Heater);
+            this.ToggleOutput(OutputId.Heater);
         }
 
+        // Use later ?  The state machine will be turning on the elements. No need to do it manually
         private void ToggleInput(InputId id) {
             this.inputs.SetState(id, this.inputs.GetState(id) == IOState.On ? IOState.Off : IOState.On);
+        }
+
+
+        /// <summary>
+        /// Force the outputs to toggle. Will be picked up by state machine and also IO 
+        /// raises an event so that the UI can adjust its display
+        /// </summary>
+        /// <param name="id">The output identifier</param>
+        private void ToggleOutput(OutputId id) {
+            this.outputs.SetState(id, this.outputs.GetState(id) == IOState.On ? IOState.Off : IOState.On);
         }
 
         #endregion
@@ -97,18 +109,20 @@ namespace SpStateMachineDemo.UI {
         /// <param name="sender">The object sending the event (DemoOutput)</param>
         /// <param name="e">Event args (OutputChangeArgs)</param>
         private void Outputs_StateChange(object sender, EventArgs e) {
-            OutputChangeArgs args = (OutputChangeArgs)e;
-            switch (args.Id) {
-                case OutputId.GasNitrogen:
-                    this.SetOutputCtrl(this.gasNitrogen, args.State);
-                    break;
-                case OutputId.GasOxygen:
-                    this.SetOutputCtrl(this.gasOxygen, args.State);
-                    break;
-                case OutputId.Heater:
-                    this.SetOutputCtrl(this.heater, args.State);
-                    break;
-            }
+            this.Dispatcher.Invoke(() => {
+                OutputChangeArgs args = (OutputChangeArgs)e;
+                switch (args.Id) {
+                    case OutputId.GasNitrogen:
+                        this.SetOutputCtrl(this.gasNitrogen, args.State);
+                        break;
+                    case OutputId.GasOxygen:
+                        this.SetOutputCtrl(this.gasOxygen, args.State);
+                        break;
+                    case OutputId.Heater:
+                        this.SetOutputCtrl(this.heater, args.State);
+                        break;
+                }
+            });
         }
 
 

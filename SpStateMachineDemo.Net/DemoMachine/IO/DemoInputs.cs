@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SpStateMachineDemo.Net.DemoMachine.IO {
 
@@ -47,15 +49,31 @@ namespace SpStateMachineDemo.Net.DemoMachine.IO {
         /// <param name="id">The input id</param>
         /// <param name="state">New input state</param>
         private void KludgeCorrespondingOutput(DemoInput input) {
+            // TODO - put in a thread delay to simulate
             switch (input.Id) {
                 case InputId.GasOxygen:
-                    this.outputs.SetState(OutputId.GasOxygen, input.State);
+                    this.KludgeOutputTimeDelaySet(OutputId.GasOxygen, input.State, 1000);
                     break;
                 case InputId.GasNitrogen:
-                    this.outputs.SetState(OutputId.GasNitrogen, input.State);
+                    this.KludgeOutputTimeDelaySet(OutputId.GasNitrogen, input.State, 1100);
                     break;
                 case InputId.Heater:
-                    this.outputs.SetState(OutputId.Heater, input.State);
+                    this.KludgeOutputTimeDelaySet(OutputId.Heater, input.State, 400);
+                    break;
+            }
+        }
+
+
+        private void KludgeOutputTimeDelaySet(OutputId id, IOState state, int delayMs) {
+            switch (state) {
+                case IOState.Off:
+                    this.outputs.SetState(id, state);
+                    break;
+                case IOState.On:
+                    Task.Run(() => {
+                        Thread.Sleep(delayMs);
+                        this.outputs.SetState(id, state);
+                    });
                     break;
             }
         }
