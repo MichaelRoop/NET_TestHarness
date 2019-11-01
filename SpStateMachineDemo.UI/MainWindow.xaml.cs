@@ -1,4 +1,5 @@
-﻿using SpStateMachineDemo.Net.DemoMachine.IO;
+﻿using SpStateMachineDemo.Net.DemoMachine;
+using SpStateMachineDemo.Net.DemoMachine.IO;
 using SpStateMachineDemo.Net.DI;
 using SpStateMachineDemo.UI.Controls;
 using System;
@@ -21,23 +22,23 @@ namespace SpStateMachineDemo.UI {
     /// <summary>Interaction logic for MainWindow.xaml</summary>
     public partial class MainWindow : Window {
 
-        IDemoOutputs<OutputId> outputs = DummyDI.OutputsInstance;
-        IDemoInputs<InputId> inputs = DummyDI.InputsInstance;
+        DemoMachineWrapper machineWrapper = new DemoMachineWrapper();
 
         public MainWindow() {
             InitializeComponent();
-            this.SetupIO();
+            this.machineWrapper.Init();
+
+            this.machineWrapper.OutputStateChange += this.Outputs_StateChange;
+            this.machineWrapper.InputStateChange += this.Inputs_StateChange;
         }
 
         #region Windows events
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
-            this.outputs.StateChange -= this.Outputs_StateChange;
-            this.inputs.StateChange -= this.Inputs_StateChange;
-
-
-            // TODO - code to shut down state machine
-            //MessageBox.Show("Shutting down state machine");
+            // We could intercept this until done
+            this.machineWrapper.Teardown();
+            this.machineWrapper.OutputStateChange -= this.Outputs_StateChange;
+            this.machineWrapper.InputStateChange -= this.Inputs_StateChange;
         }
 
         #endregion
@@ -45,25 +46,15 @@ namespace SpStateMachineDemo.UI {
         #region Fake a hardware output change to exercise state machine
 
         private void btnOxygenOut_Click(object sender, RoutedEventArgs e) {
-            this.ToggleOutput(OutputId.GasOxygen);
+            this.machineWrapper.ToggleIO(OutputId.GasOxygen);
         }
 
         private void btnNitrogenOut_Click(object sender, RoutedEventArgs e) {
-            this.ToggleOutput(OutputId.GasNitrogen);
+            this.machineWrapper.ToggleIO(OutputId.GasNitrogen);
         }
 
         private void btnHeatOut_Click(object sender, RoutedEventArgs e) {
-            this.ToggleOutput(OutputId.Heater);
-        }
-
-
-        /// <summary>
-        /// Force the outputs to toggle. Will be picked up by state machine and also IO 
-        /// raises an event so that the UI can adjust its display
-        /// </summary>
-        /// <param name="id">The output identifier</param>
-        private void ToggleOutput(OutputId id) {
-            this.outputs.SetState(id, this.outputs.GetState(id) == IOState.On ? IOState.Off : IOState.On);
+            this.machineWrapper.ToggleIO(OutputId.Heater);
         }
 
         #endregion
@@ -71,20 +62,15 @@ namespace SpStateMachineDemo.UI {
         #region Fake a hardware input change to exercise state machine
 
         private void btnOxygenIn_Click(object sender, RoutedEventArgs e) {
-            this.ToggleInput(InputId.GasOxygen);
+            this.machineWrapper.ToggleIO(InputId.GasOxygen);
         }
 
         private void btnNitrogenIn_Click(object sender, RoutedEventArgs e) {
-            this.ToggleInput(InputId.GasNitrogen);
+            this.machineWrapper.ToggleIO(InputId.GasNitrogen);
         }
 
         private void btnHeatIn_Click(object sender, RoutedEventArgs e) {
-            this.ToggleInput(InputId.Heater);
-        }
-
-        // Use later ?  The state machine will be turning on the elements. No need to do it manually
-        private void ToggleInput(InputId id) {
-            this.inputs.SetState(id, this.inputs.GetState(id) == IOState.On ? IOState.Off : IOState.On);
+            this.machineWrapper.ToggleIO(InputId.Heater);
         }
 
         #endregion
@@ -107,35 +93,18 @@ namespace SpStateMachineDemo.UI {
 
         #region Private
 
-        private void SetupIO() {
-            // TODO - Setup will be moved to machine code
-
-            this.outputs.Add(OutputId.GasNitrogen);
-            this.outputs.Add(OutputId.GasOxygen);
-            this.outputs.Add(OutputId.Heater);
-
-            this.inputs.Add(InputId.GasNitrogen);
-            this.inputs.Add(InputId.GasOxygen);
-            this.inputs.Add(InputId.Heater);
-
-            this.outputs.StateChange += this.Outputs_StateChange;
-            this.inputs.StateChange += this.Inputs_StateChange;
-        }
-
         private void Inputs_StateChange(object sender, EventArgs e) {
             this.Dispatcher.Invoke(() => {
                 InputChangeArgs args = (InputChangeArgs)e;
-                //MessageBox.Show(string.Format("{0} - {1}", args.Id, args.State));
-
                 switch (args.Id) {
                     case InputId.GasNitrogen:
-                        this.SetOutputCtrl(this.gasNitrogenIn, args.State);
+                        this.SetIOCtrl(this.gasNitrogenIn, args.State);
                         break;
                     case InputId.GasOxygen:
-                        this.SetOutputCtrl(this.gasOxygenIn, args.State);
+                        this.SetIOCtrl(this.gasOxygenIn, args.State);
                         break;
                     case InputId.Heater:
-                        this.SetOutputCtrl(this.heaterIn, args.State);
+                        this.SetIOCtrl(this.heaterIn, args.State);
                         break;
                 }
             });
@@ -150,21 +119,25 @@ namespace SpStateMachineDemo.UI {
                 OutputChangeArgs args = (OutputChangeArgs)e;
                 switch (args.Id) {
                     case OutputId.GasNitrogen:
-                        this.SetOutputCtrl(this.gasNitrogenOut, args.State);
+                        this.SetIOCtrl(this.gasNitrogenOut, args.State);
                         break;
                     case OutputId.GasOxygen:
-                        this.SetOutputCtrl(this.gasOxygenOut, args.State);
+                        this.SetIOCtrl(this.gasOxygenOut, args.State);
                         break;
                     case OutputId.Heater:
-                        this.SetOutputCtrl(this.heaterOut, args.State);
+                        this.SetIOCtrl(this.heaterOut, args.State);
                         break;
                 }
             });
         }
 
 
-        private void SetOutputCtrl(UC_Output output, IOState state) {
-            output.SetState(state == IOState.On ? UC_Output.State.On : UC_Output.State.Off);
+        private void SetIOCtrl(UC_Output ctrl, IOState state) {
+            ctrl.SetState(state == IOState.On ? UC_Output.State.On : UC_Output.State.Off);
+        }
+
+        private UC_Output.State Translate(IOState state) {
+            return state == IOState.On ? UC_Output.State.On : UC_Output.State.Off;
         }
 
         #endregion
