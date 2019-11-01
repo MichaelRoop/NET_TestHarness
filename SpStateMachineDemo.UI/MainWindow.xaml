@@ -10,35 +10,69 @@
         Closing="Window_Closing"
         >
     <Grid>
-        <StackPanel Margin="10" VerticalAlignment="Top" HorizontalAlignment="Left" >
-            <Border BorderBrush="Black" BorderThickness="2" CornerRadius="12">
-                <StackPanel>
-                    <TextBlock Text="HW Outputs" Margin="0,5" HorizontalAlignment="Center"/>
-                    <Border BorderBrush="Blue" BorderThickness="1"/>
-                    <DockPanel>
-                        <controls:UC_Output x:Name="gasOxygen" CtrlName="Oxygen" Margin="5" />
-                        <controls:UC_Output x:Name="gasNitrogen" CtrlName="Nitrogen" Margin="5" />
-                    </DockPanel>
-                    <DockPanel>
-                        <controls:UC_Output x:Name="heater" CtrlName="Heat" Margin="5" />
-                    </DockPanel>
-                </StackPanel>
-            </Border>
-            <Border BorderBrush="Black" BorderThickness="2" CornerRadius="12" Margin="0,10,0,0">
-                <StackPanel>
-                <TextBlock Text="Fake Toggle HW Outputs" Margin="0,5" HorizontalAlignment="Center"/>
-                <Border BorderBrush="Blue" BorderThickness="1"/>
-                <DockPanel>
-                    <Button x:Name="btnOxygen" Content="Oxygen" Style="{StaticResource RoundedButton}" Click="btnOxygen_Click"/>
-                    <Button x:Name="btnNitrogen" Content="Nitrogen" Style="{StaticResource RoundedButton}" Click="btnNitrogen_Click"/>
-                </DockPanel>
-                <DockPanel>
-                    <Button x:Name="btnHeat" Content="Heat" Style="{StaticResource RoundedButton}" Click="btnHeat_Click" HorizontalAlignment="Left"/>
-                </DockPanel>
-                </StackPanel>
-            </Border>
-        </StackPanel>
 
+        <DockPanel HorizontalAlignment="Left">
+            <StackPanel Margin="10" VerticalAlignment="Top" >
+                <Border BorderBrush="Black" BorderThickness="2" CornerRadius="12">
+                    <StackPanel>
+                        <TextBlock Text="HW Inputs" Margin="0,5" HorizontalAlignment="Center"/>
+                        <Border BorderBrush="Blue" BorderThickness="1"/>
+                        <DockPanel>
+                            <controls:UC_Output x:Name="gasOxygenIn" CtrlName="Oxygen" Margin="5" />
+                            <controls:UC_Output x:Name="gasNitrogenIn" CtrlName="Nitrogen" Margin="5" />
+                        </DockPanel>
+                        <DockPanel>
+                            <controls:UC_Output x:Name="heaterIn" CtrlName="Heat" Margin="5" />
+                        </DockPanel>
+                    </StackPanel>
+                </Border>
+                <Border BorderBrush="Black" BorderThickness="2" CornerRadius="12" Margin="0,10,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Fake Toggle HW Inputs" Margin="0,5" HorizontalAlignment="Center"/>
+                        <Border BorderBrush="Blue" BorderThickness="1"/>
+                        <DockPanel>
+                            <Button x:Name="btnOxygenIn" Content="Oxygen" Style="{StaticResource RoundedButton}" Click="btnOxygenIn_Click"/>
+                            <Button x:Name="btnNitrogenIn" Content="Nitrogen" Style="{StaticResource RoundedButton}" Click="btnNitrogenIn_Click"/>
+                        </DockPanel>
+                        <DockPanel>
+                            <Button x:Name="btnHeatIn" Content="Heat" Style="{StaticResource RoundedButton}" Click="btnHeatIn_Click" HorizontalAlignment="Left"/>
+                        </DockPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        
+            <StackPanel Margin="10" VerticalAlignment="Top" HorizontalAlignment="Center" >
+                <Border BorderBrush="Black" BorderThickness="2" CornerRadius="12">
+                    <StackPanel>
+                        <TextBlock Text="HW Outputs" Margin="0,5" HorizontalAlignment="Center"/>
+                        <Border BorderBrush="Blue" BorderThickness="1"/>
+                        <DockPanel>
+                            <controls:UC_Output x:Name="gasOxygen" CtrlName="Oxygen" Margin="5" />
+                            <controls:UC_Output x:Name="gasNitrogen" CtrlName="Nitrogen" Margin="5" />
+                        </DockPanel>
+                        <DockPanel>
+                            <controls:UC_Output x:Name="heater" CtrlName="Heat" Margin="5" />
+                        </DockPanel>
+                    </StackPanel>
+                </Border>
+                <Border BorderBrush="Black" BorderThickness="2" CornerRadius="12" Margin="0,10,0,0">
+                    <StackPanel>
+                        <TextBlock Text="Fake Toggle HW Outputs" Margin="0,5" HorizontalAlignment="Center"/>
+                        <Border BorderBrush="Blue" BorderThickness="1"/>
+                        <DockPanel>
+                            <Button x:Name="btnOxygen" Content="Oxygen" Style="{StaticResource RoundedButton}" Click="btnOxygen_Click"/>
+                            <Button x:Name="btnNitrogen" Content="Nitrogen" Style="{StaticResource RoundedButton}" Click="btnNitrogen_Click"/>
+                        </DockPanel>
+                        <DockPanel>
+                            <Button x:Name="btnHeat" Content="Heat" Style="{StaticResource RoundedButton}" Click="btnHeat_Click" HorizontalAlignment="Left"/>
+                        </DockPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </DockPanel>
+        
+        
+        
         <DockPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20" >
             <Button Content="Exit" x:Name="btnExit" Style="{StaticResource RoundedButton}" Click="btnExit_Click"/>
             <Button Content="Start" x:Name="btnStart" Style="{StaticResource RoundedButton}" Click="btnStart_Click"/>

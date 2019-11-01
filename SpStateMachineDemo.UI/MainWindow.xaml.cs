@@ -50,16 +50,10 @@ namespace SpStateMachineDemo.UI {
 
         private void btnNitrogen_Click(object sender, RoutedEventArgs e) {
             this.ToggleOutput(OutputId.GasNitrogen);
-            //this.ToggleInput(InputId.GasNitrogen);
         }
 
         private void btnHeat_Click(object sender, RoutedEventArgs e) {
             this.ToggleOutput(OutputId.Heater);
-        }
-
-        // Use later ?  The state machine will be turning on the elements. No need to do it manually
-        private void ToggleInput(InputId id) {
-            this.inputs.SetState(id, this.inputs.GetState(id) == IOState.On ? IOState.Off : IOState.On);
         }
 
 
@@ -71,6 +65,24 @@ namespace SpStateMachineDemo.UI {
         private void ToggleOutput(OutputId id) {
             this.outputs.SetState(id, this.outputs.GetState(id) == IOState.On ? IOState.Off : IOState.On);
         }
+
+        private void btnOxygenIn_Click(object sender, RoutedEventArgs e) {
+            this.ToggleInput(InputId.GasOxygen);
+        }
+
+        private void btnNitrogenIn_Click(object sender, RoutedEventArgs e) {
+            this.ToggleInput(InputId.GasNitrogen);
+        }
+
+        private void btnHeatIn_Click(object sender, RoutedEventArgs e) {
+            this.ToggleInput(InputId.Heater);
+        }
+
+        // Use later ?  The state machine will be turning on the elements. No need to do it manually
+        private void ToggleInput(InputId id) {
+            this.inputs.SetState(id, this.inputs.GetState(id) == IOState.On ? IOState.Off : IOState.On);
+        }
+
 
         #endregion
 
@@ -110,9 +122,22 @@ namespace SpStateMachineDemo.UI {
         private void Inputs_StateChange(object sender, EventArgs e) {
             this.Dispatcher.Invoke(() => {
                 InputChangeArgs args = (InputChangeArgs)e;
-                MessageBox.Show(string.Format("{0} - {1}", args.Id, args.State));
+                //MessageBox.Show(string.Format("{0} - {1}", args.Id, args.State));
+
+                switch (args.Id) {
+                    case InputId.GasNitrogen:
+                        this.SetOutputCtrl(this.gasNitrogenIn, args.State);
+                        break;
+                    case InputId.GasOxygen:
+                        this.SetOutputCtrl(this.gasOxygenIn, args.State);
+                        break;
+                    case InputId.Heater:
+                        this.SetOutputCtrl(this.heaterIn, args.State);
+                        break;
+                }
             });
         }
+
 
         /// <summary>Event handler from ouputs</summary>
         /// <param name="sender">The object sending the event (DemoOutput)</param>
@@ -140,5 +165,6 @@ namespace SpStateMachineDemo.UI {
         }
 
         #endregion
+
     }
 }
