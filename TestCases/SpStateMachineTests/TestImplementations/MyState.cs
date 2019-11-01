@@ -22,12 +22,12 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         /// Object represented by state machine containing common data and methods
         /// </param>
         public MyState(MyStateID id, MyDataClass dataClass)
-            : base(MyMsgFactory.Instance, id, dataClass) {
+            : base(MyDummyDI.MsgFactoryInstance, id, dataClass) {
         }
 
 
         public MyState(ISpState<MyMsgId> parent, MyStateID id, MyDataClass dataClass)
-            : base(parent, MyMsgFactory.Instance, id, dataClass) {
+            : base(parent, MyDummyDI.MsgFactoryInstance, id, dataClass) {
         }
 
         #endregion

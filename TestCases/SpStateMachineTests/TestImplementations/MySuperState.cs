@@ -13,11 +13,11 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         // Note: Singletons are test shortcuts. Should pass in Interfaces via DI
 
         public MySuperState(MyStateID id, MyDataClass dataClass)
-            : base(MyMsgFactory.Instance, id, dataClass) {
+            : base(MyDummyDI.MsgFactoryInstance, id, dataClass) {
         }
 
         public MySuperState(ISpState<MyMsgId> parent, MyStateID id, MyDataClass dataClass)
-            : base(parent, MyMsgFactory.Instance, id, dataClass) {
+            : base(parent, MyDummyDI.MsgFactoryInstance, id, dataClass) {
         }
 
         #endregion

@@ -73,6 +73,7 @@
     <Compile Include="ChkUtilsTests\ToErrorReportFaultExceptionTests.cs" />
     <Compile Include="ChkUtilsTests\ToErrReportTests.cs" />
     <Compile Include="ChkUtilsTests\ValidatorTests.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\MyDummyDI.cs" />
     <Compile Include="TestHelpersNet.cs" />
     <Compile Include="TestToolSet\HelperLogReaderNet.cs" />
     <Compile Include="LogUtilsTests.Net\LogPerformanceTests.cs" />
@@ -99,7 +100,7 @@
     <Compile Include="SpStateMachineTests\TestImplementations\MyDataClass.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyMsgId.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyIdConverter.cs" />
-    <Compile Include="SpStateMachineTests\TestImplementations\MyMsgFactory.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\MyMsgProvider.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyMsgType.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyReturnCode.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyState.cs" />

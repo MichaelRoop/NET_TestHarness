@@ -76,7 +76,7 @@ namespace TestCases.SpStateMachineTests {
         public void _50200_Constructor_NullWrappedObject() {
             TestHelpersNet.CatchExpected(50200, "SpStateBase`4", ".ctor", "Null wrappedObject Argument", () => {
                 ISpState<MyMsgId> st = new StImpl<IDisposable,MyMsgId,TSID,TMsg>(
-                    MyMsgFactory.Instance, TSID.first, null);
+                    MyDummyDI.MsgFactoryInstance, TSID.first, null);
             });
         }
 
@@ -90,7 +90,7 @@ namespace TestCases.SpStateMachineTests {
             TestHelpersNet.CatchUnexpected(() => {
                 ISpState<MyMsgId> st = 
                     new StImpl<IDisposable,MyMsgId,TSID,TMsg>(
-                        MyMsgFactory.Instance, TSID.first, wo);
+                        MyDummyDI.MsgFactoryInstance, TSID.first, wo);
 
                 st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
                 st.OnExit();
@@ -105,7 +105,7 @@ namespace TestCases.SpStateMachineTests {
             TestHelpersNet.CatchExpected(50201, "SpStateBase`4", "OnEntry", "OnEntry Cannot be Executed More Than Once Until OnExit is Called", () => {
                 ISpState<MyMsgId> st = 
                     new StImpl<IDisposable,MyMsgId,TSID,TMsg>(
-                        MyMsgFactory.Instance, TSID.first, wo);
+                        MyDummyDI.MsgFactoryInstance, TSID.first, wo);
 
                 st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
                 st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
@@ -122,7 +122,7 @@ namespace TestCases.SpStateMachineTests {
             TestHelpersNet.CatchUnexpected(() => {
                 ISpState<MyMsgId> st = 
                     new StImpl<IDisposable, MyMsgId, TSID,TMsg>(
-                        MyMsgFactory.Instance, TSID.first, wo);
+                        MyDummyDI.MsgFactoryInstance, TSID.first, wo);
                 st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
                 st.OnTick(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
             });
@@ -133,7 +133,7 @@ namespace TestCases.SpStateMachineTests {
             IDisposable wo = MockRepository.GenerateMock<IDisposable>();
             TestHelpersNet.CatchExpected(50205, "SpStateBase`4", "OnTick", "OnTick for 'first' State Cannot be Executed Before OnEntry", () => {
                 ISpState<MyMsgId> st = new StImpl<IDisposable, MyMsgId,TSID,TMsg>(
-                    MyMsgFactory.Instance, TSID.first, wo);
+                    MyDummyDI.MsgFactoryInstance, TSID.first, wo);
                 st.OnTick(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
             });
         }
@@ -147,13 +147,13 @@ namespace TestCases.SpStateMachineTests {
 
         class tstState : SpState<tstA,MyMsgId,TSID,int> {
             public tstState(ISpState<MyMsgId> parent, tstA o)
-                : base(parent, MyMsgFactory.Instance, TSID.third, o) {
+                : base(parent, MyDummyDI.MsgFactoryInstance, TSID.third, o) {
             }
         }
 
         class tstSuperState : SpSuperState<tstA,MyMsgId, TSID,int> {
             public tstSuperState(tstA o)
-                : base(MyMsgFactory.Instance, TSID.first, o) {
+                : base(MyDummyDI.MsgFactoryInstance, TSID.first, o) {
             }
         }
 
@@ -176,7 +176,7 @@ namespace TestCases.SpStateMachineTests {
             TestHelpersNet.CatchExpected(50206, "SpStateBase`4", "InitStateIds", "The Parent has a Null Id Chain", () => {
                 ISpState<MyMsgId> st = 
                     new StImpl<IDisposable, MyMsgId,TSID,TMsg>(
-                        parent, MyMsgFactory.Instance, TSID.first, wo);
+                        parent, MyDummyDI.MsgFactoryInstance, TSID.first, wo);
                 st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
                 st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
             });
@@ -192,7 +192,7 @@ namespace TestCases.SpStateMachineTests {
             TestHelpersNet.CatchExpected(50207, "SpStateBase`4", "InitStateIds", "Exception from IdChain property", () => {
                 ISpState<MyMsgId> st = 
                     new StImpl<IDisposable, MyMsgId,TSID,TMsg>(
-                        parent, MyMsgFactory.Instance, TSID.first, wo);
+                        parent, MyDummyDI.MsgFactoryInstance, TSID.first, wo);
                 st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
                 st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
             });
