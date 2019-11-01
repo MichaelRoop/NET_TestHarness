@@ -14,8 +14,8 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
 
         #region Data
 
-        ISpState<MyEventType> notStarted = null;
-        ISpState<MyEventType> recovery = null;
+        ISpState<MyMsgId> notStarted = null;
+        ISpState<MyMsgId> recovery = null;
 
         #endregion
 
@@ -49,7 +49,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
             //    new SpStateTransition<MyEventType>(SpStateTransitionType.NextState,
             //    this.recovery, new MyTickMsg()));
 
-            notStarted.ToNextOnResult(MyEventType.Abort, this.recovery, new MyTickMsg());
+            notStarted.ToNextOnResult(MyMsgId.Abort, this.recovery, new MyTickMsg());
 
 
             //// Register active state transitions 

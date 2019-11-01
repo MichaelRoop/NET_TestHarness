@@ -6,7 +6,7 @@ using TestCases.SpStateMachineTests.TestImplementations.Messages;
 
 namespace TestCases.SpStateMachineTests.TestImplementations {
 
-    public class MySuperState : SpSuperState<MyDataClass,MyEventType,MyStateID,MyMsgType> {
+    public class MySuperState : SpSuperState<MyDataClass,MyMsgId,MyStateID,MyMsgType> {
 
         #region Constructors
 
@@ -16,7 +16,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
             : base(MyMsgFactory.Instance, id, dataClass) {
         }
 
-        public MySuperState(ISpState<MyEventType> parent, MyStateID id, MyDataClass dataClass)
+        public MySuperState(ISpState<MyMsgId> parent, MyStateID id, MyDataClass dataClass)
             : base(parent, MyMsgFactory.Instance, id, dataClass) {
         }
 
@@ -42,12 +42,12 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
         protected override ISpEventMessage OnRuntimeTransitionRequest(ISpEventMessage msg) {
             
-            switch (SpConverter.IntToEnum<MyEventType>(msg.EventId)) {
-                case MyEventType.Abort:
+            switch (SpConverter.IntToEnum<MyMsgId>(msg.EventId)) {
+                case MyMsgId.Abort:
                     Log.Info("MySuperState", "OnRuntimeTransitionRequest", " *** Got abort and returning Stop");
 
                     // get the GUID
-                    ISpEventMessage myMsg = new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop);
+                    ISpEventMessage myMsg = new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop);
                     myMsg.Uid = msg.Uid;
                     return myMsg;
                 default:
@@ -57,11 +57,11 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
 
             //// Do not know which state this is except it is the current state
-            if (msg.EventId == SpConverter.EnumToInt(MyEventType.Abort)) {
+            if (msg.EventId == SpConverter.EnumToInt(MyMsgId.Abort)) {
                 //this.GetCurrentState().    
 
                 // get the GUID
-                ISpEventMessage myMsg = new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start);
+                ISpEventMessage myMsg = new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Start);
 
                 // Try recursion - no will not work
                 //this.OnTick(myMsg);

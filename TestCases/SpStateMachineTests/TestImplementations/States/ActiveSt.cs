@@ -14,7 +14,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.States {
 //        private int triggerCount = 0;
 
 
-        public ActiveSt(ISpState<MyEventType> parent, MyDataClass dataClass)
+        public ActiveSt(ISpState<MyMsgId> parent, MyDataClass dataClass)
             : base(parent, MyStateID.Active, dataClass) {
         }
 
@@ -29,7 +29,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.States {
             if (This.DoIFlipStates) {
                 // TODO rework msg to allow creation of a msg with another msg to transfer correlation GUID
                 Log.Info(this.className, "ExecOnTick", "Exceeded trigger count, ** changing msg to Stop");
-                MyBaseMsg newMsg = new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop);
+                MyBaseMsg newMsg = new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop);
                 newMsg.Uid = msg.Uid;
                 //return base.ExecOnTick(newMsg);
             }

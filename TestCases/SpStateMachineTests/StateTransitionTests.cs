@@ -50,10 +50,10 @@ namespace TestCases.SpStateMachineTests {
                 //this.TickAndValidateState(new MyTickMsg(), sm, "NotStarted.Idle");
                 //this.TickAndValidateState(new MyTickMsg(), sm, "NotStarted.Idle");
 
-                this.TickAndValidateState(this.GetMsg(MyEventType.Tick), sm, "NotStarted.Idle");
-                this.TickAndValidateState(this.GetMsg(MyEventType.Start), sm, "NotStarted.Active");
-                this.TickAndValidateState(this.GetMsg(MyEventType.Abort), sm, "NotStarted.Idle");
-                this.TickAndValidateState(this.GetMsg(MyEventType.Tick), sm, "NotStarted.Idle");
+                this.TickAndValidateState(this.GetMsg(MyMsgId.Tick), sm, "NotStarted.Idle");
+                this.TickAndValidateState(this.GetMsg(MyMsgId.Start), sm, "NotStarted.Active");
+                this.TickAndValidateState(this.GetMsg(MyMsgId.Abort), sm, "NotStarted.Idle");
+                this.TickAndValidateState(this.GetMsg(MyMsgId.Tick), sm, "NotStarted.Idle");
             });
         }
 
@@ -70,10 +70,10 @@ namespace TestCases.SpStateMachineTests {
 
                 //this.TickAndValidateState(new MyTickMsg(), sm, "Main.NotStarted");
                 //this.TickAndValidateState(new MyTickMsg(), sm, "Main.NotStarted.Idle");
-                this.TickAndValidateState(this.GetMsg(MyEventType.Tick), sm, "Main.NotStarted.Idle");
-                this.TickAndValidateState(this.GetMsg(MyEventType.Start), sm, "Main.NotStarted.Active");
-                this.TickAndValidateState(this.GetMsg(MyEventType.Stop), sm, "Main.NotStarted.Idle");
-                this.TickAndValidateState(this.GetMsg(MyEventType.Abort), sm, "Main.Recovery.Idle");
+                this.TickAndValidateState(this.GetMsg(MyMsgId.Tick), sm, "Main.NotStarted.Idle");
+                this.TickAndValidateState(this.GetMsg(MyMsgId.Start), sm, "Main.NotStarted.Active");
+                this.TickAndValidateState(this.GetMsg(MyMsgId.Stop), sm, "Main.NotStarted.Idle");
+                this.TickAndValidateState(this.GetMsg(MyMsgId.Abort), sm, "Main.Recovery.Idle");
                 //this.TickAndValidateState(this.GetMsg(MyEventType.Tick), sm, "Main.Recovery.Idle");
 
                 //Thread.Sleep(500);
@@ -92,14 +92,14 @@ namespace TestCases.SpStateMachineTests {
                 ISpStateMachine sm = new MyStateMachine(dataClass, mainSs);
 
                 this.ValidateState(sm, "Main.Level2.Level3.Idle");
-                this.TickAndValidateState(this.GetMsg(MyEventType.Tick), sm, "Main.Level2.Level3.Idle");
+                this.TickAndValidateState(this.GetMsg(MyMsgId.Tick), sm, "Main.Level2.Level3.Idle");
                 //this.TickAndValidateState(new MyTickMsg(), sm, "Main.Level2.Level3.Idle");
-                this.TickAndValidateState(this.GetMsg(MyEventType.Start), sm, "Main.Level2.Level3.Active");
+                this.TickAndValidateState(this.GetMsg(MyMsgId.Start), sm, "Main.Level2.Level3.Active");
 
                 Console.WriteLine("**********************************");
                 //this.Tick(this.GetMsg(MyEventType.Abort), sm);
-                this.TickAndValidateState(this.GetMsg(MyEventType.Abort), sm, "Main.Recovery.Idle");
-                this.TickAndValidateState(this.GetMsg(MyEventType.Tick), sm, "Main.Recovery.Idle");
+                this.TickAndValidateState(this.GetMsg(MyMsgId.Abort), sm, "Main.Recovery.Idle");
+                this.TickAndValidateState(this.GetMsg(MyMsgId.Tick), sm, "Main.Recovery.Idle");
 
 
 
@@ -123,7 +123,7 @@ namespace TestCases.SpStateMachineTests {
 
         #region Private Methods
 
-        private ISpEventMessage GetMsg(MyEventType eventId) {
+        private ISpEventMessage GetMsg(MyMsgId eventId) {
             //Console.WriteLine("-- Sending msg:{0}", eventId.ToString());
 
             Log.Info("","", String.Format("---------------------- Sending msg:{0}", eventId));
@@ -132,15 +132,15 @@ namespace TestCases.SpStateMachineTests {
 
 
         private ISpEventMessage GetStartMsg() {
-            return new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start);
+            return new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Start);
         }
 
         private ISpEventMessage GetStopMsg() {
-            return new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop);
+            return new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop);
         }
 
         private ISpEventMessage GetAbortMsg() {
-            return new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Abort);
+            return new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Abort);
         }
 
 

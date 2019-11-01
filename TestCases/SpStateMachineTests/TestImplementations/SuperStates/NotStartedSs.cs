@@ -14,12 +14,12 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
 
         #region Data
 
-        ISpState<MyEventType> StateIdle = null;
-        ISpState<MyEventType> StateActive = null;
+        ISpState<MyMsgId> StateIdle = null;
+        ISpState<MyMsgId> StateActive = null;
 
         #endregion
 
-        public NotStartedSs(ISpState<MyEventType> parent, MyDataClass dataClass)
+        public NotStartedSs(ISpState<MyMsgId> parent, MyDataClass dataClass)
             : base(parent, MyStateID.NotStarted, dataClass) {
 
             // Setup sub-states
@@ -27,17 +27,17 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
             this.StateActive = (MyState)this.AddSubState(new ActiveSt(this, dataClass));
 
             // Idle State event and results transitions
-            this.StateIdle.ToNextOnEvent(MyEventType.Start, this.StateActive);
-            this.StateIdle.ToExitOnEvent(MyEventType.Abort);
-            this.StateIdle.ToNextOnResult(MyEventType.Start, this.StateActive);
+            this.StateIdle.ToNextOnEvent(MyMsgId.Start, this.StateActive);
+            this.StateIdle.ToExitOnEvent(MyMsgId.Abort);
+            this.StateIdle.ToNextOnResult(MyMsgId.Start, this.StateActive);
 
             // Active State event and results transitions
-            this.StateActive.ToNextOnEvent(MyEventType.Stop, this.StateIdle, new MyTickMsg());
-            this.StateActive.ToDeferedOnEvent(MyEventType.Abort);
-            this.StateActive.ToNextOnResult(MyEventType.Stop, this.StateIdle, new MyTickMsg());
+            this.StateActive.ToNextOnEvent(MyMsgId.Stop, this.StateIdle, new MyTickMsg());
+            this.StateActive.ToDeferedOnEvent(MyMsgId.Abort);
+            this.StateActive.ToNextOnResult(MyMsgId.Stop, this.StateIdle, new MyTickMsg());
 
             // Super state transitions
-            this.ToNextOnResult(MyEventType.Stop, this.StateIdle);
+            this.ToNextOnResult(MyMsgId.Stop, this.StateIdle);
 
             this.SetEntryState(StateIdle);
         }

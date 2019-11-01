@@ -24,7 +24,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
 
         public ISpEventMessage Response(ISpEventMessage msg) {
 
-            MyEventType eventType = SpConverter.IntToEnum<MyEventType>(msg.EventId);
+            MyMsgId eventType = SpConverter.IntToEnum<MyMsgId>(msg.EventId);
             MyMsgType msgType = SpConverter.IntToEnum<MyMsgType>(msg.TypeId);
 
             // All my messages are Simple Types so I do not need any other info for types. Otherwise I would need a switch

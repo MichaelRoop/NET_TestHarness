@@ -43,7 +43,7 @@ namespace TestCases.SpStateMachineTests {
         public void _50032_PostMessage_Disposed() {
             TestHelpersNet.CatchExpected(50032, "SimpleEventListner", "PostMessage", "Attempting to use Disposed Object", () => {
                 this.listner.Dispose();
-                this.listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
+                this.listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Start));
             });
         }
 
@@ -55,7 +55,7 @@ namespace TestCases.SpStateMachineTests {
         public void _50033_PostResponse_Disposed() {
             TestHelpersNet.CatchExpected(50033, "SimpleEventListner", "PostResponse", "Attempting to use Disposed Object", () => {
                 this.listner.Dispose();
-                this.listner.PostResponse(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Tick));
+                this.listner.PostResponse(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Tick));
             });
         }
 
@@ -75,7 +75,7 @@ namespace TestCases.SpStateMachineTests {
                     received = true;
                     msgCopy = msg;
                 });
-                this.listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
+                this.listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Start));
 
             });
             // On thread pool so have to wait for response
@@ -88,7 +88,7 @@ namespace TestCases.SpStateMachineTests {
             Assert.IsTrue(received, "The received event was not raised");
             Assert.IsNotNull(msgCopy, "Message was not copied");
             Assert.AreEqual((int)MyMsgType.SimpleMsg, msgCopy.TypeId);
-            Assert.AreEqual((int)MyEventType.Start, msgCopy.EventId);
+            Assert.AreEqual((int)MyMsgId.Start, msgCopy.EventId);
         }
 
         #endregion
@@ -110,7 +110,7 @@ namespace TestCases.SpStateMachineTests {
                 this.listner.PostResponse(
                     new MyBaseResponse(
                         MyMsgType.SimpleMsg, 
-                        new MyBaseMsg(MyMsgType.DataStrMsg, MyEventType.Tick), MyReturnCode.Success, ""));
+                        new MyBaseMsg(MyMsgType.DataStrMsg, MyMsgId.Tick), MyReturnCode.Success, ""));
             });
             // On thread pool so have to wait for response
             for (int i = 0; i < 21; i++) {
@@ -122,7 +122,7 @@ namespace TestCases.SpStateMachineTests {
             Assert.IsTrue(received, "The received event was not raised");
             Assert.IsNotNull(msgCopy, "Message was not copied");
             Assert.AreEqual((int)MyMsgType.SimpleMsg, msgCopy.TypeId);
-            Assert.AreEqual((int)MyEventType.Tick, msgCopy.EventId);
+            Assert.AreEqual((int)MyMsgId.Tick, msgCopy.EventId);
         }
 
 
@@ -132,7 +132,7 @@ namespace TestCases.SpStateMachineTests {
                 this.listner.PostResponse(
                     new MyBaseResponse(
                         MyMsgType.SimpleMsg,
-                        new MyBaseMsg(MyMsgType.DataStrMsg, MyEventType.Tick), MyReturnCode.Success, ""));
+                        new MyBaseMsg(MyMsgType.DataStrMsg, MyMsgId.Tick), MyReturnCode.Success, ""));
             });
             this.logReader.Validate(50031, "SimpleEventListner", "RaiseEvent", "No subscribers to 'Response' message");
         }
@@ -141,7 +141,7 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _50031_MessageReceived_NoSubscribers() {
             TestHelpersNet.CatchUnexpected(() => {
-                this.listner.PostMessage(new MyBaseMsg( MyMsgType.SimpleMsg, MyEventType.Tick));
+                this.listner.PostMessage(new MyBaseMsg( MyMsgType.SimpleMsg, MyMsgId.Tick));
             });
             this.logReader.Validate(50031, "SimpleEventListner", "RaiseEvent", "No subscribers to 'Message' message");
         }
@@ -158,7 +158,7 @@ namespace TestCases.SpStateMachineTests {
                 this.listner.PostResponse(
                     new MyBaseResponse(
                         MyMsgType.SimpleMsg,
-                        new MyBaseMsg(MyMsgType.DataStrMsg, MyEventType.Tick), MyReturnCode.Success, ""));
+                        new MyBaseMsg(MyMsgType.DataStrMsg, MyMsgId.Tick), MyReturnCode.Success, ""));
 
             });
             // Allow the thread pool to catch up
@@ -177,7 +177,7 @@ namespace TestCases.SpStateMachineTests {
                 this.listner.PostMessage(
                     new MyBaseResponse(
                         MyMsgType.SimpleMsg,
-                        new MyBaseMsg(MyMsgType.DataStrMsg, MyEventType.Tick), MyReturnCode.Success, ""));
+                        new MyBaseMsg(MyMsgType.DataStrMsg, MyMsgId.Tick), MyReturnCode.Success, ""));
             });
             // Allow the thread pool to catch up
             this.logReader.Validate(50030, "QueueUserWorkItemCallback", "WaitCallback_Context", "Unexpected Error Raising Event 'Message'");

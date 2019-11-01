@@ -31,7 +31,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.Messages {
         //public MySimpleOkResponse(MyBaseMsg msg, string status)
         //: base(MyMsgType.SimpleResponse, msg, MyReturnCode.Success, status) {
         public MySimpleOkResponse(ISpEventMessage msg, string status)
-            : base(MyMsgType.SimpleResponse, MyEventType.Tick, SpEventPriority.Normal) {
+            : base(MyMsgType.SimpleResponse, MyMsgId.Tick, SpEventPriority.Normal) {
                 this.ReturnCode = SpConverter.EnumToInt(MyReturnCode.Success);
                 this.ReturnStatus = status;
                 this.Uid = msg.Uid;

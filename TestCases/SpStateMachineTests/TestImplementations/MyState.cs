@@ -10,7 +10,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
     /// Derived test state class to resolve generic parameters which represent the State Machine common 
     /// data class, the event type enum, and the state id enum 
     /// </summary>
-    public class MyState : SpState<MyDataClass,MyEventType,MyStateID,MyMsgType> {
+    public class MyState : SpState<MyDataClass,MyMsgId,MyStateID,MyMsgType> {
 
         #region Constructors
 
@@ -26,7 +26,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         }
 
 
-        public MyState(ISpState<MyEventType> parent, MyStateID id, MyDataClass dataClass)
+        public MyState(ISpState<MyMsgId> parent, MyStateID id, MyDataClass dataClass)
             : base(parent, MyMsgFactory.Instance, id, dataClass) {
         }
 

@@ -10,18 +10,18 @@ using System.Text;
 namespace SpStateMachine.States {
 
     /// <summary>Base implementation of the ISpState interface</summary>
-    /// <typeparam name="T">Object type that the state represents</typeparam>
-    /// <typeparam name="TEvent">Event id (TEvent)</typeparam>
+    /// <typeparam name="TMachine">Object type that the state represents</typeparam>
+    /// <typeparam name="TMsgId">Message id (TEvent)</typeparam>
     /// <typeparam name="TState">State id (TState)</typeparam>
-    /// <typeparam name="TMsg">Message id</typeparam>
+    /// <typeparam name="TMsgType">Message type</typeparam>
     /// <author>Michael Roop</author>
     /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
-    public class SpStateBase<T,TEvent,TState,TMsg> : ISpState<TEvent> where T : class where TEvent: struct where TState : struct where TMsg : struct {
+    public class SpStateBase<TMachine,TMsgId,TState,TMsgType> : ISpState<TMsgId> where TMachine : class where TMsgId: struct where TState : struct where TMsgType : struct {
 
         #region Data
 
         /// <summary>Holds data and method accessible to all states</summary>
-        private T wrappedObject = default(T);
+        private TMachine wrappedObject = default(TMachine);
 
         /// <summary>Tracks the if current state OnEntry has been called</summary>
         private bool isEntered = false;
@@ -30,10 +30,10 @@ namespace SpStateMachine.States {
         List<int> idChain = new List<int>();
 
         /// <summary>List of transitions provoqued by incoming events directly</summary>
-        private Dictionary<int, ISpStateTransition<TEvent>> onEventTransitions = new Dictionary<int, ISpStateTransition<TEvent>>();
+        private Dictionary<int, ISpStateTransition<TMsgId>> onEventTransitions = new Dictionary<int, ISpStateTransition<TMsgId>>();
 
         /// <summary>List of transitions provoqued by the results of state processing</summary>
-        private Dictionary<int, ISpStateTransition<TEvent>> onResultTransitions = new Dictionary<int, ISpStateTransition<TEvent>>();
+        private Dictionary<int, ISpStateTransition<TMsgId>> onResultTransitions = new Dictionary<int, ISpStateTransition<TMsgId>>();
 
         /// <summary>state name without reference to ancestors</summary>
         private string name = "";
@@ -54,7 +54,7 @@ namespace SpStateMachine.States {
         private ISpMsgFactory msgFactory = null;
 
         /// <summary>Convert the id integers to implementation level string equivalents</summary>
-        private ISpIdConverter<TState,TEvent,TMsg> idConverter = null;
+        private ISpIdConverter<TState,TMsgId,TMsgType> idConverter = null;
 
         private ClassLog log = new ClassLog("SpStateBase");
 
@@ -63,7 +63,7 @@ namespace SpStateMachine.States {
         #region Properties
 
         /// <summary>Returns object represented by the state machine</summary>
-        public T This {
+        public TMachine This {
             get {
                 return this.wrappedObject;
             }
@@ -150,7 +150,7 @@ namespace SpStateMachine.States {
         /// <param name="idConverter">The integer id to string converter</param>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpStateBase(ISpMsgFactory msgFactory, TState id, T wrappedObject)
+        public SpStateBase(ISpMsgFactory msgFactory, TState id, TMachine wrappedObject)
             : this(null, msgFactory, id, wrappedObject) {
         }
 
@@ -160,11 +160,11 @@ namespace SpStateMachine.States {
         /// <param name="msgFactory">Message Factory</param>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpStateBase(ISpState<TEvent> parent, ISpMsgFactory msgFactory, TState id, T wrappedObject) {
+        public SpStateBase(ISpState<TMsgId> parent, ISpMsgFactory msgFactory, TState id, TMachine wrappedObject) {
             WrapErr.ChkParam(msgFactory, "msgFactory", 9999);
             WrapErr.ChkParam(wrappedObject, "wrappedObject", 50200);
             this.msgFactory = msgFactory;
-            this.idConverter = new SpIdConverter<TState,TEvent,TMsg>();
+            this.idConverter = new SpIdConverter<TState,TMsgId,TMsgType>();
             this.InitStateIds(parent, id);
             this.wrappedObject = wrappedObject;
         }
@@ -179,7 +179,7 @@ namespace SpStateMachine.States {
         /// <remarks>Only override in super state</remarks>        
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
-        public virtual ISpStateTransition<TEvent> OnEntry(ISpEventMessage msg) {
+        public virtual ISpStateTransition<TMsgId> OnEntry(ISpEventMessage msg) {
             this.log.Info("OnEntry", String.Format("'{0}' State {1} - Event", this.FullName, this.GetCachedEventId(msg.EventId)));
             WrapErr.ChkFalse(this.IsEntryExcecuted, 50201, "OnEntry Cannot be Executed More Than Once Until OnExit is Called");
             return WrapErr.ToErrorReportException(9999, () => {
@@ -191,7 +191,7 @@ namespace SpStateMachine.States {
         /// <summary>Called on every other period after entry</summary>
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
-        public virtual ISpStateTransition<TEvent> OnTick(ISpEventMessage msg) {
+        public virtual ISpStateTransition<TMsgId> OnTick(ISpEventMessage msg) {
             //Log.Info(this.className, "OnTick", String.Format("'{0}' State - {1}", this.FullName, this.ConvertEventIdToString(msg.EventId)));
             WrapErr.ChkTrue(this.IsEntryExcecuted, 50205, () => {
                 return String.Format("OnTick for '{0}' State Cannot be Executed Before OnEntry", this.FullName);
@@ -228,7 +228,7 @@ namespace SpStateMachine.States {
         /// <summary>Register a state transition from incoming event</summary>
         /// <param name="eventId">The event id</param>
         /// <param name="transition">The transition object</param>
-        public void RegisterOnEventTransition(TEvent eventId, ISpStateTransition<TEvent> transition) {
+        public void RegisterOnEventTransition(TMsgId eventId, ISpStateTransition<TMsgId> transition) {
             SpTools.RegisterTransition("OnEvent", eventId, transition, this.onEventTransitions);
         }
 
@@ -236,8 +236,8 @@ namespace SpStateMachine.States {
         /// <summary>Register transition to next state on event</summary>
         /// <param name="ev">The event</param>
         /// <param name="newState">The target state for transition</param>
-        public void ToNextOnEvent(TEvent ev, ISpState<TEvent> newState) {
-            this.RegisterOnEventTransition(ev, SpStateTransition<TEvent>.ToNext(newState));
+        public void ToNextOnEvent(TMsgId ev, ISpState<TMsgId> newState) {
+            this.RegisterOnEventTransition(ev, SpStateTransition<TMsgId>.ToNext(newState));
         }
 
 
@@ -245,22 +245,22 @@ namespace SpStateMachine.States {
         /// <param name="ev">The event</param>
         /// <param name="newState">The target state for transition</param>
         /// <param name="returnMsg">The message to return on transition</param>
-        public void ToNextOnEvent(TEvent ev, ISpState<TEvent> newState, ISpEventMessage returnMsg) {
-            this.RegisterOnEventTransition(ev, SpStateTransition<TEvent>.ToNext(newState, returnMsg));
+        public void ToNextOnEvent(TMsgId ev, ISpState<TMsgId> newState, ISpEventMessage returnMsg) {
+            this.RegisterOnEventTransition(ev, SpStateTransition<TMsgId>.ToNext(newState, returnMsg));
         }
 
 
         /// <summary>Register exit transition on event</summary>
         /// <param name="ev">The event</param>
-        public void ToExitOnEvent(TEvent ev) {
-            this.RegisterOnEventTransition(ev, SpStateTransition<TEvent>.ToExit());
+        public void ToExitOnEvent(TMsgId ev) {
+            this.RegisterOnEventTransition(ev, SpStateTransition<TMsgId>.ToExit());
         }
 
 
         /// <summary>Register defered action on event</summary>
         /// <param name="ev">The event</param>
-        public void ToDeferedOnEvent(TEvent ev) {
-            this.RegisterOnEventTransition(ev, SpStateTransition<TEvent>.ToDefered());
+        public void ToDeferedOnEvent(TMsgId ev) {
+            this.RegisterOnEventTransition(ev, SpStateTransition<TMsgId>.ToDefered());
         }
 
         #endregion
@@ -270,7 +270,7 @@ namespace SpStateMachine.States {
         /// <summary>Register state transition from the result of state processing</summary>
         /// <param name="responseId">The result id the state returns as the result of processing</param>
         /// <param name="transition">The transition object</param>
-        public void RegisterOnResultTransition(TEvent responseId, ISpStateTransition<TEvent> transition) {
+        public void RegisterOnResultTransition(TMsgId responseId, ISpStateTransition<TMsgId> transition) {
             SpTools.RegisterTransition("OnResult", responseId, transition, this.onResultTransitions);
         }
 
@@ -278,8 +278,8 @@ namespace SpStateMachine.States {
         /// <summary>Register transition to next state on processing results</summary>
         /// <param name="ev">The event</param>
         /// <param name="newState">The target state for transition</param>
-        public void ToNextOnResult(TEvent ev, ISpState<TEvent> newState) {
-            this.RegisterOnResultTransition(ev, SpStateTransition<TEvent>.ToNext(newState));
+        public void ToNextOnResult(TMsgId ev, ISpState<TMsgId> newState) {
+            this.RegisterOnResultTransition(ev, SpStateTransition<TMsgId>.ToNext(newState));
         }
 
 
@@ -287,8 +287,8 @@ namespace SpStateMachine.States {
         /// <param name="ev">The event</param>
         /// <param name="newState">The target state for transition</param>
         /// <param name="returnMsg">The message to return on transition</param>
-        public void ToNextOnResult(TEvent ev, ISpState<TEvent> newState, ISpEventMessage returnMsg) {
-            this.RegisterOnResultTransition(ev, SpStateTransition<TEvent>.ToNext(newState, returnMsg));
+        public void ToNextOnResult(TMsgId ev, ISpState<TMsgId> newState, ISpEventMessage returnMsg) {
+            this.RegisterOnResultTransition(ev, SpStateTransition<TMsgId>.ToNext(newState, returnMsg));
         }
 
         #endregion
@@ -334,7 +334,7 @@ namespace SpStateMachine.States {
         /// <summary>Wrapper to retrieve OnEvent Transition Object</summary>
         /// <param name="eventMsg">The incomming event message</param>
         /// <returns>The transition if present, otherwise null</returns>
-        protected ISpStateTransition<TEvent> GetOnEventTransition(ISpEventMessage eventMsg) {
+        protected ISpStateTransition<TMsgId> GetOnEventTransition(ISpEventMessage eventMsg) {
             return this.GetTransitionFromStore(this.onEventTransitions, eventMsg);
         }
 
@@ -342,7 +342,7 @@ namespace SpStateMachine.States {
         /// <summary>Wrapper to retrieve OnResult Transition Object</summary>
         /// <param name="eventMsg">The incomming event message</param>
         /// <returns>The transition if present, otherwise null</returns>
-        protected ISpStateTransition<TEvent> GetOnResultTransition(ISpEventMessage eventMsg) {
+        protected ISpStateTransition<TMsgId> GetOnResultTransition(ISpEventMessage eventMsg) {
             return this.GetTransitionFromStore(this.onResultTransitions, eventMsg);
         }
 
@@ -398,10 +398,10 @@ namespace SpStateMachine.States {
         /// </param>
         /// <param name="eventMsg">The incoming message to validate against the onEvent list</param>
         /// <returns>The OnEvent, OnResult or default transition</returns>
-        private ISpStateTransition<TEvent> GetTransition(bool onEntry, Func<ISpEventMessage, ISpEventMessage> stateFunc, ISpEventMessage msg) {
+        private ISpStateTransition<TMsgId> GetTransition(bool onEntry, Func<ISpEventMessage, ISpEventMessage> stateFunc, ISpEventMessage msg) {
             return WrapErr.ToErrorReportException(9999, () => {
                 // Query the OnEvent queue for a transition BEFORE calling state function (OnEntry, OnTick)
-                ISpStateTransition<TEvent> tr = this.GetOnEventTransition(msg);
+                ISpStateTransition<TMsgId> tr = this.GetOnEventTransition(msg);
                 if (tr != null) {
                     tr.ReturnMessage = (tr.ReturnMessage == null) 
                         ? this.MsgFactory.GetResponse(msg) 
@@ -422,7 +422,7 @@ namespace SpStateMachine.States {
                 }
 
                 // If no transitions registered return SameState with default success message
-                return new SpStateTransition<TEvent>(SpStateTransitionType.SameState, null, this.MsgFactory.GetDefaultResponse(msg));
+                return new SpStateTransition<TMsgId>(SpStateTransitionType.SameState, null, this.MsgFactory.GetDefaultResponse(msg));
             });
         }
 
@@ -431,9 +431,9 @@ namespace SpStateMachine.States {
         /// <param name="store">The store to search</param>
         /// <param name="eventMsg">The message to insert in the transition object</param>
         /// <returns>The transition object from the store or null if not found</returns>
-        private ISpStateTransition<TEvent> GetTransitionFromStore(Dictionary<int, ISpStateTransition<TEvent>> store, ISpEventMessage eventMsg) {
+        private ISpStateTransition<TMsgId> GetTransitionFromStore(Dictionary<int, ISpStateTransition<TMsgId>> store, ISpEventMessage eventMsg) {
             return WrapErr.ToErrorReportException(50204, () => {
-                ISpStateTransition<TEvent> t = SpTools.GetTransitionCloneFromStore(store, eventMsg);
+                ISpStateTransition<TMsgId> t = SpTools.GetTransitionCloneFromStore(store, eventMsg);
                 if (t != null) {
                     this.LogTransition(t, eventMsg);
                 }
@@ -445,7 +445,7 @@ namespace SpStateMachine.States {
         /// <summary>Factor out the reporting of state transitions for clarity</summary>
         /// <param name="tr">The transition object</param>
         /// <param name="eventMsg">The event message which pushed this transition</param>
-        private void LogTransition(ISpStateTransition<TEvent> tr, ISpEventMessage eventMsg) {
+        private void LogTransition(ISpStateTransition<TMsgId> tr, ISpEventMessage eventMsg) {
             WrapErr.ToErrorReportException(9999, () => {
                 Log.Debug("SpState", "LogTransition",
                     String.Format(
@@ -462,7 +462,7 @@ namespace SpStateMachine.States {
         /// <summary>Initialise the state id chain from ancestors to this state</summary>
         /// <param name="parent">The parent state</param>
         /// <param name="id">The enum state id</param>
-        private void InitStateIds(ISpState<TEvent> parent, TState id) {
+        private void InitStateIds(ISpState<TMsgId> parent, TState id) {
             // Add any ancestor state ids to the chain
             WrapErr.ToErrorReportException(50207, () => {
                 WrapErr.ChkTrue(typeof(TState).IsEnum, 9999, () => string.Format("State type {0} must be Enum", id.GetType().Name));

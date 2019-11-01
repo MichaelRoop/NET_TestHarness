@@ -3,9 +3,9 @@ using SpStateMachine.Interfaces;
 
 namespace TestCases.SpStateMachineTests.TestImplementations {
 
-    public class MyStateMachine : SpMachine<MyDataClass, MyEventType> {
+    public class MyStateMachine : SpMachine<MyDataClass, MyMsgId> {
 
-        public MyStateMachine(MyDataClass dataClass, ISpState<MyEventType> state)
+        public MyStateMachine(MyDataClass dataClass, ISpState<MyMsgId> state)
             : base(dataClass, state) {
         }
 

@@ -9,18 +9,18 @@ namespace SpStateMachine.Core {
     /// The state machine allows only one state to be active at a time. Each state can act on the wrapped object
     /// according to what is allowed in that state
     /// </remarks>
-    /// <typeparam name="T">Wraped object type constrained to a class with IDisposable Interface required</typeparam>
+    /// <typeparam name="TMachine">Wraped object type constrained to a class with IDisposable Interface required</typeparam>
     /// <author>Michael Roop</author>
     /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
-    public class SpMachine<T,T2> : ISpStateMachine where T : class, IDisposable where T2 : struct {
+    public class SpMachine<TMachine,TMsgId> : ISpStateMachine where TMachine : class, IDisposable where TMsgId : struct {
 
         #region Data
 
         /// <summary>The main state for the State Machine</summary>
-        ISpState<T2> state = null;
+        ISpState<TMsgId> state = null;
 
         /// <summary>The object that the State Machine represents</summary>
-        T wrappedObject = null;
+        TMachine wrappedObject = null;
 
         /// <summary>Flag to indicate if the first 'OnEntry' has been called</summary>
         private bool isStarted = false;
@@ -60,7 +60,7 @@ namespace SpStateMachine.Core {
         /// can use a single state implementation if you only want the wrapped object to be 
         /// driven by periodic timer and have access to the messaging architecture
         /// </remarks>
-        public SpMachine(T wrappedObject, ISpState<T2> state) {
+        public SpMachine(TMachine wrappedObject, ISpState<TMsgId> state) {
             WrapErr.ChkParam(wrappedObject, "wrappedObject", 50170);
             WrapErr.ChkParam(state, "state", 50171);
             this.wrappedObject = wrappedObject;
@@ -90,7 +90,7 @@ namespace SpStateMachine.Core {
             WrapErr.ChkParam(msg, "msg", 50172);
 
             // First tick to drive it from entry to regular
-            ISpStateTransition<T2> tr = null;
+            ISpStateTransition<TMsgId> tr = null;
             bool tmpIsStarted = this.isStarted;
 
             //Log.Debug("SpMachine", "Tick", String.Format("isStarted:{0}", this.isStarted));

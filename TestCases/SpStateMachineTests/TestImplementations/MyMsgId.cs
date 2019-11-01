@@ -6,7 +6,7 @@ using ChkUtils;
 
 namespace TestCases.SpStateMachineTests.TestImplementations {
 
-    public enum MyEventType : int {
+    public enum MyMsgId : int {
 
         Tick = 0,
 

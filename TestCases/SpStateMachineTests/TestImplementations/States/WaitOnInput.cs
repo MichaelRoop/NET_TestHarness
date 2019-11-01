@@ -11,7 +11,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.States {
 
         private string className = "WaitOnInput";
 
-        public WaitOnInput(ISpState<MyEventType> parent, MyDataClass dataClass)
+        public WaitOnInput(ISpState<MyMsgId> parent, MyDataClass dataClass)
             : base(parent, MyStateID.Idle, dataClass) {
         }
 

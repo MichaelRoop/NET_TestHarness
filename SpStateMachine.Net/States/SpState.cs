@@ -3,10 +3,10 @@
 namespace SpStateMachine.States {
 
     /// <summary>Implementation of SpState handles virtuals left exposed by the State Base</summary>
-    /// <typeparam name="T">Generic type that the state represents</typeparam>
+    /// <typeparam name="TMachine">Generic type that the state represents</typeparam>
     /// <author>Michael Roop</author>
     /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
-    public class SpState<T,TEvent,TState,TMsg> : SpStateBase<T,TEvent,TState,TMsg> where T : class where TEvent : struct where TState : struct where TMsg : struct {
+    public class SpState<TMachine,TMsgId,TState,TMsgType> : SpStateBase<TMachine,TMsgId,TState,TMsgType> where TMachine : class where TMsgId : struct where TState : struct where TMsgType : struct {
 
         #region ISpState Sealed Properties
 
@@ -31,7 +31,7 @@ namespace SpStateMachine.States {
         /// <param name="msgFactory">Message Factory</param>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpState(ISpMsgFactory msgFactory, TState id, T wrappedObject)
+        public SpState(ISpMsgFactory msgFactory, TState id, TMachine wrappedObject)
             : base(msgFactory, id, wrappedObject) {
         }
 
@@ -43,7 +43,7 @@ namespace SpStateMachine.States {
         /// <param name="msgFactory">Message Factory</param>
         /// <param name="id">Unique state id</param>
         /// <param name="wrappedObject">The generic object that the states represent</param>
-        public SpState(ISpState<TEvent> parent, ISpMsgFactory msgFactory, TState id, T wrappedObject) 
+        public SpState(ISpState<TMsgId> parent, ISpMsgFactory msgFactory, TState id, TMachine wrappedObject) 
             : base (parent, msgFactory, id, wrappedObject) {
         }
 
@@ -56,7 +56,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
-        public sealed override ISpStateTransition<TEvent> OnEntry(ISpEventMessage msg) {
+        public sealed override ISpStateTransition<TMsgId> OnEntry(ISpEventMessage msg) {
             return base.OnEntry(msg);
         }
 
@@ -66,7 +66,7 @@ namespace SpStateMachine.States {
         /// </summary>
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
-        public sealed override ISpStateTransition<TEvent> OnTick(ISpEventMessage msg) {
+        public sealed override ISpStateTransition<TMsgId> OnTick(ISpEventMessage msg) {
             return base.OnTick(msg);
         }
 

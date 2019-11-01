@@ -75,7 +75,7 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _50200_Constructor_NullWrappedObject() {
             TestHelpersNet.CatchExpected(50200, "SpStateBase`4", ".ctor", "Null wrappedObject Argument", () => {
-                ISpState<MyEventType> st = new StImpl<IDisposable,MyEventType,TSID,TMsg>(
+                ISpState<MyMsgId> st = new StImpl<IDisposable,MyMsgId,TSID,TMsg>(
                     MyMsgFactory.Instance, TSID.first, null);
             });
         }
@@ -88,13 +88,13 @@ namespace TestCases.SpStateMachineTests {
         public void _0_OnEntry_ExecutedTwiceWithOnExitBetween() {
             IDisposable wo = MockRepository.GenerateMock<IDisposable>();
             TestHelpersNet.CatchUnexpected(() => {
-                ISpState<MyEventType> st = 
-                    new StImpl<IDisposable,MyEventType,TSID,TMsg>(
+                ISpState<MyMsgId> st = 
+                    new StImpl<IDisposable,MyMsgId,TSID,TMsg>(
                         MyMsgFactory.Instance, TSID.first, wo);
 
-                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
+                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
                 st.OnExit();
-                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
+                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
             });
         }
 
@@ -103,12 +103,12 @@ namespace TestCases.SpStateMachineTests {
         public void _50201_OnEntry_ExecutedTwice() {
             IDisposable wo = MockRepository.GenerateMock<IDisposable>();
             TestHelpersNet.CatchExpected(50201, "SpStateBase`4", "OnEntry", "OnEntry Cannot be Executed More Than Once Until OnExit is Called", () => {
-                ISpState<MyEventType> st = 
-                    new StImpl<IDisposable,MyEventType,TSID,TMsg>(
+                ISpState<MyMsgId> st = 
+                    new StImpl<IDisposable,MyMsgId,TSID,TMsg>(
                         MyMsgFactory.Instance, TSID.first, wo);
 
-                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
-                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
+                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
+                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
             });
         }
 
@@ -120,11 +120,11 @@ namespace TestCases.SpStateMachineTests {
         public void _0_OnTick_AfterOnEntry() {
             IDisposable wo = MockRepository.GenerateMock<IDisposable>();
             TestHelpersNet.CatchUnexpected(() => {
-                ISpState<MyEventType> st = 
-                    new StImpl<IDisposable, MyEventType, TSID,TMsg>(
+                ISpState<MyMsgId> st = 
+                    new StImpl<IDisposable, MyMsgId, TSID,TMsg>(
                         MyMsgFactory.Instance, TSID.first, wo);
-                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
-                st.OnTick(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
+                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
+                st.OnTick(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
             });
         }
 
@@ -132,9 +132,9 @@ namespace TestCases.SpStateMachineTests {
         public void _50205_OnTick_WithoutOnEntry() {
             IDisposable wo = MockRepository.GenerateMock<IDisposable>();
             TestHelpersNet.CatchExpected(50205, "SpStateBase`4", "OnTick", "OnTick for 'first' State Cannot be Executed Before OnEntry", () => {
-                ISpState<MyEventType> st = new StImpl<IDisposable, MyEventType,TSID,TMsg>(
+                ISpState<MyMsgId> st = new StImpl<IDisposable, MyMsgId,TSID,TMsg>(
                     MyMsgFactory.Instance, TSID.first, wo);
-                st.OnTick(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
+                st.OnTick(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
             });
         }
 
@@ -145,13 +145,13 @@ namespace TestCases.SpStateMachineTests {
         class tstA {
         }
 
-        class tstState : SpState<tstA,MyEventType,TSID,int> {
-            public tstState(ISpState<MyEventType> parent, tstA o)
+        class tstState : SpState<tstA,MyMsgId,TSID,int> {
+            public tstState(ISpState<MyMsgId> parent, tstA o)
                 : base(parent, MyMsgFactory.Instance, TSID.third, o) {
             }
         }
 
-        class tstSuperState : SpSuperState<tstA,MyEventType, TSID,int> {
+        class tstSuperState : SpSuperState<tstA,MyMsgId, TSID,int> {
             public tstSuperState(tstA o)
                 : base(MyMsgFactory.Instance, TSID.first, o) {
             }
@@ -160,8 +160,8 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _0_() {
             tstA o = new tstA();
-            ISpState<MyEventType> ss = new tstSuperState(o);
-            ISpState<MyEventType> s = new tstState(ss, o);
+            ISpState<MyMsgId> ss = new tstSuperState(o);
+            ISpState<MyMsgId> s = new tstState(ss, o);
             Console.WriteLine("SS name:{0} - FullName:{1}", ss.Name, ss.FullName);
             Console.WriteLine("S name:{0} - FullName:{1}", s.Name, s.FullName);
         }
@@ -170,15 +170,15 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _50206_InitStateIds_ParentNullIdChain() {
             IDisposable wo = MockRepository.GenerateMock<IDisposable>();
-            ISpState<MyEventType> parent = MockRepository.GenerateMock<ISpState<MyEventType>>();
+            ISpState<MyMsgId> parent = MockRepository.GenerateMock<ISpState<MyMsgId>>();
             parent.Expect(o => o.IdChain).IgnoreArguments().Return(null);
 
             TestHelpersNet.CatchExpected(50206, "SpStateBase`4", "InitStateIds", "The Parent has a Null Id Chain", () => {
-                ISpState<MyEventType> st = 
-                    new StImpl<IDisposable, MyEventType,TSID,TMsg>(
+                ISpState<MyMsgId> st = 
+                    new StImpl<IDisposable, MyMsgId,TSID,TMsg>(
                         parent, MyMsgFactory.Instance, TSID.first, wo);
-                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
-                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
+                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
+                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
             });
         }
 
@@ -186,15 +186,15 @@ namespace TestCases.SpStateMachineTests {
         [Test]
         public void _50207_InitStateIds_UnexpectedError() {
             IDisposable wo = MockRepository.GenerateMock<IDisposable>();
-            ISpState<MyEventType> parent = MockRepository.GenerateMock<ISpState<MyEventType>>();
+            ISpState<MyMsgId> parent = MockRepository.GenerateMock<ISpState<MyMsgId>>();
             parent.Expect(o => o.IdChain).IgnoreArguments().Throw(new Exception("Exception from IdChain property"));
 
             TestHelpersNet.CatchExpected(50207, "SpStateBase`4", "InitStateIds", "Exception from IdChain property", () => {
-                ISpState<MyEventType> st = 
-                    new StImpl<IDisposable, MyEventType,TSID,TMsg>(
+                ISpState<MyMsgId> st = 
+                    new StImpl<IDisposable, MyMsgId,TSID,TMsg>(
                         parent, MyMsgFactory.Instance, TSID.first, wo);
-                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
-                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
+                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
+                st.OnEntry(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
             });
         }
 

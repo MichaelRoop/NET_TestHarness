@@ -7,7 +7,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.Messages {
 
         /// <summary>Constructor</summary>
         public MyTickMsg()
-            : base(MyMsgType.SimpleMsg, MyEventType.Tick, SpEventPriority.Normal) {
+            : base(MyMsgType.SimpleMsg, MyMsgId.Tick, SpEventPriority.Normal) {
         }
 
     }

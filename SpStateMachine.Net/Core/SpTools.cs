@@ -41,18 +41,18 @@ namespace SpStateMachine.Core {
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="T">Event id type</typeparam>
+        /// <typeparam name="TMsgId">Event id</typeparam>
         /// <param name="type">string of transition type</param>
         /// <param name="eventId">The event message id</param>
         /// <param name="transition">Transition object</param>
         /// <param name="store">Transition store</param>
-        public static void RegisterTransition<T>(string type, T eventId, ISpStateTransition<T> transition, Dictionary<int, ISpStateTransition<T>> store) where T : struct {
+        public static void RegisterTransition<TMsgId>(string type, TMsgId eventId, ISpStateTransition<TMsgId> transition, Dictionary<int, ISpStateTransition<TMsgId>> store) where TMsgId : struct {
             //WrapErr.ChkParam(eventId, "eventId", 51004);
             WrapErr.ChkParam(transition, "transition", 51005);
             WrapErr.ChkParam(store, "store", 51006);
 
-            WrapErr.ChkTrue(typeof(T).IsEnum, 9999, () => string.Format("Transition type {0} must be Enum", eventId.GetType().Name));
-            WrapErr.ChkTrue(typeof(T).GetEnumUnderlyingType() == typeof(Int32), 9999, 
+            WrapErr.ChkTrue(typeof(TMsgId).IsEnum, 9999, () => string.Format("Transition type {0} must be Enum", eventId.GetType().Name));
+            WrapErr.ChkTrue(typeof(TMsgId).GetEnumUnderlyingType() == typeof(Int32), 9999, 
                 () => string.Format("Transition type enum {0} must be derived from int", eventId.GetType().Name));
 
             int tmp = Convert.ToInt32(eventId);
@@ -71,14 +71,14 @@ namespace SpStateMachine.Core {
         /// <param name="store">The store to search</param>
         /// <param name="eventMsg">The message to insert in the transition object</param>
         /// <returns>The transition object from the store or null if not found</returns>
-        public static ISpStateTransition<T> GetTransitionCloneFromStore<T>(Dictionary<int, ISpStateTransition<T>> store, ISpEventMessage eventMsg) where T : struct {
+        public static ISpStateTransition<TMsgId> GetTransitionCloneFromStore<TMsgId>(Dictionary<int, ISpStateTransition<TMsgId>> store, ISpEventMessage eventMsg) where TMsgId : struct {
             WrapErr.ChkParam(store, "store", 51009);
             WrapErr.ChkParam(eventMsg, "eventMsg", 51010);
 
             return WrapErr.ToErrorReportException(51011, () => {
                 if (store.Keys.Contains(eventMsg.EventId)) {
                     // Clone Transition object from store since its pointers get reset later
-                    ISpStateTransition<T> tr = (ISpStateTransition<T>)store[eventMsg.EventId].Clone();
+                    ISpStateTransition<TMsgId> tr = (ISpStateTransition<TMsgId>)store[eventMsg.EventId].Clone();
 
                     if (tr.ReturnMessage == null) {
                         tr.ReturnMessage = eventMsg;

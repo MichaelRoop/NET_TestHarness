@@ -62,7 +62,7 @@ namespace TestCases.SpStateMachineTests {
                 Console.WriteLine("State s name:{0}", s.FullName);
                 Console.WriteLine("State s2 name:{0}", s2.FullName);
 
-                s.ToNextOnEvent(MyEventType.Stop, s2);
+                s.ToNextOnEvent(MyMsgId.Stop, s2);
 
                 ISpStateMachine sm = new MyStateMachine(dataClass, s);
                 ISpEventStore store = new SimpleDequeEventStore(new MyTickMsg());
@@ -88,7 +88,7 @@ namespace TestCases.SpStateMachineTests {
 
                 //listner.PostMessage(new SpBaseMsg(MyMessageType 777, 12345));
 
-                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
 
                 Thread.Sleep(3000);
                 engine.Stop();
@@ -154,11 +154,11 @@ namespace TestCases.SpStateMachineTests {
 
                 Assert.AreEqual("NotStarted.Idle", notStartedSs.CurrentStateName);
 
-                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Start));
                 Thread.Sleep(700);
                 Assert.AreEqual("NotStarted.Active", notStartedSs.CurrentStateName);
 
-                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Abort));
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Abort));
                 Thread.Sleep(700);
                 Assert.AreEqual("NotStarted.Idle", notStartedSs.CurrentStateName);
 
@@ -188,26 +188,26 @@ namespace TestCases.SpStateMachineTests {
                 // Just move the inner states around
                 Thread.Sleep(600);
                 //Assert.AreEqual("Main.NotStarted.Idle", mainSs.FullName);
-                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Start));
                 Thread.Sleep(600);
 
                 Assert.AreEqual("Main.NotStarted.Active", mainSs.CurrentStateName);
 
-                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
                 Thread.Sleep(600);
                 Assert.AreEqual("Main.NotStarted.Idle", mainSs.CurrentStateName);
 
-                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Start));
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Start));
                 Thread.Sleep(600);
                 Assert.AreEqual("Main.NotStarted.Active", mainSs.CurrentStateName);
 
-                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Stop));
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Stop));
                 Thread.Sleep(800);
                 Assert.AreEqual("Main.NotStarted.Idle", mainSs.CurrentStateName);
 
                 // Should be back to Main.NotStarted.Idle by now - it has a ExitState transition registered to that state
                 Console.WriteLine("Sending the Abort event to provoke a ExitState transition");
-                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Abort));
+                listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Abort));
                 Thread.Sleep(800);
                 Assert.AreEqual("Main.Recovery.Idle", mainSs.CurrentStateName);
 
@@ -221,7 +221,7 @@ namespace TestCases.SpStateMachineTests {
 
 
 
-        private SpStateMachineEngine GetEngine(out ISpEventListner listner, MyDataClass dataClass, ISpState<MyEventType> firstState) {
+        private SpStateMachineEngine GetEngine(out ISpEventListner listner, MyDataClass dataClass, ISpState<MyMsgId> firstState) {
 
             ISpStateMachine sm = new MyStateMachine(dataClass, firstState);
             ISpEventStore store = new SimpleDequeEventStore(new MyTickMsg());

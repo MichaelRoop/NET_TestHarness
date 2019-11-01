@@ -7,7 +7,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.Messages {
     /// Implementation of SpBaseEventResponse with msg, msg type, return enums 
     /// </summary>
     /// <author>Michael Roop</author>
-    public class MyBaseResponse : SpBaseEventResponse<MyMsgType,MyEventType,MyReturnCode> {
+    public class MyBaseResponse : SpBaseEventResponse<MyMsgType,MyMsgId,MyReturnCode> {
 
         /// <summary>Base response type for strong type check on enumssummary>
         /// <param name="msgType">The return message type</param>

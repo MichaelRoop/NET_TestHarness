@@ -6,7 +6,7 @@ namespace SpStateMachine.Interfaces {
     /// </summary>
     /// <author>Michael Roop</author>
     /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
-    public interface ISpIdConverter<TState,TEvent,TMsg> where TState : struct where TEvent :struct where TMsg : struct {
+    public interface ISpIdConverter<TState,TMsgId,TMsgType> where TState : struct where TMsgId :struct where TMsgType : struct {
 
         /// <summary>Convert State id to string via enum</summary>
         /// <param name="id">The id to convert to string</param>

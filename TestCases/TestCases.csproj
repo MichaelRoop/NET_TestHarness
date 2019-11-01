@@ -97,7 +97,7 @@
     <Compile Include="SpStateMachineTests\TestImplementations\Messages\MySimpleOkResponse.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\Messages\MyTickMsg.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyDataClass.cs" />
-    <Compile Include="SpStateMachineTests\TestImplementations\MyEventType.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\MyMsgId.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyIdConverter.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyMsgFactory.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyMsgType.cs" />

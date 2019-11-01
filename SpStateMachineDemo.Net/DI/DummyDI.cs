@@ -8,13 +8,13 @@ using System.Text;
 namespace SpStateMachineDemo.Net.DI {
     public class DummyDI {
 
-        #region static instances for singletons
+        #region static singleton instances
 
         private static ISpMsgFactory msgFactoryInstance = null;
 
         #endregion
 
-        #region Static constructors for singletons
+        #region Static properties to return singletons
 
         public static ISpMsgFactory MsgFactoryInstance {
             get {

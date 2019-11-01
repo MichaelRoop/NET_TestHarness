@@ -4,10 +4,10 @@ using System.Collections.Generic;
 namespace SpStateMachine.Interfaces {
 
     /// <summary>Interface for defining the state interface</summary>
-    /// <typeparam name="TEvent">Event id (TEvent)</typeparam>
+    /// <typeparam name="TMsgId">Event id (TEvent)</typeparam>
     /// <author>Michael Roop</author>
     /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
-    public interface ISpState <TEvent> where TEvent : struct {
+    public interface ISpState <TMsgId> where TMsgId : struct {
 
         #region Properties
 
@@ -39,13 +39,13 @@ namespace SpStateMachine.Interfaces {
         /// <summary>Excecuted once when the state becomes the current state</summary>
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
-        ISpStateTransition<TEvent> OnEntry(ISpEventMessage msg);
+        ISpStateTransition<TMsgId> OnEntry(ISpEventMessage msg);
 
 
         /// <summary>Called on every other period after entry</summary>
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
-        ISpStateTransition<TEvent> OnTick(ISpEventMessage msg);
+        ISpStateTransition<TMsgId> OnTick(ISpEventMessage msg);
 
 
         /// <summary>Always invoked on object exit</summary>
@@ -58,30 +58,30 @@ namespace SpStateMachine.Interfaces {
         /// <summary>Register a state transition from incoming event</summary>
         /// <param name="eventId">The event id</param>
         /// <param name="transition">The transition object</param>
-        void RegisterOnEventTransition(TEvent eventId, ISpStateTransition<TEvent> transition);
+        void RegisterOnEventTransition(TMsgId eventId, ISpStateTransition<TMsgId> transition);
 
 
         /// <summary>Register transition to next state on event</summary>
         /// <param name="ev">The event</param>
         /// <param name="newState">The target state for transition</param>
-        void ToNextOnEvent(TEvent ev, ISpState<TEvent> newState);
+        void ToNextOnEvent(TMsgId ev, ISpState<TMsgId> newState);
 
 
         /// <summary>Register transition to next state on event</summary>
         /// <param name="ev">The event</param>
         /// <param name="newState">The target state for transition</param>
         /// <param name="returnMsg">The message to return on transition</param>
-        void ToNextOnEvent(TEvent ev, ISpState<TEvent> newState, ISpEventMessage returnMsg);
+        void ToNextOnEvent(TMsgId ev, ISpState<TMsgId> newState, ISpEventMessage returnMsg);
 
 
         /// <summary>Register exit transition on event</summary>
         /// <param name="ev">The event</param>
-        void ToExitOnEvent(TEvent ev);
+        void ToExitOnEvent(TMsgId ev);
 
 
         /// <summary>Register defered action on event</summary>
         /// <param name="ev">The event</param>
-        void ToDeferedOnEvent(TEvent ev);
+        void ToDeferedOnEvent(TMsgId ev);
 
         #endregion
 
@@ -90,20 +90,20 @@ namespace SpStateMachine.Interfaces {
         /// <summary>Register state transition from the result of state processing</summary>
         /// <param name="responseId">The result id the state returns as the result of processing</param>
         /// <param name="transition">The transition object</param>
-        void RegisterOnResultTransition(TEvent responseId, ISpStateTransition<TEvent> transition);
+        void RegisterOnResultTransition(TMsgId responseId, ISpStateTransition<TMsgId> transition);
 
 
         /// <summary>Register transition to next state on processing results</summary>
         /// <param name="ev">The event</param>
         /// <param name="newState">The target state for transition</param>
-        void ToNextOnResult(TEvent ev, ISpState<TEvent> newState);
+        void ToNextOnResult(TMsgId ev, ISpState<TMsgId> newState);
 
 
         /// <summary>Register transition to next state on processing results</summary>
         /// <param name="ev">The event</param>
         /// <param name="newState">The target state for transition</param>
         /// <param name="returnMsg">The message to return on transition</param>
-        void ToNextOnResult(TEvent ev, ISpState<TEvent> newState, ISpEventMessage returnMsg);
+        void ToNextOnResult(TMsgId ev, ISpState<TMsgId> newState, ISpEventMessage returnMsg);
 
         #endregion
 
