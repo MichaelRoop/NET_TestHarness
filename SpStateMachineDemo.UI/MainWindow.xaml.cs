@@ -33,6 +33,8 @@ namespace SpStateMachineDemo.UI {
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
             this.outputs.StateChange -= this.Outputs_StateChange;
+            this.inputs.StateChange -= this.Inputs_StateChange;
+
 
             // TODO - code to shut down state machine
             //MessageBox.Show("Shutting down state machine");
@@ -102,8 +104,15 @@ namespace SpStateMachineDemo.UI {
             this.inputs.Add(InputId.Heater);
 
             this.outputs.StateChange += this.Outputs_StateChange;
+            this.inputs.StateChange += this.Inputs_StateChange;
         }
 
+        private void Inputs_StateChange(object sender, EventArgs e) {
+            this.Dispatcher.Invoke(() => {
+                InputChangeArgs args = (InputChangeArgs)e;
+                MessageBox.Show(string.Format("{0} - {1}", args.Id, args.State));
+            });
+        }
 
         /// <summary>Event handler from ouputs</summary>
         /// <param name="sender">The object sending the event (DemoOutput)</param>

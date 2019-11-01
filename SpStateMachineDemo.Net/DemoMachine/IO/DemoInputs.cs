@@ -7,10 +7,23 @@ using System.Threading.Tasks;
 
 namespace SpStateMachineDemo.Net.DemoMachine.IO {
 
+    public class InputChangeArgs : EventArgs {
+        public InputId Id { get; private set; }
+        public IOState State { get; private set; }
+        private InputChangeArgs() { }
+        public InputChangeArgs(DemoInput input) {
+            this.Id = input.Id;
+            this.State = input.State;
+        }
+    }
+
+
     public class DemoInputs : IDemoInputs<InputId> {
 
         private IDemoOutputs<OutputId> outputs = null;
         private List<DemoInput> inputs = new List<DemoInput>();
+
+        public event EventHandler StateChange;
 
 
         public DemoInputs(IDemoOutputs<OutputId> outputs) {
@@ -37,6 +50,7 @@ namespace SpStateMachineDemo.Net.DemoMachine.IO {
             if (this.inputs.Exists(x => x.Id == id)) {
                 DemoInput input = this.inputs.Find(x => x.Id == id);
                 input.State = state;
+                this.StateChange?.Invoke(this, new InputChangeArgs(input));
                 this.KludgeCorrespondingOutput(input);
             }
         }
