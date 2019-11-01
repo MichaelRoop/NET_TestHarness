@@ -10,7 +10,6 @@
         Closing="Window_Closing"
         >
     <Grid>
-
         <StackPanel Margin="10" VerticalAlignment="Top" HorizontalAlignment="Left" >
             <Border BorderBrush="Black" BorderThickness="2" CornerRadius="12">
                 <StackPanel>
@@ -23,18 +22,19 @@
                     <DockPanel>
                         <controls:UC_Output x:Name="heater" CtrlName="Heat" Margin="5" />
                     </DockPanel>
-
-                    <Border BorderBrush="Blue" BorderThickness="2"/>
-
-                    <TextBlock Text="Fake Toggle HW Outputs" Margin="0,5" HorizontalAlignment="Center"/>
-                    <Border BorderBrush="Blue" BorderThickness="1"/>
-                    <DockPanel>
-                        <Button x:Name="btnOxygen" Content="Oxygen" Style="{StaticResource RoundedButton}" Click="btnOxygen_Click"/>
-                        <Button x:Name="btnNitrogen" Content="Nitrogen" Style="{StaticResource RoundedButton}" Click="btnNitrogen_Click"/>
-                    </DockPanel>
-                    <DockPanel>
-                        <Button x:Name="btnHeat" Content="Heat" Style="{StaticResource RoundedButton}" Click="btnHeat_Click" HorizontalAlignment="Left"/>
-                    </DockPanel>
+                </StackPanel>
+            </Border>
+            <Border BorderBrush="Black" BorderThickness="2" CornerRadius="12" Margin="0,10,0,0">
+                <StackPanel>
+                <TextBlock Text="Fake Toggle HW Outputs" Margin="0,5" HorizontalAlignment="Center"/>
+                <Border BorderBrush="Blue" BorderThickness="1"/>
+                <DockPanel>
+                    <Button x:Name="btnOxygen" Content="Oxygen" Style="{StaticResource RoundedButton}" Click="btnOxygen_Click"/>
+                    <Button x:Name="btnNitrogen" Content="Nitrogen" Style="{StaticResource RoundedButton}" Click="btnNitrogen_Click"/>
+                </DockPanel>
+                <DockPanel>
+                    <Button x:Name="btnHeat" Content="Heat" Style="{StaticResource RoundedButton}" Click="btnHeat_Click" HorizontalAlignment="Left"/>
+                </DockPanel>
                 </StackPanel>
             </Border>
         </StackPanel>

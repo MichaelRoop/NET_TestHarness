@@ -27,7 +27,7 @@ namespace SpStateMachineDemo.UI {
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
             // TODO - code to shut down state machine
-            MessageBox.Show("Shutting down state machine");
+            //MessageBox.Show("Shutting down state machine");
         }
 
         #endregion
