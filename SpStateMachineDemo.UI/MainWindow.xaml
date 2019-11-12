@@ -71,8 +71,14 @@
                     </StackPanel>
                 </Border>
             </StackPanel>
-        </DockPanel>
+            <StackPanel>
+                <DockPanel HorizontalAlignment="Left">
+                    <TextBlock Text=" State: " />
+                    <TextBlock x:Name="txtState" Text=" N/A" />
+                </DockPanel>
 
+            </StackPanel>
+        </DockPanel>
         <!-- User event buttons -->
         <DockPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,20" >
             <Button Content="Exit" x:Name="btnExit" Style="{StaticResource RoundedButton}" Click="btnExit_Click"/>

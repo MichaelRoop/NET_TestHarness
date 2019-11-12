@@ -2,6 +2,7 @@
 using SpStateMachine.EventListners;
 using SpStateMachine.Interfaces;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using TestCases.SpStateMachineTests.TestImplementations;
 using TestCases.SpStateMachineTests.TestImplementations.Messages;
@@ -102,7 +103,7 @@ namespace TestCases.SpStateMachineTests {
 
             TestHelpersNet.CatchUnexpected(() => {
                 this.listner.ResponseReceived += new Action<ISpEventMessage>((msg) => {
-                    Console.WriteLine("Woke up on response received");
+                    Debug.WriteLine("Woke up on response received");
                     received = true;
                     msgCopy = msg;
                 });

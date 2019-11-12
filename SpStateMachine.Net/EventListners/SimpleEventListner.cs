@@ -94,7 +94,7 @@ namespace SpStateMachine.EventListners {
                                 action.Invoke(msg);
                             }
                             else {
-                                Log.Warning(50031, String.Format("No subscribers to '{0}' message", type));
+                                Log.Warning(50034, String.Format("In thread - No subscribers to '{0}' message", type));
                             }
                         });
                 });

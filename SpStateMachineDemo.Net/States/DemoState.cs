@@ -1,14 +1,8 @@
 ﻿using SpStateMachine.Interfaces;
 using SpStateMachine.States;
-using SpStateMachineDemo.Net;
 using SpStateMachineDemo.Net.DemoMachine;
 using SpStateMachineDemo.Net.DI;
 using SpStateMachineDemo.Net.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpStateMachineDemo.Net.States {
 

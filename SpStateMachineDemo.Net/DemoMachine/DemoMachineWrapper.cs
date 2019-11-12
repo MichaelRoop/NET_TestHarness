@@ -1,11 +1,29 @@
-﻿using SpStateMachineDemo.Net.DemoMachine.IO;
+﻿using LogUtils.Net;
+using SpStateMachine.Behaviours;
+using SpStateMachine.Core;
+using SpStateMachine.EventStores;
+using SpStateMachine.Interfaces;
+using SpStateMachine.PeriodicTimers;
+using SpStateMachineDemo.Net.Core;
+using SpStateMachineDemo.Net.DemoMachine.IO;
 using SpStateMachineDemo.Net.DI;
 using SpStateMachineDemo.Net.Messaging;
+using SpStateMachineDemo.Net.Messaging.Messages;
+using SpStateMachineDemo.Net.SuperStates;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace SpStateMachineDemo.Net.DemoMachine {
+
+    public  class StateChangeArgs : EventArgs {
+        public string State { get; private set; }
+        public StateChangeArgs(string newState) {
+            this.State = newState;
+        }
+    }
+
     public class DemoMachineWrapper {
 
         #region Data
@@ -19,6 +37,7 @@ namespace SpStateMachineDemo.Net.DemoMachine {
 
         public event EventHandler InputStateChange = null;
         public event EventHandler OutputStateChange = null;
+        public event EventHandler StateMachineStateChange = null;
 
         #endregion
 
@@ -35,18 +54,41 @@ namespace SpStateMachineDemo.Net.DemoMachine {
             this.inputs.StateChange += this.Inputs_StateChange;
 
             // Create state machine and engine
+            this.CreateStateMachine();
 
+            // Get response change to the state
+
+
+            this.stateMachineEngine.Start();
         }
 
-        public void SendMsg(DemoMsgId id) {
 
+        //public void StartEngine() {
+        //    this.stateMachineEngine.Start();
+        //}
+
+        //public void StopEngine() {
+        //    this.stateMachineEngine.Stop();
+        //}
+
+
+        public void SendMsg(DemoMsgId id) {
+            DummyDI.EventListnerInstance.PostMessage(new DemoMsgBase(DemoMsgType.SimpleMsg, id));
         }
 
 
         public void Teardown() {
+            this.stateMachineEngine.Stop();
             // TODO - code to shut down state machine
             this.outputs.StateChange -= this.Outputs_StateChange;
             this.inputs.StateChange -= this.Inputs_StateChange;
+            DummyDI.EventListnerInstance.ResponseReceived -= this.EventListnerInstance_ResponseReceived;
+            //DummyDI.EventListnerInstance.MsgReceived -= this.EventListnerInstance_MsgReceived;
+
+             
+            //this.stateMachine.Dispose();
+            this.stateMachineEngine.Dispose();
+
         }
 
 
@@ -76,5 +118,59 @@ namespace SpStateMachineDemo.Net.DemoMachine {
             this.OutputStateChange?.Invoke(sender, args);
         }
 
+
+        SpStateMachineEngine stateMachineEngine = null;
+        ISpStateMachine stateMachine = null;
+        string currentState = "";
+
+        private void CreateStateMachine() {
+            this.stateMachine = new DemoStateMachine(
+                        DummyDI.DemoMachineObjInstance,
+                        new SuperStateNotStarted(DummyDI.DemoMachineObjInstance));
+
+            this.stateMachineEngine = new SpStateMachineEngine(
+                DummyDI.EventListnerInstance,
+                new PriorityEventStore(new MsgTick()),
+                new SpPeriodicWakeupOnly(),
+                this.stateMachine,
+                new WinSimpleTimer(new TimeSpan(0, 0, 0, 0, 1000)));
+
+
+
+            //Thread.Sleep(2000);
+
+            //DummyDI.EventListnerInstance.MsgReceived += EventListnerInstance_MsgReceived;
+
+            DummyDI.EventListnerInstance.ResponseReceived -= this.EventListnerInstance_ResponseReceived;
+            DummyDI.EventListnerInstance.ResponseReceived += this.EventListnerInstance_ResponseReceived;
+            //DummyDI.EventListnerInstance.ResponseReceived += this.EventListnerInstance_ResponseReceived;
+            //DummyDI.EventListnerInstance.ResponseReceived += new Action<ISpEventMessage>((msg) => {
+
+            //});
+
+            //+= new Action<ISpEventMessage>((msg) =>
+
+        }
+
+        private void EventListnerInstance_MsgReceived(ISpEventMessage obj) {
+            //throw new NotImplementedException();
+
+            //this.StateMachineStateChange?.Invoke(this, new StateChangeArgs("BLIFFY"));
+        }
+
+        private void EventListnerInstance_ResponseReceived(ISpEventMessage obj) {
+
+            Log.Warning(0, "Response received");
+
+            //this.StateMachineStateChange?.Invoke(this, new StateChangeArgs("sflkjsdflkdjsflk"));
+
+
+            //this.currentState = "werwerewr";
+
+            if (this.stateMachine.CurrentStateName != this.currentState) {
+                this.currentState = this.stateMachine.CurrentStateName;
+                this.StateMachineStateChange?.Invoke(this, new StateChangeArgs(this.currentState));
+            }
+        }
     }
 }

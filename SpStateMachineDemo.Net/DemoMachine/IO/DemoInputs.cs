@@ -84,10 +84,10 @@ namespace SpStateMachineDemo.Net.DemoMachine.IO {
                     this.outputs.SetState(id, state);
                     break;
                 case IOState.On:
-                    Task.Run(() => {
-                        Thread.Sleep(delayMs);
+                    //Task.Run(() => {
+                    //    Thread.Sleep(delayMs);
                         this.outputs.SetState(id, state);
-                    });
+                    //});
                     break;
             }
         }

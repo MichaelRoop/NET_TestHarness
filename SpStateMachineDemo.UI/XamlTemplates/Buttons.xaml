@@ -7,7 +7,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border CornerRadius="12" 
+                    <Border CornerRadius="8" 
                             Background="White" 
                             BorderThickness="1" 
                             Padding="2" 

@@ -31,9 +31,13 @@ namespace SpStateMachineDemo.UI {
         #region Windows events
 
         private void Window_ContentRendered(object sender, EventArgs e) {
+            this.machineWrapper.StateMachineStateChange += this.MachineWrapper_StateMachineStateChange;
             this.machineWrapper.OutputStateChange += this.Outputs_StateChange;
             this.machineWrapper.InputStateChange += this.Inputs_StateChange;
             this.machineWrapper.Init();
+
+            LogUtils.Net.Log.Warning(0, "In the content rendered");
+
         }
 
 
@@ -42,6 +46,7 @@ namespace SpStateMachineDemo.UI {
             this.machineWrapper.Teardown();
             this.machineWrapper.OutputStateChange -= this.Outputs_StateChange;
             this.machineWrapper.InputStateChange -= this.Inputs_StateChange;
+            this.machineWrapper.StateMachineStateChange -= this.MachineWrapper_StateMachineStateChange;
         }
 
         #endregion
@@ -95,6 +100,13 @@ namespace SpStateMachineDemo.UI {
         #endregion
 
         #region Private
+
+        private void MachineWrapper_StateMachineStateChange(object sender, EventArgs e) {
+            this.Dispatcher.Invoke(() => {
+                this.txtState.Text = ((StateChangeArgs)e).State;
+            });
+        }
+
 
         private void Inputs_StateChange(object sender, EventArgs e) {
             this.Dispatcher.Invoke(() => {

@@ -1,6 +1,8 @@
 ﻿using SpStateMachine.Core;
+using SpStateMachine.EventListners;
 using SpStateMachine.Interfaces;
 using SpStateMachineDemo.Net.Core;
+using SpStateMachineDemo.Net.DemoMachine;
 using SpStateMachineDemo.Net.DemoMachine.IO;
 
 namespace SpStateMachineDemo.Net.DI {
@@ -11,6 +13,8 @@ namespace SpStateMachineDemo.Net.DI {
         private static ISpMsgFactory msgFactoryInstance = null;
         private static IDemoInputs<InputId> inputsInstance = null;
         private static IDemoOutputs<OutputId> outputsInstance = null;
+        private static ISpEventListner listnerInstance = null;
+        private static DemoMachineObj machineObjInstance = null;
 
         #endregion
 
@@ -42,6 +46,25 @@ namespace SpStateMachineDemo.Net.DI {
                     inputsInstance = new DemoInputs(OutputsInstance);
                 }
                 return inputsInstance;
+            }
+        }
+
+
+        public static ISpEventListner EventListnerInstance {
+            get {
+                if (listnerInstance == null) {
+                    listnerInstance = new SimpleEventListner();
+                }
+                return listnerInstance;
+            }
+        }
+
+        public static DemoMachineObj DemoMachineObjInstance {
+            get {
+                if (machineObjInstance == null) {
+                    machineObjInstance = new DemoMachineObj();
+                }
+                return machineObjInstance;
             }
         }
 

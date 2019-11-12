@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -97,6 +100,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -106,6 +110,18 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ChkUtils.Net\ChkUtils.Net.csproj">
+      <Project>{0B214B89-C1D6-42BD-BB1A-F6F42DE5A240}</Project>
+      <Name>ChkUtils.Net</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LogUtils.Net\LogUtils.Net.csproj">
+      <Project>{F5D8A3A1-AD3B-4029-B83E-35BC124F8CFE}</Project>
+      <Name>LogUtils.Net</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SpStateMachine.Net\SpStateMachine.Net.csproj">
+      <Project>{78785248-0A5D-4D86-A2FA-113387537735}</Project>
+      <Name>SpStateMachine.Net</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SpStateMachineDemo.Net\SpStateMachineDemo.Net.csproj">
       <Project>{4D2EE4F2-9C65-4221-8FF2-4683714EC17D}</Project>
       <Name>SpStateMachineDemo.Net</Name>
