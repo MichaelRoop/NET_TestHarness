@@ -177,3 +177,5 @@ pip-log.txt
 .vs/TestHarness/v16/TestStore/0/079-0000.testlog
 .vs/TestHarness/v16/TestStore/0/079-0001.testlog
 .vs/TestHarness/v16/TestStore/0/*.testlog
+.vs/TestHarness/v16/TestStore/*/*.testlog
+.vs/TestHarness/v16/TestStore/*/testlog.manifest
