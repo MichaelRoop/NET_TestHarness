@@ -126,7 +126,7 @@ namespace SpStateMachineDemo.Net.DemoMachine {
         private void CreateStateMachine() {
             this.stateMachine = new DemoStateMachine(
                         DummyDI.DemoMachineObjInstance,
-                        new SuperStateNotStarted(DummyDI.DemoMachineObjInstance));
+                        new SuperStateMain(DummyDI.DemoMachineObjInstance));
 
             this.stateMachineEngine = new SpStateMachineEngine(
                 DummyDI.EventListnerInstance,

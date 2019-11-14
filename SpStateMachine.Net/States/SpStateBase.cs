@@ -291,6 +291,34 @@ namespace SpStateMachine.States {
             this.RegisterOnResultTransition(ev, SpStateTransition<TMsgId>.ToNext(newState, returnMsg));
         }
 
+
+        /// <summary>Register exit transition on result</summary>
+        /// <param name="ev">The returned result</param>
+        public void ToExitOnResult(TMsgId ev) {
+            this.RegisterOnResultTransition(ev, SpStateTransition<TMsgId>.ToExit());
+        }
+
+        public void DebugDumpTransitions() {
+            Log.Warning(0, string.Format("----- Result Transitions ({0}) -----", this.onResultTransitions.Keys.Count));
+
+            foreach (var k in this.onResultTransitions.Keys) {
+                Log.Warning(0, string.Format(
+                    "     ID: {0} Type: {1} Next state: {2}",
+                    k,
+                    this.onResultTransitions[k].TransitionType,
+                    this.onResultTransitions[k].NextState));
+            }
+
+            Log.Warning(0, string.Format("----- Event Transitions ({0}) -----", this.onEventTransitions.Keys.Count));
+            foreach (var k in this.onEventTransitions.Keys) {
+                Log.Warning(0, string.Format(
+                    "     ID: {0} Type: {1} Next state: {2}",
+                    k,
+                    this.onEventTransitions[k].TransitionType,
+                    this.onEventTransitions[k].NextState));
+            }
+        }
+
         #endregion
 
         #endregion
@@ -400,6 +428,9 @@ namespace SpStateMachine.States {
         /// <returns>The OnEvent, OnResult or default transition</returns>
         private ISpStateTransition<TMsgId> GetTransition(bool onEntry, Func<ISpEventMessage, ISpEventMessage> stateFunc, ISpEventMessage msg) {
             return WrapErr.ToErrorReportException(9999, () => {
+
+                //Log.Warning(88, "||||||| State get result transition");
+
                 // Query the OnEvent queue for a transition BEFORE calling state function (OnEntry, OnTick)
                 ISpStateTransition<TMsgId> tr = this.GetOnEventTransition(msg);
                 if (tr != null) {
@@ -454,7 +485,7 @@ namespace SpStateMachine.States {
                         this.GetCachedMsgTypeId(eventMsg.TypeId),
                         this.GetCachedEventId(eventMsg.EventId),
                         this.FullName,
-                        tr.NextState == null ? "Unknown" : tr.NextState.FullName));
+                        tr.NextState == null ? "Unknown(null)" : tr.NextState.FullName));
             });
         }
 

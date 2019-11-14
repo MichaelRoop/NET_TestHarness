@@ -2,9 +2,6 @@
 using SpStateMachineDemo.Net.DemoMachine;
 using SpStateMachineDemo.Net.Messaging;
 using SpStateMachineDemo.Net.States;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SpStateMachineDemo.Net.SuperStates {
 
@@ -15,22 +12,20 @@ namespace SpStateMachineDemo.Net.SuperStates {
         ISpState<DemoMsgId> initialising = null;
 
 
-        public SuperStateNotStarted(DemoMachineObj machine)
-            : base(DemoStateId.Initial, machine) {
+        public SuperStateNotStarted(ISpState<DemoMsgId> parent, DemoStateId id, DemoMachineObj machine)
+            : base(parent, id, machine) {
 
             // Create sub-states
-            this.recovery = new StateSimpleRecovery(this, DemoStateId.SimpleRecovery, machine);
-            this.initialising = new StateInitIO(this, machine);
+            this.recovery = this.AddSubState(new StateSimpleRecovery(this, DemoStateId.SimpleRecovery, machine));
+            this.initialising = this.AddSubState(new StateInitIO(this, machine));
 
+            // Register events and internal result returns
             this.recovery.ToNextOnResult(DemoMsgId.RecoveryComplete, this.initialising);
-            // TODO - needs ToExitOnResult ?
-            this.initialising.ToExitOnEvent(DemoMsgId.InitComplete);
+            this.initialising.ToExitOnResult(DemoMsgId.InitComplete);
 
             this.SetEntryState(this.recovery);
         }
 
-
-
-
     }
+
 }

@@ -29,6 +29,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         StopHeater,
 
         // -- reponses
+        RespDone,
 
     }
 

@@ -12,6 +12,7 @@ using System.Threading;
 using TestCases.SpStateMachineTests.TestImplementations;
 using TestCases.SpStateMachineTests.TestImplementations.Messages;
 using TestCases.SpStateMachineTests.TestImplementations.SuperStates;
+using TestCases.SpStateMachineTests.TestImplementations.SuperStates.ExitSS;
 
 namespace TestCases.SpStateMachineTests {
 
@@ -29,7 +30,7 @@ namespace TestCases.SpStateMachineTests {
         public void Setup() {
             Log.SetVerbosity(MsgLevel.Info);
             Log.SetMsgNumberThreshold(1);
-
+            Log.SetStackTools(new StackTools());
             WrapErr.InitialiseOnExceptionLogDelegate(Log.LogExceptionDelegate);
 
             this.consoleWriter.StartLogging();
@@ -219,6 +220,39 @@ namespace TestCases.SpStateMachineTests {
         }
 
 
+        private void DoTick(ISpEventListner listner, ISpState<MyMsgId> st, string expected) {
+            listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Tick));
+            Thread.Sleep(600);
+            Log.Warning(9, () => string.Format("State:{0}", st.CurrentStateName));
+            Log.Warning(0, () => string.Format(" --- Current state: {0} ---", st.CurrentStateName));
+            Assert.AreEqual(expected, st.CurrentStateName);
+
+        }
+
+        [Test, Explicit]
+        public void TestResultExitStateTransitionsInSuperState() {
+
+            TestHelpers.CatchUnexpected(() => {
+                MyDataClass dataClass = new MyDataClass();
+                SS_M m = new SS_M(dataClass);
+                ISpEventListner listner;
+                SpStateMachineEngine engine = this.GetEngine(out listner, dataClass, m);
+
+                engine.Start();
+
+                this.DoTick(listner, m, "SS_M.SS_A1.SS_A1");
+                this.DoTick(listner, m, "SS_M.SS_A1.SS_A1");
+                this.DoTick(listner, m, "SS_M.SS_A1.SS_A1");
+                // After third it should have transitioned
+                this.DoTick(listner, m, "SS_M.SS_B1.SS_B1");
+                this.DoTick(listner, m, "SS_M.SS_B1.SS_B1");
+                this.DoTick(listner, m, "SS_M.SS_B1.SS_B1");
+
+                engine.Stop();
+                engine.Dispose();
+                Console.WriteLine("Engine Disposed");
+            });
+        }
 
 
         private SpStateMachineEngine GetEngine(out ISpEventListner listner, MyDataClass dataClass, ISpState<MyMsgId> firstState) {

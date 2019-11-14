@@ -105,6 +105,14 @@ namespace SpStateMachine.Interfaces {
         /// <param name="returnMsg">The message to return on transition</param>
         void ToNextOnResult(TMsgId ev, ISpState<TMsgId> newState, ISpEventMessage returnMsg);
 
+
+        /// <summary>Register exit transition on result</summary>
+        /// <param name="ev">The returned result</param>
+        void ToExitOnResult(TMsgId ev);
+
+
+        void DebugDumpTransitions();
+
         #endregion
 
     }

@@ -74,6 +74,12 @@
     <Compile Include="ChkUtilsTests\ToErrReportTests.cs" />
     <Compile Include="ChkUtilsTests\ValidatorTests.cs" />
     <Compile Include="SpStateMachineTests\TestImplementations\MyDummyDI.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\SuperStates\ExitSS\MyDoneMsg.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\SuperStates\ExitSS\SS_A.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\SuperStates\ExitSS\SS_B.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\SuperStates\ExitSS\SS_M.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\SuperStates\ExitSS\S_A1.cs" />
+    <Compile Include="SpStateMachineTests\TestImplementations\SuperStates\ExitSS\S_B1.cs" />
     <Compile Include="TestHelpersNet.cs" />
     <Compile Include="TestToolSet\HelperLogReaderNet.cs" />
     <Compile Include="LogUtilsTests.Net\LogPerformanceTests.cs" />

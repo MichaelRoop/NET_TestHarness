@@ -1,8 +1,10 @@
-﻿using SpStateMachine.Interfaces;
+﻿using LogUtils.Net;
+using SpStateMachine.Interfaces;
 using SpStateMachineDemo.Net.DemoMachine;
 using SpStateMachineDemo.Net.DemoMachine.IO;
 using SpStateMachineDemo.Net.DI;
 using SpStateMachineDemo.Net.Messaging;
+using SpStateMachineDemo.Net.Messaging.Messages;
 
 namespace SpStateMachineDemo.Net.States {
 
@@ -42,12 +44,11 @@ namespace SpStateMachineDemo.Net.States {
             // If all IO is on, return message
             if (this.outputs.GetState(OutputId.GasNitrogen) == IOState.On &&
                 this.outputs.GetState(OutputId.GasOxygen) == IOState.On) {
-                // Return completed
-                return new DemoMsgBase(DemoMsgType.SimpleMsg, DemoMsgId.InitComplete) {
-                    Uid = eventMsg.Uid
-                };
+                Log.Warning(2, "******* Everyting is ON  **********");
+                return new MsgInitComplete();
             }
             // Still waiting
+            Log.Warning(3, "******* STILL WAITING  **********");
             return base.ExecOnTick(eventMsg);
         }
 

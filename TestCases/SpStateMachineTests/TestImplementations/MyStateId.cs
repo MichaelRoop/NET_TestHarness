@@ -28,6 +28,13 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         Failed,
         WaitingForUserInput,    
         
+        // Result exit tests
+        S_A1,
+        S_A2,
+        SS_A1,
+        SS_B1,
+        SS_M,
+
         Undefined,
     }
 
