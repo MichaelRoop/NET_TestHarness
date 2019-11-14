@@ -117,9 +117,13 @@ namespace SpStateMachine.States {
             if (t.TransitionType != SpStateTransitionType.SameState) {
                 return t;
             }
+            // TODO - put more inteligence to handle result Exit from super state
+
 
             // return transition
             this.currentState = this.entryState;
+
+            // TODO - put more inteligence to handle result Exit from current state
             return this.currentState.OnEntry(msg);
         }
 
@@ -141,14 +145,15 @@ namespace SpStateMachine.States {
                 return tr;
             }
 
-            // Temp hack to check if the current state returned an Exit result that has a registered result at super state level
+            // Check if the current state returned an Exit result that has a registered result at super state level
             tr = this.currentState.OnTick(msg);
             if (tr.TransitionType == SpStateTransitionType.ExitState) {
-                // HACK - change msg ID
-                msg.EventId = tr.ReturnMessage.EventId;
-                ISpStateTransition<TMsgId> sstr = GetSuperStateOnEventTransition(msg);
-                if (sstr != null) {
-                    return sstr;
+                ISpStateTransition<TMsgId> sstr = null;
+                if (tr.ReturnMessage != null) {
+                    sstr = this.GetSuperStateOnResultTransition(tr.ReturnMessage);
+                    if (sstr != null) {
+                        return sstr;
+                    }
                 }
             }
 

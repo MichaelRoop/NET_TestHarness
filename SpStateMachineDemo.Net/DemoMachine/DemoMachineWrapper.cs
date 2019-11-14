@@ -77,6 +77,11 @@ namespace SpStateMachineDemo.Net.DemoMachine {
         }
 
 
+        public void SendMsg(ISpEventMessage msg) {
+            DummyDI.EventListnerInstance.PostMessage(msg);
+        }
+
+
         public void Teardown() {
             this.stateMachineEngine.Stop();
             // TODO - code to shut down state machine
