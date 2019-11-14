@@ -140,7 +140,21 @@ namespace SpStateMachine.States {
             if (tr != null) {
                 return tr;
             }
-            return this.GetTransition(this.currentState.OnTick, msg);
+
+            // Temp hack to check if the current state returned an Exit result that has a registered result at super state level
+            tr = this.currentState.OnTick(msg);
+            if (tr.TransitionType == SpStateTransitionType.ExitState) {
+                // HACK - change msg ID
+                msg.EventId = tr.ReturnMessage.EventId;
+                ISpStateTransition<TMsgId> sstr = GetSuperStateOnEventTransition(msg);
+                if (sstr != null) {
+                    return sstr;
+                }
+            }
+
+            return this.ReadTransitionType(tr, msg, false);
+            // Original which invoked to OnTick
+            //return this.GetTransition(this.currentState.OnTick, msg);
         }
 
         #endregion
@@ -220,7 +234,8 @@ namespace SpStateMachine.States {
         /// <param name="msg"></param>
         /// <returns></returns>
         private ISpStateTransition<TMsgId> HandleExitStateTransitionType(ISpEventMessage msg) {
-            Log.Info(this.className, "HandleExitStateTransitionType", String.Format("'{0}' State", this.FullName));
+            Log.Info(this.className, "HandleExitStateTransitionType", 
+                String.Format("State '{0}' msg type {1} msg id {2}", this.FullName, msg.TypeId, msg.EventId));
 
             // TODO - this is really only another kind of defered. The difference is that the superstate does not
             // TODO     called at runtime to handle the event. Rather the event is passed to the super state's
@@ -271,7 +286,7 @@ namespace SpStateMachine.States {
         /// <param name="msg"></param>
         /// <returns></returns>
         private ISpStateTransition<TMsgId> GetSuperStateOnResultTransition(ISpEventMessage msg) {
-
+            
             // Check super state registered result transitions against Sub State event id
             ISpStateTransition<TMsgId> tr = this.GetOnResultTransition(msg);
             WrapErr.ChkVar(tr, 9999, () => {
