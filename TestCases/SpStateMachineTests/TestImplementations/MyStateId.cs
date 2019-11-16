@@ -31,9 +31,11 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         // Result exit tests
         S_A1,
         S_A2,
+        S_A1_ExitEntry,
         SS_A1,
         SS_B1,
         SS_M,
+        SS_M2,
 
         Undefined,
     }

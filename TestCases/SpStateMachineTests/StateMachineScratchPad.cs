@@ -220,23 +220,48 @@ namespace TestCases.SpStateMachineTests {
         }
 
 
-        private void DoTick(ISpEventListner listner, ISpState<MyMsgId> st, string expected) {
+        private void DoTick(ISpEventListner listner, ISpState<MyMsgId> st, string expected, bool assertOnFail = true) {
             listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Tick));
             Thread.Sleep(600);
-            Log.Warning(9, () => string.Format("State:{0}", st.CurrentStateName));
-            Log.Warning(0, () => string.Format(" --- Current state: {0} ---", st.CurrentStateName));
-            Assert.AreEqual(expected, st.CurrentStateName);
+            //Log.Warning(9, () => string.Format("State:{0}", st.CurrentStateName));
+            Log.Warning(0, () => string.Format(" -*-*- Current state: {0} -*-*-", st.CurrentStateName));
+            if (assertOnFail) {
+                Assert.AreEqual(expected, st.CurrentStateName);
+            }
 
         }
 
         [Test, Explicit]
-        public void TestResultExitStateTransitionsInSuperState() {
+        public void TestResultExitTickStateTransitionsInSuperState() {
 
             TestHelpers.CatchUnexpected(() => {
                 MyDataClass dataClass = new MyDataClass();
                 SS_M m = new SS_M(dataClass);
                 ISpEventListner listner;
                 SpStateMachineEngine engine = this.GetEngine(out listner, dataClass, m);
+
+                listner.MsgReceived += new Action<ISpEventMessage>((msg) => {
+                    Log.Info("StateMachineScratchPad", "Exit test", () =>
+                        string.Format("**** Message  Id:{0} Ret:{1} Status:{2} Payload:{3} Priority:{4} UID:{5}",
+                        msg.EventId,
+                        msg.ReturnCode,
+                        msg.ReturnStatus,
+                        msg.StringPayload,
+                        msg.Priority,
+                        msg.Uid));
+                });
+
+                listner.ResponseReceived += new Action<ISpEventMessage>((msg) => {
+                    Log.Info("StateMachineScratchPad", "Exit test", () => 
+                        string.Format("**** Response Id:{0} Ret:{1} Status:{2} Payload:{3} Priority:{4} UID:{5}", 
+                        msg.EventId,
+                        msg.ReturnCode, 
+                        msg.ReturnStatus, 
+                        msg.StringPayload, 
+                        msg.Priority, 
+                        msg.Uid));
+                });
+
 
                 engine.Start();
 
@@ -254,6 +279,43 @@ namespace TestCases.SpStateMachineTests {
             });
         }
 
+
+        [Test, Explicit]
+        public void TestResultExitEntryStateTransitionsInSuperState() {
+
+            TestHelpers.CatchUnexpected(() => {
+                MyDataClass dataClass = new MyDataClass();
+                SS_M2 m = new SS_M2(dataClass);
+                ISpEventListner listner;
+                SpStateMachineEngine engine = this.GetEngine(out listner, dataClass, m);
+
+                engine.Start();
+                // First tick will drive cascade of state changes because the first SS aborts on entry of first sub state entry
+
+                this.DoTick(listner, m, "SS_M2.SS_A1.S_A1_ExitEntry", false);
+                this.DoTick(listner, m, "SS_M2.SS_A1.S_A1_ExitEntry", false);
+
+                ////this.DoTick(listner, m, "SS_M.SS_A1.SS_A1");
+                ////this.DoTick(listner, m, "SS_M.SS_A1.SS_A1");
+                ////// After third it should have transitioned1
+                ////this.DoTick(listner, m, "SS_M.SS_B1.SS_B1");
+                //this.DoTick(listner, m, "SS_M.SS_B1.SS_B1");
+                //this.DoTick(listner, m, "SS_M.SS_B1.SS_B1");
+
+
+                Thread.Sleep(1000);
+                Log.Warning(0, () => string.Format(" -*-*- Current state: {0} -*-*-", m.CurrentStateName));
+                Thread.Sleep(1000);
+                engine.Stop();
+                engine.Dispose();
+                Console.WriteLine("Engine Disposed");
+            });
+        }
+
+
+        //private void Listner_ResponseReceived(ISpEventMessage obj) {
+        //    throw new NotImplementedException();
+        //}
 
         private SpStateMachineEngine GetEngine(out ISpEventListner listner, MyDataClass dataClass, ISpState<MyMsgId> firstState) {
 
