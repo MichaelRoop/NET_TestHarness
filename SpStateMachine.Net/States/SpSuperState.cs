@@ -117,14 +117,35 @@ namespace SpStateMachine.States {
             if (t.TransitionType != SpStateTransitionType.SameState) {
                 return t;
             }
-            // TODO - put more inteligence to handle result Exit from super state
 
-
-            // return transition
+            // Get the substate that was set as first for this superstate
             this.currentState = this.entryState;
 
-            // TODO - put more inteligence to handle result Exit from current state
-            return this.currentState.OnEntry(msg);
+            // Call entry on the first substate
+            ISpStateTransition<TMsgId> tr = this.currentState.OnEntry(msg);
+
+            // TODO check logic and see if it can be moved to the SpMachine
+            // If the current state's transition is call to exit the substate, then we need 
+            // to get the registered next state transistion and call exit on the current and 
+            // entry on that new substate
+            if (tr.TransitionType == SpStateTransitionType.ExitState) {
+                ISpStateTransition<TMsgId> sstr = null;
+                if (tr.ReturnMessage != null) {
+                    sstr = this.GetSuperStateOnResultTransition(tr.ReturnMessage);
+                    if (sstr != null) {
+                        if (sstr.NextState != null) {
+                            this.currentState.OnExit();
+                            this.currentState = sstr.NextState;
+                            // This should handle any recursion since it is called on another object
+                            // TODO - not sure.  Need to test multiple recursion scenarios
+                            return this.currentState.OnEntry(msg);
+                        }
+                        return sstr;
+                    }
+                }
+            }
+
+            return tr;
         }
 
 
@@ -144,22 +165,7 @@ namespace SpStateMachine.States {
             if (tr != null) {
                 return tr;
             }
-
-            // Check if the current state returned an Exit result that has a registered result at super state level
-            tr = this.currentState.OnTick(msg);
-            if (tr.TransitionType == SpStateTransitionType.ExitState) {
-                ISpStateTransition<TMsgId> sstr = null;
-                if (tr.ReturnMessage != null) {
-                    sstr = this.GetSuperStateOnResultTransition(tr.ReturnMessage);
-                    if (sstr != null) {
-                        return sstr;
-                    }
-                }
-            }
-
-            return this.ReadTransitionType(tr, msg, false);
-            // Original which invoked to OnTick
-            //return this.GetTransition(this.currentState.OnTick, msg);
+            return this.GetTransition(this.currentState.OnTick, msg);
         }
 
         #endregion
@@ -174,8 +180,21 @@ namespace SpStateMachine.States {
         /// <param name="msg">The incoming event message received</param>
         /// <returns>A Transtion object with the results of the state processing</returns>
         ISpStateTransition<TMsgId> GetTransition(Func<ISpEventMessage, ISpStateTransition<TMsgId>> stateFunc, ISpEventMessage msg) {
-            return this.ReadTransitionType(stateFunc.Invoke(msg), msg, false);
-        }
+            ISpStateTransition<TMsgId> tr = stateFunc.Invoke(msg);
+            if (tr.TransitionType == SpStateTransitionType.ExitState) {
+                ISpStateTransition<TMsgId> sstr = null;
+                if (tr.ReturnMessage != null) {
+                    sstr = this.GetSuperStateOnResultTransition(tr.ReturnMessage);
+                    if (sstr != null) {
+                        return sstr;
+                    }
+                }
+            }
+        
+        return this.ReadTransitionType(tr, msg, false);
+
+        //return this.ReadTransitionType(stateFunc.Invoke(msg), msg, false);
+    }
 
 
         /// <summary>

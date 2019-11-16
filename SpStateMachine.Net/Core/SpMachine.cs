@@ -104,7 +104,7 @@ namespace SpStateMachine.Core {
             else {
                 tr = this.state.OnTick(msg);
             }
-            WrapErr.ChkVar(tr, 50177, String.Format(
+            WrapErr.ChkVar(tr, 50177, () => String.Format(
                 "The State '{0}' {1} Returned a Null Transition", this.state.FullName, tmpIsStarted ? "OnTick" : "OnEntry" ));
             return tr.ReturnMessage;
         }
