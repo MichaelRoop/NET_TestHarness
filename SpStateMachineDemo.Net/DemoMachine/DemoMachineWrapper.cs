@@ -1,6 +1,7 @@
 ﻿using LogUtils.Net;
 using SpStateMachine.Behaviours;
 using SpStateMachine.Core;
+using SpStateMachine.EventListners;
 using SpStateMachine.EventStores;
 using SpStateMachine.Interfaces;
 using SpStateMachine.PeriodicTimers;
@@ -150,32 +151,23 @@ namespace SpStateMachineDemo.Net.DemoMachine {
             DummyDI.EventListnerInstance.ResponseReceived += this.EventListnerInstance_ResponseReceived;
             //DummyDI.EventListnerInstance.ResponseReceived += this.EventListnerInstance_ResponseReceived;
             //DummyDI.EventListnerInstance.ResponseReceived += new Action<ISpEventMessage>((msg) => {
-
-            //});
-
-            //+= new Action<ISpEventMessage>((msg) =>
-
         }
 
-        private void EventListnerInstance_MsgReceived(ISpEventMessage obj) {
-            //throw new NotImplementedException();
 
-            //this.StateMachineStateChange?.Invoke(this, new StateChangeArgs("BLIFFY"));
-        }
+        private void EventListnerInstance_ResponseReceived(object sender, EventArgs e) {
 
-        private void EventListnerInstance_ResponseReceived(ISpEventMessage obj) {
+            Log.Warning(0, "****************************** Response received");
 
-            Log.Warning(0, "Response received");
-
-            //this.StateMachineStateChange?.Invoke(this, new StateChangeArgs("sflkjsdflkdjsflk"));
-
-
-            //this.currentState = "werwerewr";
-
+            //MsgOrResponseArgs args = (MsgOrResponseArgs)e;
             if (this.stateMachine.CurrentStateName != this.currentState) {
                 this.currentState = this.stateMachine.CurrentStateName;
                 this.StateMachineStateChange?.Invoke(this, new StateChangeArgs(this.currentState));
             }
+
         }
+
+
+
+
     }
 }

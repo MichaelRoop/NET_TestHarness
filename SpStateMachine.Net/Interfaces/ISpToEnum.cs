@@ -10,7 +10,7 @@ namespace SpStateMachine.Interfaces {
     /// The type of Enum to convert. The struct constraint forces the type to 
     /// be non nullable.  The implementation has to do the checking if Enum
     /// </typeparam>
-    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
+    /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
     public interface ISpToEnum<T> where T : struct {
 
         /// <summary>

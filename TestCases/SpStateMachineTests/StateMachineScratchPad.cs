@@ -26,7 +26,7 @@ namespace TestCases.SpStateMachineTests {
 
         NUnitTraceWriter consoleWriter = new NUnitTraceWriter();
         SpTestHelpers helpers = new SpTestHelpers();
-
+        ClassLog log = new ClassLog("StateMachineScratchPad");
 
         [OneTimeSetUp]
         public void Setup() {
@@ -73,7 +73,7 @@ namespace TestCases.SpStateMachineTests {
                 ISpPeriodicTimer timer = new WinSimpleTimer(new TimeSpan(0, 0, 0, 0, 1000));
                 ISpEventListner listner = new SimpleEventListner();
 
-                listner.ResponseReceived += new Action<ISpEventMessage>((msg) => { });
+                listner.ResponseReceived += new EventHandler((o,e) => { });
 
 
 
@@ -148,12 +148,11 @@ namespace TestCases.SpStateMachineTests {
                 MySuperState notStartedSs = new NotStartedSs(null, dataClass);
                 ISpEventListner listner;
                 SpStateMachineEngine engine = this.GetEngine(out listner, dataClass, notStartedSs);
+                listner.MsgReceived += this.helpers.ListnerMsgDumpDelegate;
+                listner.ResponseReceived += this.helpers.ListnerResponseDumpDelegate;
 
                 engine.Start();
                 Thread.Sleep(600);
-
-                ////listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyEventType.Tick));
-
 
                 Assert.AreEqual("NotStarted.Idle", notStartedSs.CurrentStateName);
 
@@ -164,6 +163,10 @@ namespace TestCases.SpStateMachineTests {
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Abort));
                 Thread.Sleep(700);
                 Assert.AreEqual("NotStarted.Idle", notStartedSs.CurrentStateName);
+
+                listner.MsgReceived -= this.helpers.ListnerMsgDumpDelegate;
+                listner.ResponseReceived -= this.helpers.ListnerResponseDumpDelegate;
+
 
                 Thread.Sleep(200);
                 engine.Stop();
@@ -293,7 +296,8 @@ namespace TestCases.SpStateMachineTests {
             //ISpEventListner listner = new SimpleEventListner();
             listner = new SimpleEventListner();
 
-            listner.ResponseReceived += new Action<ISpEventMessage>((msg) => { });
+            // To avoid log errors if no subscribers
+            listner.ResponseReceived += new EventHandler((o,e) => { });
 
             // Simulates DI
             return new SpStateMachineEngine(listner, store, behavior, sm, timer);

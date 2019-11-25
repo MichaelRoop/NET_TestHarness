@@ -6,6 +6,19 @@ using System.Threading;
 
 namespace SpStateMachine.EventListners {
 
+    /// <summary>Event args for the messages or responses</summary>
+    public class SpMessagingArgs : EventArgs {
+
+        /// <summary>Args payload which is the event message</summary>
+        public ISpEventMessage Payload { get; private set; }
+
+        public SpMessagingArgs(ISpEventMessage msg) {
+            this.Payload = msg;
+        }
+
+    };
+
+
     /// <summary>
     /// A simple event listner. This class could be shared between the the
     /// state machine engine and a communications module like WCF as a bridge
@@ -22,14 +35,14 @@ namespace SpStateMachine.EventListners {
         /// outside and be subscribed to by the engine to be pushed to the 
         /// state machine
         /// </summary>
-        public event Action<ISpEventMessage>  MsgReceived;
+        public event EventHandler MsgReceived;
 
         /// <summary>
         /// Event raised when a response is received. This would originate from the
         /// state machine and be subscribed to by the originator of original message 
         /// to the state machine
         /// </summary>
-        public event Action<ISpEventMessage>  ResponseReceived;
+        public event EventHandler ResponseReceived;
 
         #endregion
 
@@ -81,9 +94,9 @@ namespace SpStateMachine.EventListners {
         /// <param name="action">The action to raise</param>
         /// <param name="msg">The message or response to push</param>
         /// <param name="type">Either message or response identifier string</param>
-        private void RaiseEvent(Action<ISpEventMessage> action, ISpEventMessage msg, string type) {
+        private void RaiseEvent(EventHandler action, ISpEventMessage msg, string type) {
             Log.Info("SimpleEventListner", "RaiseEvent", String.Format("Raising Event:{0} type:{1} Event Id:{2}", type, msg.TypeId, msg.EventId));
-
+            
             if (action != null) {
                 ThreadPool.QueueUserWorkItem((threadContext) => {
                     WrapErr.ToErrReport(50030,
@@ -91,7 +104,7 @@ namespace SpStateMachine.EventListners {
                         () => {
                             // Check again just before execution
                             if (action != null) {
-                                action.Invoke(msg);
+                                action.Invoke(this, new SpMessagingArgs(msg));
                             }
                             else {
                                 Log.Warning(50034, String.Format("In thread - No subscribers to '{0}' message", type));
@@ -103,7 +116,7 @@ namespace SpStateMachine.EventListners {
                 Log.Warning(50031, String.Format("No subscribers to '{0}' message", type));
             }
         }
-        
+
         #endregion
 
     }

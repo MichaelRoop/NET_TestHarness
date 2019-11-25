@@ -14,14 +14,14 @@ namespace SpStateMachine.Interfaces {
         /// outside and be subscribed to by the engine to be pushed to the 
         /// state machine
         /// </summary>
-        event Action<ISpEventMessage> MsgReceived;
+        event EventHandler MsgReceived;
 
         /// <summary>
         /// Event raised when a response is received. This would originate from the
         /// state machine and be subscribed to by the originator of original message 
         /// to the state machine
         /// </summary>
-        event Action<ISpEventMessage> ResponseReceived;
+        event EventHandler ResponseReceived;
         
         #endregion
 

@@ -2,6 +2,7 @@
 using System.Threading;
 using ChkUtils.Net;
 using LogUtils.Net;
+using SpStateMachine.EventListners;
 using SpStateMachine.Interfaces;
 
 namespace SpStateMachine.Core {
@@ -27,8 +28,6 @@ namespace SpStateMachine.Core {
         ISpBehaviorOnEvent eventBehavior = null;
 
         Action wakeUpAction = null;
-
-        Action<ISpEventMessage> msgReceivedAction = null;
 
         private bool terminateThread = false;
 
@@ -76,8 +75,7 @@ namespace SpStateMachine.Core {
 
                 // Initalise events that will be raised and connect them to objects that will raise them
                 this.wakeUpAction = new Action(this.timer_OnWakeup);
-                this.msgReceivedAction = new Action<ISpEventMessage>(this.eventListner_MsgReceived);
-                this.msgListner.MsgReceived += this.msgReceivedAction;
+                this.msgListner.MsgReceived += this.eventListner_MsgReceived;
                 this.timer.OnWakeup += this.wakeUpAction;
             });
         }
@@ -140,8 +138,8 @@ namespace SpStateMachine.Core {
 
         /// <summary>Event from the event listner gets stuffed in the store</summary>
         /// <param name="msg"></param>
-        void eventListner_MsgReceived(ISpEventMessage msg) {
-            this.msgStore.Add(msg);
+        void eventListner_MsgReceived(object sender, EventArgs e) {
+            this.msgStore.Add(((SpMessagingArgs)e).Payload);
             this.eventBehavior.EventReceived(BehaviorResponseEventType.MsgArrived);
         }
 
@@ -208,7 +206,7 @@ namespace SpStateMachine.Core {
             this.log.DebugEntry("DisposeManagedResources");
 
             // Disconnect event handling
-            WrapErr.SafeAction(() => { this.msgListner.MsgReceived -= this.msgReceivedAction; });
+            WrapErr.SafeAction(() => { this.msgListner.MsgReceived -= this.eventListner_MsgReceived; });
             WrapErr.SafeAction(() => { this.timer.OnWakeup -= this.wakeUpAction; });
 
             this.DisposeObject(this.timer, "timer");

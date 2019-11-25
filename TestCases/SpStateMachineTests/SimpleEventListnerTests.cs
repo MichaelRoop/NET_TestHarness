@@ -1,8 +1,8 @@
-﻿using NUnit.Framework;
+﻿using LogUtils.Net;
+using NUnit.Framework;
 using SpStateMachine.EventListners;
 using SpStateMachine.Interfaces;
 using System;
-using System.Diagnostics;
 using System.Threading;
 using TestCases.SpStateMachineTests.TestImplementations;
 using TestCases.SpStateMachineTests.TestImplementations.Messages;
@@ -17,6 +17,7 @@ namespace TestCases.SpStateMachineTests {
 
         HelperLogReaderNet logReader = new HelperLogReaderNet();
         private ISpEventListner listner = null;
+        private ClassLog log = new ClassLog("SimpleEventListnerTests");
 
         #endregion
 
@@ -30,6 +31,8 @@ namespace TestCases.SpStateMachineTests {
 
         [TearDown]
         public void TestTeardown() {
+            // Wait for logs to dump
+            Thread.Sleep(300);
             this.logReader.StopLogging();
             this.logReader.Clear();
             this.listner.Dispose();
@@ -69,23 +72,25 @@ namespace TestCases.SpStateMachineTests {
         public void _0_MessageReceived_validMsg() {
             bool received = false;
             ISpEventMessage msgCopy = null;
-
             TestHelpersNet.CatchUnexpected(() => {
-                this.listner.MsgReceived += new Action<ISpEventMessage>((msg) => {
-                    Console.WriteLine("Woke up on msg received");
+                this.listner.MsgReceived += new EventHandler((o, e) => {
+                    this.log.Info("_0_MessageReceived_validMsg", "Woke up on msg received");
                     received = true;
-                    msgCopy = msg;
+                    msgCopy = ((SpMessagingArgs)e).Payload;
                 });
                 this.listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Start));
 
             });
+
             // On thread pool so have to wait for response
             for (int i = 0; i < 21; i++) {
                 if (received) {
+                    this.log.Info("_0_MessageReceived_validMsg", () => string.Format("Received on count {0}", i));
                     break;
                 }
                 Thread.Sleep(25);
             }
+
             Assert.IsTrue(received, "The received event was not raised");
             Assert.IsNotNull(msgCopy, "Message was not copied");
             Assert.AreEqual((int)MyMsgType.SimpleMsg, msgCopy.TypeId);
@@ -102,15 +107,15 @@ namespace TestCases.SpStateMachineTests {
             ISpEventMessage msgCopy = null;
 
             TestHelpersNet.CatchUnexpected(() => {
-                this.listner.ResponseReceived += new Action<ISpEventMessage>((msg) => {
-                    Debug.WriteLine("Woke up on response received");
+                this.listner.ResponseReceived += new EventHandler((o, e) => {
+                    this.log.Info("_0_MessageReceived_validMsg", "Woke up on msg received");
                     received = true;
-                    msgCopy = msg;
+                    msgCopy = ((SpMessagingArgs)e).Payload;
                 });
 
                 this.listner.PostResponse(
                     new MyBaseResponse(
-                        MyMsgType.SimpleMsg, 
+                        MyMsgType.SimpleMsg,
                         new MyBaseMsg(MyMsgType.DataStrMsg, MyMsgId.Tick), MyReturnCode.Success, ""));
             });
             // On thread pool so have to wait for response
@@ -152,10 +157,11 @@ namespace TestCases.SpStateMachineTests {
         public void _50030_RaiseEvent_CatchUserResponseDelegateException() {
 
             TestHelpersNet.CatchUnexpected(() => {
-                this.listner.ResponseReceived += new Action<ISpEventMessage>((msg) => {
-                    Console.WriteLine("** Response Received triggered **");
+                this.listner.ResponseReceived += new EventHandler((o, e) => {
+                    this.log.Info("_0_MessageReceived_validMsg", "** Response Received triggered - Exception coming **");
                     throw new Exception("User Exception in delegate");
                 });
+
                 this.listner.PostResponse(
                     new MyBaseResponse(
                         MyMsgType.SimpleMsg,
@@ -171,8 +177,8 @@ namespace TestCases.SpStateMachineTests {
         public void _50030_RaiseEvent_CatchUserMessageDelegateException() {
 
             TestHelpersNet.CatchUnexpected(() => {
-                this.listner.MsgReceived += new Action<ISpEventMessage>((msg) => {
-                    Console.WriteLine("** Message Received triggered **");
+                this.listner.MsgReceived += new EventHandler((o, e) => {
+                    this.log.Info("_0_MessageReceived_validMsg", "** Message Received triggered - Exception coming **");
                     throw new Exception("User Exception in delegate");
                 });
                 this.listner.PostMessage(

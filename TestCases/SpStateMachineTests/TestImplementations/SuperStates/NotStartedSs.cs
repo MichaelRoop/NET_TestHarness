@@ -39,7 +39,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations.SuperStates {
             // Super state transitions
             this.ToNextOnResult(MyMsgId.Stop, this.StateIdle);
 
-            this.SetEntryState(StateIdle);
+            this.SetEntryState(this.StateIdle);
         }
 
     }
