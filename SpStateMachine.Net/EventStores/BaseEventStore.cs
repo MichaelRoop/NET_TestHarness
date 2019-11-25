@@ -10,7 +10,7 @@ namespace SpStateMachine.EventStores {
     /// default tick object for non sent event ticks
     /// </summary>
     /// <author>Michael Roop</author>
-    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
+    /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
     public abstract class BaseEventStore : ISpEventStore {
         
         #region Data
@@ -25,16 +25,12 @@ namespace SpStateMachine.EventStores {
 
         #region Constructors
 
-        /// <summary>
-        /// Default constructor in private scope to prevent usage
-        /// </summary>
+        /// <summary>Default constructor in private scope to prevent usage</summary>
         private BaseEventStore() {
         }
 
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
+        /// <summary>Constructorsummary>
         /// <param name="defaultTick">
         /// The default tick event if to provide if there are no queued event objects
         /// </param>
@@ -44,9 +40,7 @@ namespace SpStateMachine.EventStores {
         }
 
 
-        /// <summary>
-        /// Finalizer
-        /// </summary>
+        /// <summary>Finalizer</summary>
         ~BaseEventStore() {
             this.Dispose(false);
         }
@@ -55,9 +49,7 @@ namespace SpStateMachine.EventStores {
 
         #region IEventStore
 
-        /// <summary>
-        /// Add and event object to the store
-        /// </summary>
+        /// <summary>Add and event object to the store</summary>
         /// <param name="msg">The message event</param>
         public void Add(ISpEventMessage msg) {
             WrapErr.ChkDisposed(this.disposed, 50111);
@@ -68,10 +60,8 @@ namespace SpStateMachine.EventStores {
         }
 
 
-        /// <summary>
-        /// Pop the next event object from the store
-        /// </summary>
-        /// <returns>The T object</returns>
+        /// <summary>the next event object from the store</summary>
+        /// <returns>The next ISpEventMessage</returns>
         public ISpEventMessage Get() {
             WrapErr.ChkDisposed(this.disposed, 50113);
             // Make stack variable and only lock the queue for the duration of the copy to
@@ -89,18 +79,14 @@ namespace SpStateMachine.EventStores {
 
         private bool disposed = false;
 
-        /// <summary>
-        /// Dispose any resources in the object
-        /// </summary>
+        /// <summary>Dispose any resources in the object</summary>
         public void Dispose() {
             this.Dispose(true);
             // Prevent finalizer call since we are releasing resources early
             GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// Dispose resources
-        /// </summary>
+        /// <summary>Dispose resources</summary>
         /// <param name="disposeManagedResources">
         /// If true it was called by the Dispose method rather than finalizer
         /// </param>
@@ -114,16 +100,14 @@ namespace SpStateMachine.EventStores {
             this.disposed = true;
         }
 
-        /// <summary>
-        /// Dispose managed resources (those with Dispose methods)
-        /// </summary>
+
+        /// <summary>Dispose managed resources (those with Dispose methods)</summary>
         protected virtual void DisposeManagedResources() {
             // Nothing to cleanup
         }
 
-        /// <summary>
-        /// Dispose unmanaged native resources (InPtr, file handles)
-        /// </summary>
+
+        /// <summary>Dispose unmanaged native resources (InPtr, file handles)</summary>
         protected virtual void DisposeNativeResources() {
             // Nothing to cleanup
         }
@@ -132,16 +116,12 @@ namespace SpStateMachine.EventStores {
                 
         #region Abstract Methods
 
-        /// <summary>
-        /// Get an event from the store child implementation
-        /// </summary>
+        /// <summary>Get an event from the store child implementation</summary>
         /// <returns>The next event or null if none found</returns>
         protected abstract ISpEventMessage GetEvent();
 
 
-        /// <summary>
-        /// Add an event to the child implementation
-        /// </summary>
+        /// <summary>Add an event to the child implementation</summary>
         /// <param name="eventObject">The event object to add</param>
         protected abstract void AddEvent(ISpEventMessage eventObject);
 

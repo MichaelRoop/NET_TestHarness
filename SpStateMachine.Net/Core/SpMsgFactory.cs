@@ -10,7 +10,7 @@ namespace SpStateMachine.Core {
     /// of GUIDs to the response to satisfy message correlation
     /// </summary>
     /// <author>Michael Roop</author>
-    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
+    /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
     public sealed class SpMsgFactory : ISpMsgFactory {
 
         #region Data
@@ -21,16 +21,12 @@ namespace SpStateMachine.Core {
 
         #region Constructors
 
-        /// <summary>
-        /// Default constructor in private scope to prevent usage
-        /// </summary>
+        /// <summary>Default constructor in private scope to prevent usage</summary>
         private SpMsgFactory() {
         }
 
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
+        /// <summary>Constructor</summary>
         /// <param name="provider">The message provider</param>
         public SpMsgFactory(ISpMsgProvider provider) {
             WrapErr.ChkParam(provider, "provider", 9999);
@@ -42,9 +38,8 @@ namespace SpStateMachine.Core {
         #region ISpMsgFactory Members
 
         /// <summary>
-        /// This will return the default success response with only the GUID 
-        /// transfered from the incoming message to satisfy any need of msg 
-        /// correlation
+        /// Returns default success response with only the GUID transfered from the 
+        /// incoming message to satisfy any need of msg correlation
         /// </summary>
         /// <param name="msg">The message received by the state machine</param>
         /// <returns>The default response message</returns>
@@ -53,6 +48,7 @@ namespace SpStateMachine.Core {
                 return this.provider.DefaultMsg(msg);
             });
         }
+
 
         public ISpEventMessage GetResponse(ISpEventMessage msg) {
             return this.GetMsg(msg, () => {
@@ -70,9 +66,7 @@ namespace SpStateMachine.Core {
 
         #region Private Methods
 
-        /// <summary>
-        /// Safely execute the function and transfer the GUID to the response
-        /// </summary>
+        /// <summary>Safely execute function and transfer the GUID to the response</summary>
         /// <param name="msg">The incoming message</param>
         /// <param name="func">The function to invoke to generate the response message</param>
         /// <returns>A correlated response message</returns>

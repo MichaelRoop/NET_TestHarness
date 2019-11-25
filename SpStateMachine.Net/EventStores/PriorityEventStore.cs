@@ -12,7 +12,7 @@ namespace SpStateMachine.EventStores {
     /// and maintain order of same priority events
     /// </summary>
     /// <author>Michael Roop</author>
-    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
+    /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
     public class PriorityEventStore : BaseEventStore {
 
         #region Data
@@ -33,9 +33,7 @@ namespace SpStateMachine.EventStores {
         
         #region Constructors
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
+        /// <summary>Constructor</summary>
         /// <param name="defaultTick">
         /// The default tick event if to provide if there are no queued event objects
         /// </param>
@@ -47,9 +45,7 @@ namespace SpStateMachine.EventStores {
 
         #region BaseEventStore overrides
 
-        /// <summary>
-        /// Get an event from the highest level queue descending
-        /// </summary>
+        /// <summary>Get event from the highest level queue descending</summary>
         /// <returns>The next event or null if none found</returns>
         protected override ISpEventMessage GetEvent() {
             if (this.UrgentPriorityQueue.Count > 0) {

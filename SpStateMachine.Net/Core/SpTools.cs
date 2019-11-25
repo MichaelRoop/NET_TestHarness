@@ -10,7 +10,7 @@ namespace SpStateMachine.Core {
     /// Collection of tools useful for factoring out common functionality
     /// </summary>
     /// <author>Michael Roop</author>
-    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
+    /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
     public static class SpTools {
         
         /// <summary>
@@ -38,24 +38,22 @@ namespace SpStateMachine.Core {
         }
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TMsgId">Event id</typeparam>
+        /// <summary>Register a transition for a state</summary>
         /// <param name="type">string of transition type</param>
-        /// <param name="eventId">The event message id</param>
+        /// <typeparam name="TMsgId">Event id</typeparam>
+        /// <param name="msgId">The event message id</param>
         /// <param name="transition">Transition object</param>
         /// <param name="store">Transition store</param>
-        public static void RegisterTransition<TMsgId>(string type, TMsgId eventId, ISpStateTransition<TMsgId> transition, Dictionary<int, ISpStateTransition<TMsgId>> store) where TMsgId : struct {
-            //WrapErr.ChkParam(eventId, "eventId", 51004);
+        public static void RegisterTransition<TMsgId>(string type, TMsgId msgId, ISpStateTransition<TMsgId> transition, Dictionary<int, ISpStateTransition<TMsgId>> store) where TMsgId : struct {
+            //WrapErr.ChkParam(eventId, "msgId", 51004);
             WrapErr.ChkParam(transition, "transition", 51005);
             WrapErr.ChkParam(store, "store", 51006);
 
-            WrapErr.ChkTrue(typeof(TMsgId).IsEnum, 9999, () => string.Format("Transition type {0} must be Enum", eventId.GetType().Name));
+            WrapErr.ChkTrue(typeof(TMsgId).IsEnum, 9999, () => string.Format("Transition type {0} must be Enum", msgId.GetType().Name));
             WrapErr.ChkTrue(typeof(TMsgId).GetEnumUnderlyingType() == typeof(Int32), 9999, 
-                () => string.Format("Transition type enum {0} must be derived from int", eventId.GetType().Name));
+                () => string.Format("Transition type enum {0} must be derived from int", msgId.GetType().Name));
 
-            int tmp = Convert.ToInt32(eventId);
+            int tmp = Convert.ToInt32(msgId);
             // 51007 - failure of conversion number
 
             // Duplicate transitions on same Event is a no no.
@@ -87,19 +85,12 @@ namespace SpStateMachine.Core {
                         //Log.Info("SpTools", "GetTransitionCloneFromStore", "Found a transition AND - Held msg - transfering GUID");
                     }
 
-                    // TODO - Look at transfering the GUID here
                     tr.ReturnMessage.Uid = eventMsg.Uid;
-
-
-                    //tr.ReturnMessage = eventMsg;
                     return tr;
                 }
                 return null;
             });
         }
-
-
-
 
     }
 }

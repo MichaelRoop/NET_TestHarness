@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿namespace SpStateMachine.Core {
 
-namespace SpStateMachine.Core {
-
-    /// <summary>
-    /// Differnt priorities of Events
-    /// </summary>
-    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
+    /// <summary>Different priorities of Events</summary>
+    /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
     public enum SpEventPriority {
 
         /// <summary>Below normal priority level</summary>

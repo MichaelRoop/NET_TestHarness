@@ -6,7 +6,9 @@ using System.Threading;
 
 namespace SpStateMachine.EventListners {
 
-    /// <summary>Event args for the messages or responses</summary>
+    /// <summary>Args for the messages or responses</summary>
+    /// <author>Michael Roop</author>
+    /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
     public class SpMessagingArgs : EventArgs {
 
         /// <summary>Args payload which is the event message</summary>
@@ -21,11 +23,11 @@ namespace SpStateMachine.EventListners {
 
     /// <summary>
     /// A simple event listner. This class could be shared between the the
-    /// state machine engine and a communications module like WCF as a bridge
+    /// state machine engine and a communications module as a bridge
     /// to push messages into the state machine and get back the responses
     /// </summary>
     /// <author>Michael Roop</author>
-    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
+    /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
     public sealed class SimpleEventListner : ISpEventListner {
 
         #region ISpEventListner Events
@@ -48,10 +50,7 @@ namespace SpStateMachine.EventListners {
 
         #region ISpEventListner Methods
 
-        /// <summary>
-        /// Post an ISpMessage to those listening. This will raise the 
-        /// MsgReceived event
-        /// </summary>
+        /// <summary>Post ISpMessage to listeners. This will raise the MsgReceived event</summary>
         /// <param name="msg">The message to post</param>
         public void PostMessage(ISpEventMessage msg) {
             WrapErr.ChkDisposed(this.disposed, 50032);
@@ -88,9 +87,7 @@ namespace SpStateMachine.EventListners {
 
         #region Private Methods
 
-        /// <summary>
-        /// Raise an event in a thread pool if there are subscribers to the event
-        /// </summary>
+        /// <summary>Raise an event in a thread pool if there are subscribers to the event</summary>
         /// <param name="action">The action to raise</param>
         /// <param name="msg">The message or response to push</param>
         /// <param name="type">Either message or response identifier string</param>

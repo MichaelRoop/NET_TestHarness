@@ -7,11 +7,9 @@ using System.Threading;
 
 namespace SpStateMachine.Behaviours {
 
-    /// <summary>
-    /// Implementation of a behavior class that wakes only on periodic timer
-    /// </summary>
+    /// <summary>Implementation of a behavior that wakes on periodic timer</summary>
     /// <author>Michael Roop</author>
-    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
+    /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
     public sealed class SpPeriodicWakeupOnly : ISpBehaviorOnEvent {
 
         #region Data
@@ -29,16 +27,12 @@ namespace SpStateMachine.Behaviours {
 
         #region Constructors
 
-        /// <summary>
-        /// Default constructor
-        /// </summary>
+        /// <summary>Default constructor</summary>
         public SpPeriodicWakeupOnly() {
         }
 
 
-        /// <summary>
-        /// Finalizer
-        /// </summary>
+        /// <summary>Finalizer</summary>
         ~SpPeriodicWakeupOnly() {
             this.Dispose(false);
         }
@@ -47,9 +41,7 @@ namespace SpStateMachine.Behaviours {
 
         #region ISpBehaviorOnEvent Members
 
-        /// <summary>
-        /// Invoked when an event is received
-        /// </summary>
+        /// <summary>Invoked when an event is received</summary>
         /// <param name="eventType">The type of event received</param>
         public void EventReceived(BehaviorResponseEventType eventType) {
             WrapErr.ChkDisposed(this.disposed, 50080);
@@ -70,9 +62,7 @@ namespace SpStateMachine.Behaviours {
         }
 
 
-        /// <summary>
-        /// Wait indefinitely until behavior is satisfied
-        /// </summary>
+        /// <summary>Wait indefinitely until behavior is satisfied</summary>
         public void WaitOnEvent() {
             WrapErr.ChkDisposed(this.disposed, 50082);
             lock (this.busyLock) {
@@ -94,9 +84,7 @@ namespace SpStateMachine.Behaviours {
 
         private bool disposed = false;
 
-        /// <summary>
-        /// Dispose all resources in this object
-        /// </summary>
+        /// <summary>Dispose all resources in this object</summary>
         public void Dispose() {
             this.Dispose(true);
 
@@ -105,9 +93,7 @@ namespace SpStateMachine.Behaviours {
         }
 
 
-        /// <summary>
-        /// Dispose resources
-        /// </summary>
+        /// <summary>Dispose resources        /// </summary>
         /// <param name="disposeManagedResources">
         /// If true it was called by the Dispose method rather than finalizer
         /// </param>
@@ -127,9 +113,7 @@ namespace SpStateMachine.Behaviours {
         }
 
 
-        /// <summary>
-        /// Dispose managed resources (those with Dispose methods)
-        /// </summary>
+        /// <summary>Dispose managed resources (those with Dispose methods)</summary>
         private void DisposeManagedResources() {
             WrapErr.ToErrReport(50083, "Error Disposing wakeEvent", () => {
                 if (this.wakeEvent != null) {
@@ -139,9 +123,8 @@ namespace SpStateMachine.Behaviours {
             });
         }
 
-        /// <summary>
-        /// Dispose unmanaged native resources (InPtr, file handles)
-        /// </summary>
+
+        /// <summary>Dispose unmanaged native resources (InPtr, file handles)</summary>
         private void DisposeNativeResources() {
             // Nothing to cleanup
         }

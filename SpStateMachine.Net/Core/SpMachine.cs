@@ -11,7 +11,7 @@ namespace SpStateMachine.Core {
     /// </remarks>
     /// <typeparam name="TMachine">Wraped object type constrained to a class with IDisposable Interface required</typeparam>
     /// <author>Michael Roop</author>
-    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
+    /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
     public class SpMachine<TMachine,TMsgId> : ISpStateMachine where TMachine : class, IDisposable where TMsgId : struct {
 
         #region Data
@@ -43,17 +43,13 @@ namespace SpStateMachine.Core {
 
         #region Constructors
 
-        /// <summary>
-        /// Default constructor in private scope to prevent usage
-        /// </summary>
+        /// <summary>Default constructor in private scope to prevent usage</summary>
         private SpMachine() {
         }
 
 
-        /// <summary>
-        /// Constructor with DI injectable main state
-        /// </summary>
-        /// <param name="wrappedObject"></param>
+        /// <summary>Constructor</summary>
+        /// <param name="wrappedObject">Has common data and functions for all states</param>
         /// <param name="state">The state machine's main state</param>
         /// <remarks>
         /// The main state will be a super state or parallel super state implementation. You 
@@ -68,9 +64,7 @@ namespace SpStateMachine.Core {
         }
 
 
-        /// <summary>
-        /// Finalizer
-        /// </summary>
+        /// <summary>Finalizer</summary>
         ~SpMachine() {
             this.Dispose(false);
         }
@@ -80,10 +74,8 @@ namespace SpStateMachine.Core {
         #region ISpStateMachine Methods
 
 
-        /// <summary>
-        /// Tick the current state to execute the action based on the event message
-        /// </summary>
-        /// <param name="eventMessage">The event message</param>
+        /// <summary>Tick current state to execute the action based on the inputed message</summary>
+        /// <param name="msg">The inputed message</param>
         /// <returns>The return message from the action</returns>
         public ISpEventMessage Tick(ISpEventMessage msg) {
             WrapErr.ChkDisposed(this.disposed, 50176);
@@ -116,18 +108,16 @@ namespace SpStateMachine.Core {
         /// <summary>Disposed flag</summary>
         private bool disposed = false;
 
-        /// <summary>
-        /// Dispose any resources in the object
-        /// </summary>
+
+        /// <summary>Dispose any resources in the object</summary>
         public void Dispose() {
             this.Dispose(true);
             // Prevent finalizer call since we are releasing resources early
             GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// Dispose resources
-        /// </summary>
+
+        /// <summary>Dispose resources</summary>
         /// <param name="disposeManagedResources">
         /// If true it was called by the Dispose method rather than finalizer
         /// </param>
@@ -150,9 +140,7 @@ namespace SpStateMachine.Core {
         }
 
 
-        /// <summary>
-        /// Dispose unmanaged native resources (InPtr, file handles)
-        /// </summary>
+        /// <summary>Dispose unmanaged native resources (InPtr, file handles)        /// </summary>
         protected virtual void DisposeNativeResources() {
             // Nothing to cleanup
         }

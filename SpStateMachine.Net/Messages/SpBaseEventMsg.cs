@@ -16,7 +16,7 @@ namespace SpStateMachine.Messages {
     /// Extension methods to convert them to int.
     /// </remarks>
     /// <author>Michael Roop</author>
-    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
+    /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
     [DataContract]
     public class SpBaseEventMsg<TMsgType,TMsgId> : ISpEventMessage 
         where TMsgType : struct 
@@ -49,9 +49,7 @@ namespace SpStateMachine.Messages {
         
         #region ISpMessage Properties
 
-        /// <summary>
-        /// Unique identifier of message. Setter only for WCF transfer
-        /// </summary>
+        /// <summary>Unique identifier of message. Setter only for WCF transfer</summary>
         [DataMember]
         public Guid Uid {
             get {
@@ -142,16 +140,12 @@ namespace SpStateMachine.Messages {
 
         #region Constructors
 
-        /// <summary>
-        /// Default constructor in private scope to prevent usage
-        /// </summary>
+        /// <summary>Default constructor in private scope to prevent usage</summary>
         private SpBaseEventMsg() {
         }
 
 
-        /// <summary>
-        /// Constructor for Normal Priority messages
-        /// </summary>
+        /// <summary>Constructor for Normal Priority messages</summary>
         /// <param name="_type">The type id to cast to derived for payload retrieval</param>
         /// <param name="id">The event identifier</param>
         public SpBaseEventMsg(TMsgType _type, int id) {

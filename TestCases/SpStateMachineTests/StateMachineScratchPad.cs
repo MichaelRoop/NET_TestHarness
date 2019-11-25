@@ -40,6 +40,7 @@ namespace TestCases.SpStateMachineTests {
 
         [OneTimeTearDown]
         public void Teardown() {
+            Thread.Sleep(300);
             this.consoleWriter.StopLogging();
         }
 
@@ -48,7 +49,42 @@ namespace TestCases.SpStateMachineTests {
         //NUnit 3 seems to ignore the Explicit so will just comment them out until needed
 
 
-       [Test, Explicit]
+                
+
+        public class EnumTestClass {
+            public Enum TypeId { get; set; }
+            public Enum MsgId { get; set; }
+        }
+
+
+        [Test]
+        public void DoEnumParamTest() {
+            EnumTestClass tc = new EnumTestClass() {
+                TypeId = MyMsgType.DataStrMsg,
+                MsgId = MyMsgId.ExitAborted,
+            };
+            Thread.Sleep(500);
+
+
+            this.log.Info("DoEnumParamTest", () => string.Format("Msg type {0} Msg Id {1}", 
+                (MyMsgType)tc.TypeId, (MyMsgId)tc.MsgId));
+
+            //string t = tc.TypeId.ToString();
+            //string i = tc.MsgId.ToString();
+
+            ////this.log.Info("DoEnumParamTest", () => string.Format("Msg type {0} Msg Id {1}",
+            ////    t, i));
+
+            ////this.log.Info("sdfsd", "Hi there");
+
+            //Log.Warning(1233, "Log warning");
+
+        }
+
+
+
+
+        [Test, Explicit]
         public void TestInitialGenericSpState() {
 
             TestHelpers.CatchUnexpected(() => {

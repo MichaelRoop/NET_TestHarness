@@ -7,6 +7,8 @@ namespace SpStateMachine.Net.Converters {
     /// <typeparam name="TState">State id</typeparam>
     /// <typeparam name="TEvent">Event id</typeparam>
     /// <typeparam name="TMsg">Message id</typeparam>
+    /// <author>Michael Roop</author>
+    /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
     public class SpIdConverter<TState,TEvent,TMsg> : ISpIdConverter<TState,TEvent,TMsg> where TState : struct where TEvent : struct where TMsg : struct {
 
         #region ISpIdConverter Members

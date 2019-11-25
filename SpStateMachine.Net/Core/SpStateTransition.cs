@@ -6,24 +6,22 @@ namespace SpStateMachine.Core {
     /// Contains the necessary information to execute a state transition
     /// </summary>
     /// <author>Michael Roop</author>
-    /// <copyright>July 2012 Michael Roop Used by permission</copyright> 
+    /// <copyright>July 2019 Michael Roop Used by permission</copyright> 
     public sealed class SpStateTransition<TMsgId> : ISpStateTransition<TMsgId> where TMsgId : struct {
 
         #region Data 
 
-        SpStateTransitionType type = SpStateTransitionType.SameState;
+        private SpStateTransitionType type = SpStateTransitionType.SameState;
 
-        ISpState<TMsgId> nextState = null;
+        private ISpState<TMsgId> nextState = null;
 
-        ISpEventMessage returnMsg = null;
+        private ISpEventMessage returnMsg = null;
 
         #endregion
 
         #region ISpStateTransition Members
 
-        /// <summary>
-        /// The type of transition to execute
-        /// </summary>
+        /// <summary>The type of transition to execute</summary>
         public SpStateTransitionType TransitionType {
             get { 
                 return this.type; 
@@ -34,9 +32,7 @@ namespace SpStateMachine.Core {
         }
 
 
-        /// <summary>
-        /// The registered next state for NextState transitions
-        /// </summary>
+        /// <summary>Registered next state for NextState transitions</summary>
         public ISpState<TMsgId> NextState {
             get {
                 return this.nextState;
@@ -47,9 +43,7 @@ namespace SpStateMachine.Core {
         }
 
 
-        /// <summary>
-        /// The response message to return to caller
-        /// </summary>
+        /// <summary>Response message to return to caller</summary>
         public ISpEventMessage ReturnMessage {
             get {
                 return this.returnMsg;
@@ -105,16 +99,12 @@ namespace SpStateMachine.Core {
 
         #region Constructors 
 
-        /// <summary>
-        /// Default constructor in private scope to prevent usage
-        /// </summary>
+        /// <summary>Default constructor in private scope to prevent usage</summary>
         private SpStateTransition() {
         }
 
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
+        /// <summary>Constructor</summary>
         /// <param name="type">The transition type</param>
         /// <param name="nextState">The next state for next state transitions</param>
         /// <param name="returnMsg">The repsponse to return to the caller</param>
