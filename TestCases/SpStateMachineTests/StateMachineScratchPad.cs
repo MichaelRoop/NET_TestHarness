@@ -25,6 +25,8 @@ namespace TestCases.SpStateMachineTests {
         #region Setup 
 
         NUnitTraceWriter consoleWriter = new NUnitTraceWriter();
+        SpTestHelpers helpers = new SpTestHelpers();
+
 
         [OneTimeSetUp]
         public void Setup() {
@@ -240,38 +242,18 @@ namespace TestCases.SpStateMachineTests {
                 ISpEventListner listner;
                 SpStateMachineEngine engine = this.GetEngine(out listner, dataClass, m);
 
-                listner.MsgReceived += new Action<ISpEventMessage>((msg) => {
-                    Log.Info("StateMachineScratchPad", "Exit test", () =>
-                        string.Format("**** Message  Id:{0} Ret:{1} Status:{2} Payload:{3} Priority:{4} UID:{5}",
-                        msg.EventId,
-                        msg.ReturnCode,
-                        msg.ReturnStatus,
-                        msg.StringPayload,
-                        msg.Priority,
-                        msg.Uid));
-                });
-
-                listner.ResponseReceived += new Action<ISpEventMessage>((msg) => {
-                    Log.Info("StateMachineScratchPad", "Exit test", () => 
-                        string.Format("**** Response Id:{0} Ret:{1} Status:{2} Payload:{3} Priority:{4} UID:{5}", 
-                        msg.EventId,
-                        msg.ReturnCode, 
-                        msg.ReturnStatus, 
-                        msg.StringPayload, 
-                        msg.Priority, 
-                        msg.Uid));
-                });
-
+                listner.MsgReceived += this.helpers.ListnerMsgDumpDelegate;
+                listner.ResponseReceived += this.helpers.ListnerResponseDumpDelegate;
 
                 engine.Start();
 
                 this.DoTick(listner, m, "SS_M.SS_A1.SS_A1");
                 this.DoTick(listner, m, "SS_M.SS_A1.SS_A1");
                 this.DoTick(listner, m, "SS_M.SS_A1.SS_A1");
-                // After third it should have transitioned
-                this.DoTick(listner, m, "SS_M.SS_B1.SS_B1");
-                this.DoTick(listner, m, "SS_M.SS_B1.SS_B1");
-                this.DoTick(listner, m, "SS_M.SS_B1.SS_B1");
+                // After third it should have transitioned and stays the same
+                this.DoTick(listner, m, "SS_M.SS_B1.S_B1");
+                this.DoTick(listner, m, "SS_M.SS_B1.S_B1");
+                this.DoTick(listner, m, "SS_M.SS_B1.S_B1");
 
                 engine.Stop();
                 engine.Dispose();
@@ -291,17 +273,7 @@ namespace TestCases.SpStateMachineTests {
 
                 engine.Start();
                 // First tick will drive cascade of state changes because the first SS aborts on entry of first sub state entry
-
-                this.DoTick(listner, m, "SS_M2.SS_A1.S_A1_ExitEntry", false);
-                this.DoTick(listner, m, "SS_M2.SS_A1.S_A1_ExitEntry", false);
-
-                ////this.DoTick(listner, m, "SS_M.SS_A1.SS_A1");
-                ////this.DoTick(listner, m, "SS_M.SS_A1.SS_A1");
-                ////// After third it should have transitioned1
-                ////this.DoTick(listner, m, "SS_M.SS_B1.SS_B1");
-                //this.DoTick(listner, m, "SS_M.SS_B1.SS_B1");
-                //this.DoTick(listner, m, "SS_M.SS_B1.SS_B1");
-
+                this.DoTick(listner, m, "SS_M2.SS_B1.S_B1", true);
 
                 Thread.Sleep(1000);
                 Log.Warning(0, () => string.Format(" -*-*- Current state: {0} -*-*-", m.CurrentStateName));
@@ -311,11 +283,6 @@ namespace TestCases.SpStateMachineTests {
                 Console.WriteLine("Engine Disposed");
             });
         }
-
-
-        //private void Listner_ResponseReceived(ISpEventMessage obj) {
-        //    throw new NotImplementedException();
-        //}
 
         private SpStateMachineEngine GetEngine(out ISpEventListner listner, MyDataClass dataClass, ISpState<MyMsgId> firstState) {
 

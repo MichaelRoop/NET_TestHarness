@@ -192,7 +192,7 @@ namespace SpStateMachine.States {
         /// <param name="msg">The incoming message</param>
         /// <returns>A state transition object</returns>
         public virtual ISpStateTransition<TMsgId> OnTick(ISpEventMessage msg) {
-            //Log.Info(this.className, "OnTick", String.Format("'{0}' State - {1}", this.FullName, this.ConvertEventIdToString(msg.EventId)));
+            //this.log.Info("OnTick", String.Format("'{0}' State - {1}", this.FullName, this.ConvertEventIdToString(msg.EventId)));
             WrapErr.ChkTrue(this.IsEntryExcecuted, 50205, () => {
                 return String.Format("OnTick for '{0}' State Cannot be Executed Before OnEntry", this.FullName);
             });
@@ -215,7 +215,7 @@ namespace SpStateMachine.States {
                     this.ExecOnExit();
                 }
                 else {
-                    Log.Warning(9999, String.Format(
+                    this.log.Warning(9999, String.Format(
                         "ExecOnExit for State:{0} not called because OnEntry was preempted by an OnEvent Transition",
                         this.FullName));
                 }
@@ -299,19 +299,19 @@ namespace SpStateMachine.States {
         }
 
         public void DebugDumpTransitions() {
-            Log.Warning(0, string.Format("----- Result Transitions ({0}) -----", this.onResultTransitions.Keys.Count));
+            this.log.Warning(0, string.Format("----- Result Transitions ({0}) -----", this.onResultTransitions.Keys.Count));
 
             foreach (var k in this.onResultTransitions.Keys) {
-                Log.Warning(0, string.Format(
+                this.log.Warning(0, string.Format(
                     "     ID: {0} Type: {1} Next state: {2}",
                     k,
                     this.onResultTransitions[k].TransitionType,
                     this.onResultTransitions[k].NextState));
             }
 
-            Log.Warning(0, string.Format("----- Event Transitions ({0}) -----", this.onEventTransitions.Keys.Count));
+            this.log.Warning(0, string.Format("----- Event Transitions ({0}) -----", this.onEventTransitions.Keys.Count));
             foreach (var k in this.onEventTransitions.Keys) {
-                Log.Warning(0, string.Format(
+                this.log.Warning(0, string.Format(
                     "     ID: {0} Type: {1} Next state: {2}",
                     k,
                     this.onEventTransitions[k].TransitionType,
@@ -429,7 +429,7 @@ namespace SpStateMachine.States {
         private ISpStateTransition<TMsgId> GetTransition(bool onEntry, Func<ISpEventMessage, ISpEventMessage> stateFunc, ISpEventMessage msg) {
             return WrapErr.ToErrorReportException(9999, () => {
 
-                //Log.Warning(88, "||||||| State get result transition");
+                //this.log.Warning(88, "||||||| State get result transition");
 
                 // Query the OnEvent queue for a transition BEFORE calling state function (OnEntry, OnTick)
                 ISpStateTransition<TMsgId> tr = this.GetOnEventTransition(msg);
@@ -449,6 +449,8 @@ namespace SpStateMachine.States {
                 // Get the transition object from the 'OnResult' queue
                 if ((tr = this.GetOnResultTransition(stateFunc.Invoke(msg))) != null) {
                     tr.ReturnMessage = this.MsgFactory.GetResponse(msg, tr.ReturnMessage);
+                    this.log.Info("GetTransition", () => string.Format(
+                        "Got result transition type {0} from factory with return code {1}", tr.TransitionType, tr.ReturnMessage.ReturnCode));
                     return tr;
                 }
 
@@ -478,7 +480,7 @@ namespace SpStateMachine.States {
         /// <param name="eventMsg">The event message which pushed this transition</param>
         private void LogTransition(ISpStateTransition<TMsgId> tr, ISpEventMessage eventMsg) {
             WrapErr.ToErrorReportException(9999, () => {
-                Log.Debug("SpState", "LogTransition",
+                this.log.Debug("LogTransition",
                     String.Format(
                         "{0} OnMsg({1} - {2}) - From:{3} To:{4}",
                         tr.TransitionType,

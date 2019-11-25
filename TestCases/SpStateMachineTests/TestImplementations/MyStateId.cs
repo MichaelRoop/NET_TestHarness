@@ -36,6 +36,7 @@ namespace TestCases.SpStateMachineTests.TestImplementations {
         SS_B1,
         SS_M,
         SS_M2,
+        S_B1,
 
         Undefined,
     }
