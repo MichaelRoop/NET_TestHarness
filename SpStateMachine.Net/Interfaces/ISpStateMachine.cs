@@ -12,9 +12,9 @@ namespace SpStateMachine.Interfaces {
 
 
         /// <summary>Tick current state to execute the action based on the event message</summary>
-        /// <param name="eventMessage">The event message</param>
-        /// <returns>The return message from the action</returns>
-        ISpEventMessage Tick(ISpEventMessage eventMessage);
+        /// <param name="msg">The message pulled from the incoming message queue</param>
+        /// <returns>The return message from registered event handling or internal results</returns>
+        ISpEventMessage Tick(ISpEventMessage msg);
 
     }
 }

@@ -229,7 +229,7 @@ namespace TestCases.SpStateMachineTests {
 
                 // Just move the inner states around
                 Thread.Sleep(600);
-                //Assert.AreEqual("Main.NotStarted.Idle", mainSs.FullName);
+                Assert.AreEqual("Main.NotStarted.Idle", mainSs.CurrentStateName);
                 listner.PostMessage(new MyBaseMsg(MyMsgType.SimpleMsg, MyMsgId.Start));
                 Thread.Sleep(600);
 
